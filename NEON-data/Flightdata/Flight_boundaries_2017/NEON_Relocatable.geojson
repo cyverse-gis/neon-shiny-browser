@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "NEON Relocatable",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "D13 - Moab", "description": null, "BUFF_DIST": "5", "OID_": "0", "LabelID": "1", "SymbolID": "1", "Snippet": "", "Base": "0", "FID": "0", "PopupInfo": "", "ORIG_FID": "0", "HasLabel": "-1", "FolderPath": "NEON Project Locations (v12)\/NEON Relocatable", "AltMode": "-1", "Field_1": "D13 - Moab" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -109.445379116346203, 38.203285260917028 ], [ -109.331160883653794, 38.203285260917028 ], [ -109.331160883653794, 38.293374392422209 ], [ -109.445379116346203, 38.293374392422209 ], [ -109.445379116346203, 38.203285260917028 ] ] ] ] } }
+]
+}

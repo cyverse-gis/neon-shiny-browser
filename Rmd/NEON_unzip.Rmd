@@ -1,0 +1,2 @@
+##### Unzip downloaded files
+The downloaded data comes zipped and in the form of many small files. They should be unzipped and joined to make a small number of large, accesible files. This step will unzip the files and combine them month-by-site to return a more organized and understandable result.

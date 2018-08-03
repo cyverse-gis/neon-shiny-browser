@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D17_SOAP_R1_P1_v2",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "Pacific Southwest", "description": null, "Zone": "11", "DomainName": "Pacific Southwest", "Long": "-119.26219", "Source": "Characterization Report on Agile", "State": "CA", "Type": "Relocatable", "Sub_Type": "Relocatable Tower 1", "Status": "Final", "SiteName": "Soaproot Saddle", "BUFF_DIST": "5", "Ownership": "U.S. Forest Service", "Lat": "37.03337", "Science": "Climate", "Notes": "", "FID": "0", "PM_Code": "D17R1", "annotation": "RC9", "Field_1": "Pacific Southwest", "Domain": "17", "ORIG_FID": "0", "Site_ID": "SOAP", "County": "Fresno", "Easting": "298792.741022", "Northing": "4100967.25274" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -119.318376521420703, 36.988315962606407 ], [ -119.206003478579305, 36.988315962606407 ], [ -119.206003478579305, 37.078423694479739 ], [ -119.318376521420703, 37.078423694479739 ], [ -119.318376521420703, 36.988315962606407 ] ] ] ] } }
+]
+}

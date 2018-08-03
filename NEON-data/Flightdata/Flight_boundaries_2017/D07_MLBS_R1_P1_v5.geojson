@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D07_MLBS_R1_P1_v5",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "FID": "0", "Field_1": " " }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -80.595807075712273, 37.328881625119287 ], [ -80.468342054668582, 37.328910403089147 ], [ -80.46831252861233, 37.43481576053793 ], [ -80.595804321440966, 37.434787157694302 ], [ -80.595807075712273, 37.328881625119287 ] ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D10_CPER_C1_P1_Flight_Box",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "FID": "0", "Field_1": " " }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -104.793110128897496, 40.781745273095872 ], [ -104.674585585933301, 40.781733317746173 ], [ -104.674569798443102, 40.871782331277117 ], [ -104.793094404770301, 40.871794308023013 ], [ -104.793110128897496, 40.781745273095872 ] ] ] ] } }
+]
+}

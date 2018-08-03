@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D19_DEJU_R1_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "FID": "0", "Field_1": " " }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -145.870040461459496, 63.775552118003823 ], [ -145.666120653259895, 63.77555211800383 ], [ -145.66612065325981, 63.941162604009733 ], [ -145.87004046145961, 63.941162604009712 ], [ -145.870040461459496, 63.775552118003823 ] ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D08_TALL_C1_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "FID": "0" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -87.364025763520814, 32.984039790506323 ], [ -87.470960091835209, 32.983876384414792 ], [ -87.470936331382902, 32.873232012951753 ], [ -87.364509771648045, 32.873393302537437 ], [ -87.364025763520814, 32.984039790506323 ] ] ] ] } }
+]
+}

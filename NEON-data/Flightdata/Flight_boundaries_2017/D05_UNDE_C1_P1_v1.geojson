@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D05_UNDE_C1_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "Area_km2": "146.416687", "FID": "0", "Field_1": " " }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -89.435763088647917, 46.266543633440072 ], [ -89.581071854075191, 46.266250068326919 ], [ -89.580078727627694, 46.149146816816447 ], [ -89.435038738179884, 46.148528786680437 ], [ -89.435763088647917, 46.266543633440072 ] ] ] ] } }
+]
+}

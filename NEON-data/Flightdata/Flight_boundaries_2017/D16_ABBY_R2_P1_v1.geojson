@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D16_ABBY_R2_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "FID": "0", "Field_1": " " }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -122.393800283748106, 45.710164637257513 ], [ -122.238700972810307, 45.710049904499932 ], [ -122.238805528840203, 45.807240414509373 ], [ -122.393924810411306, 45.807355094537392 ], [ -122.393800283748106, 45.710164637257513 ] ] ] ] } }
+]
+}

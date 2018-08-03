@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D02_SERC_R1_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "FID": "0", "Field_1": " " }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -76.621069304091463, 38.845040211736467 ], [ -76.505830534138298, 38.845040211736467 ], [ -76.505830534138298, 38.935119440210023 ], [ -76.621069304091463, 38.935119440210023 ], [ -76.621069304091463, 38.845040211736467 ] ] ] ] } }
+]
+}

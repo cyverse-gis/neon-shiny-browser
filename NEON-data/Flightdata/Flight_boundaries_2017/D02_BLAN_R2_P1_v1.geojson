@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D02_BLAN_R2_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "FID": "0", "Field_1": " " }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -78.095171576787848, 39.041532405640112 ], [ -77.949818773741811, 39.041532405640112 ], [ -77.949818773741811, 39.131575443188297 ], [ -78.095171576787848, 39.131575443188297 ], [ -78.095171576787848, 39.041532405640112 ] ] ] ] } }
+]
+}

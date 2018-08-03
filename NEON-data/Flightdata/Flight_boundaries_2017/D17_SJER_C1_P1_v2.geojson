@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D17_SJER_C1_P1_v2",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "FID": "0", "Field_1": " " }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -119.7885221813859, 37.045309508471313 ], [ -119.676037818613807, 37.045309508471277 ], [ -119.676037818613807, 37.135416091996042 ], [ -119.7885221813859, 37.135416091996042 ], [ -119.7885221813859, 37.045309508471313 ] ] ] ] } }
+]
+}

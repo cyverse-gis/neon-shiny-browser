@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D05_STEI_TREE_R1_P2_v2",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "Area_km2": "83.464616", "FID": "0" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -89.391822600831503, 45.550252886791583 ], [ -89.485485107248778, 45.550253004388892 ], [ -89.48554097592671, 45.447798533929721 ], [ -89.391919324205901, 45.4475143140209 ], [ -89.391822600831503, 45.550252886791583 ] ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D06_MCDI_C1_P2_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "FID": "0", "Field_1": " " }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -96.520786949843156, 38.934067490628607 ], [ -96.43363919050455, 38.9340674906286 ], [ -96.43363919050455, 38.983738739125343 ], [ -96.520786949843142, 38.983738739125329 ], [ -96.520786949843156, 38.934067490628607 ] ] ] ] } }
+]
+}

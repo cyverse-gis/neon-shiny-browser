@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D01_HARV_C1_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "FID": "0", "Field_1": " " }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -72.148186994880064, 42.575097429580822 ], [ -72.281912879211077, 42.574915213877297 ], [ -72.281507955683722, 42.383632117581257 ], [ -72.147759714144229, 42.383731843105622 ], [ -72.148186994880064, 42.575097429580822 ] ] ] ] } }
+]
+}

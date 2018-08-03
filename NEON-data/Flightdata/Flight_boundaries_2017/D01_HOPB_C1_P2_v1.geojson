@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D01_HOPB_C1_P2_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "FID": "0", "Field_1": " " }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -72.366346344976407, 42.463993171554982 ], [ -72.324122106523703, 42.463993171555018 ], [ -72.324122106523703, 42.514134454717649 ], [ -72.366346344976407, 42.514134454717663 ], [ -72.366346344976407, 42.463993171554982 ] ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D19_BONA_C1_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "FID": "0", "Field_1": " " }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -147.670071651942607, 65.127081926459766 ], [ -147.347882819740107, 65.127266762809029 ], [ -147.347355123807006, 65.241287047526484 ], [ -147.66984114277659, 65.24110330290641 ], [ -147.670071651942607, 65.127081926459766 ] ] ] ] } }
+]
+}

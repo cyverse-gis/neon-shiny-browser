@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D11_CLBJ_C1_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "Area_km2": "129.129", "FID": "0", "Field_1": " " }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -97.668853202339349, 33.317925519440777 ], [ -97.548100349445008, 33.31799580545065 ], [ -97.548100640315226, 33.421632865473747 ], [ -97.668871970484545, 33.421562963769603 ], [ -97.668853202339349, 33.317925519440777 ] ] ] ] } }
+]
+}

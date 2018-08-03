@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D09_NOGP_R2_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "FID": "0", "Field_1": " " }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -100.979084207516607, 46.740962134416733 ], [ -100.848147988929597, 46.740960733251583 ], [ -100.848145884115795, 46.830915812149627 ], [ -100.979082226183706, 46.830917217202291 ], [ -100.979084207516607, 46.740962134416733 ] ] ] ] } }
+]
+}

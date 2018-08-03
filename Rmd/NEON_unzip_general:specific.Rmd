@@ -1,0 +1,1 @@
+Select the output directory from the last step into the [widget](https://github.com/wleepang/shiny-directory-input) below. A folder from the 'General' option should start with **filesToStack**, while a folder from the 'Specific' option should be in the form **NEON\_\<site\>\_\<time range\>**.

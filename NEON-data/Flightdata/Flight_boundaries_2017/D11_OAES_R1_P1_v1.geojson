@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D11_OAES_R1_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "Area_km2": "212.874854", "FID": "0", "Field_1": " " }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -99.178126241840332, 35.295848165246788 ], [ -99.022665858583849, 35.295896480741447 ], [ -99.022697960835501, 35.431769720521707 ], [ -99.178245757334736, 35.431721109436161 ], [ -99.178126241840332, 35.295848165246788 ] ] ] ] } }
+]
+}

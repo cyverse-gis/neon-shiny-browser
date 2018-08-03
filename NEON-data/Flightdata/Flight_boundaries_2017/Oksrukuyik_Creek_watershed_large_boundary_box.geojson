@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "Oksrukuyik_Creek_watershed_large_boundary_box",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "FID": "0", "Field_1": " " }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -149.289087097771898, 68.553750285113225 ], [ -149.108491329561588, 68.553458078047839 ], [ -149.106416513705597, 68.681996034105367 ], [ -149.288049329187288, 68.682287836889586 ], [ -149.289087097771898, 68.553750285113225 ] ] ] ] } }
+]
+}

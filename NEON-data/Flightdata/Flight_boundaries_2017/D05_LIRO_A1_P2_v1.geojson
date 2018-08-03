@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D05_LIRO_A1_P2_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "", "description": null, "FID": "0", "Field_1": " " }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -89.716378725466143, 45.987602676025993 ], [ -89.685847863296289, 45.987600192526187 ], [ -89.685835799498619, 46.015563830979012 ], [ -89.716382063310448, 46.015565975633827 ], [ -89.716378725466143, 45.987602676025993 ] ] ] ] } }
+]
+}
