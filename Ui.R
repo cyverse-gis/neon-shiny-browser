@@ -6,7 +6,12 @@ fluidPage(theme = shinytheme('cerulean'),
           navbarPage(tags$b("NEON-Browser"),
                      ####Tab 1: Includes the map, and key with features like filtering data####
                      tabPanel("Interactive Map",
+                              dropdown(right = TRUE, status = "primary", size = "sm",
+                                       selectInput(inputId = "NEONsite", label = "Zoom to a site:", choices = FieldSite_abbs),
+                                       actionButton(inputId = "zoomtosite", label = "See site")
+                              ),
                               sidebarLayout(
+                                position = "right",
                                 sidebarPanel(width = 6,
                                              tabsetPanel(
                                                #### — NEON ####
@@ -20,7 +25,6 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                     radioButtons(inputId = "NEONbrowsingstep_site", label = "Steps:", choices = list("Find Product" = "list", "Get Availability" = "single"), inline = TRUE),
                                                                                     conditionalPanel("input.NEONbrowsingstep_site == 'list'",
                                                                                                      selectInput(inputId = "NEONsite_site", label = "Select site:", choices = FieldSite_abbs),
-                                                                                                     actionButton(inputId = "zoomtosite", label = "See site"),
                                                                                                      tags$br(),
                                                                                                      tags$b("Data Products Available:"),
                                                                                                      tags$br(),
@@ -143,10 +147,10 @@ fluidPage(theme = shinytheme('cerulean'),
                                 )
                               )
                      ),
-                     #### Tab : Description of NEON ####
+                     #### Tab 2: Description of NEON ####
                      tabPanel("About NEON",
                               includeMarkdown('Rmd/NEON_info_about.Rmd')),
-                     ####Tab 4: Includes outputs to help with testing or troubleshooting####
+                     ####Tab 3: Includes outputs to help with testing or troubleshooting####
                      tabPanel("For me (troubleshooting)",
                               textOutput("text_me"),
                               textOutput("text_me_two"),

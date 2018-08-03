@@ -212,8 +212,8 @@ function(input, output, session) {
   output$NEONproductoptions_site <- renderDataTable(NEONproductlist_site(), options = list(autoWidth = TRUE))
   # Display products: single
   observeEvent(input$zoomtosite,
-               leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_site],
-                                             lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_site],
+               leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite],
+                                             lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite],
                                              zoom = 10)
   )
   output$NEONproductname_site <- renderPrint(req(NEONproductinfo_site()$dataProductTitle))
