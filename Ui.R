@@ -8,7 +8,7 @@ fluidPage(theme = shinytheme('cerulean'),
                      tabPanel("Interactive Map",
                               dropdown(right = TRUE, status = "primary", size = "sm",
                                        selectInput(inputId = "NEONsite", label = "Zoom to a site:", choices = FieldSite_abbs),
-                                       actionButton(inputId = "zoomtosite", label = "See site")
+                                       shiny::actionButton(inputId = "zoomtosite", label = "See site")
                               ),
                               sidebarLayout(
                                 position = "right",
@@ -17,7 +17,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                #### — NEON ####
                                                tabPanel(tags$h5("NEON Data"),
                                                         tabsetPanel(
-                                                          #### —— STEP 1- Find Data####
+                                                          #### —— STEP 1: Find Data####
                                                           tabPanel("Step 1- Find Data",
                                                                    radioButtons(inputId = "NEON_browsing_type", label = "Browsing method", choices = list("Start with Site" = "site", "Start with Product" = "product")),
                                                                    conditionalPanel("input.NEON_browsing_type == 'site'",
@@ -25,13 +25,11 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                     radioButtons(inputId = "NEONbrowsingstep_site", label = "Steps:", choices = list("Find Product" = "list", "Get Availability" = "single"), inline = TRUE),
                                                                                     conditionalPanel("input.NEONbrowsingstep_site == 'list'",
                                                                                                      selectInput(inputId = "NEONsite_site", label = "Select site:", choices = FieldSite_abbs),
-                                                                                                     tags$br(),
-                                                                                                     tags$b("Data Products Available:"),
-                                                                                                     tags$br(),
-                                                                                                     tags$br(),
                                                                                                      dataTableOutput(outputId = "NEONproductoptions_site")
                                                                                     ),
                                                                                     conditionalPanel("input.NEONbrowsingstep_site == 'single'",
+                                                                                                     tags$b("Site:"),
+                                                                                                     verbatimTextOutput(outputId = "NEONproductsite_site", placeholder = TRUE),
                                                                                                      textInput(inputId = "NEONproductID_site", label = "Product ID"),
                                                                                                      tags$b("Name:"),
                                                                                                      verbatimTextOutput(outputId = "NEONproductname_site", placeholder = TRUE),
@@ -83,7 +81,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                     )
                                                                    )
                                                           ),
-                                                          #### —— STEP 2- Download Data####
+                                                          #### —— STEP 2: Download Data####
                                                           tabPanel("Step 2- Download Data",
                                                                    radioButtons(inputId = "NEON_download_type", label = "Download method", choices = list("By Data Product— General" = "general", "By Data Product— Specific" = "specific", "By Data Product— Manual" = "manual")),
                                                                    conditionalPanel("input.NEON_download_type == 'general'",
@@ -94,7 +92,8 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                     conditionalPanel("input.extra_options_general",
                                                                                                      selectInput(inputId = "package_type_general", label = "Package Type", choices = c("basic", "expanded"))),
                                                                                     includeMarkdown('Rmd/NEON_download_message.Rmd'),
-                                                                                    actionButton(inputId = "download_NEON_general", label = "Download items")
+                                                                                    busyIndicator(text = "Downloading...", wait = 2000),
+                                                                                    shiny::actionButton(inputId = "download_NEON_general", label = "Download items")
                                                                    ),
                                                                    conditionalPanel("input.NEON_download_type == 'specific'",
                                                                                     includeMarkdown('Rmd/NEON_download_specific.Rmd'),
@@ -105,7 +104,8 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                     conditionalPanel("input.extra_options_specific",
                                                                                                      selectInput(inputId = "package_type_specific", label = "Package Type", choices = c("basic", "expanded"))),
                                                                                     includeMarkdown('Rmd/NEON_download_message.Rmd'),
-                                                                                    actionButton(inputId = "download_NEON_specific", label = "Download items")
+                                                                                    busyIndicator(text = "Downloading...", wait = 2000),
+                                                                                    shiny::actionButton(inputId = "download_NEON_specific", label = "Download items")
                                                                    ),
                                                                    conditionalPanel("input.NEON_download_type == 'manual'",
                                                                                     includeMarkdown('Rmd/NEON_download_manual.Rmd')
@@ -119,12 +119,14 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                    conditionalPanel("input.NEON_unzip_type == 'general/specific'",
                                                                                     includeMarkdown('Rmd/NEON_unzip_general:specific.Rmd'),
                                                                                     directoryInput('NEON_unzip_folder', label = 'Select the directory', value = '..'),
-                                                                                    actionButton(inputId = "unzip_NEON_folder", label = "Unzip/join folder")
+                                                                                    busyIndicator(text = "Unzipping...", wait = 2000),
+                                                                                    shiny::actionButton(inputId = "unzip_NEON_folder", label = "Unzip/join folder")
                                                                    ),
                                                                    conditionalPanel("input.NEON_unzip_type == 'manual'",
                                                                                     includeMarkdown('Rmd/NEON_unzip_manual.Rmd'),
                                                                                     selectInput(inputId = 'NEON_unzip_file', label = "Choose .zip file", choices = list.files(path = '..', pattern = ".zip")),
-                                                                                    actionButton(inputId = "unzip_NEON_file", label = "Unzip/join file")
+                                                                                    busyIndicator(text = "Unzipping...", wait = 2000),
+                                                                                    shiny::actionButton(inputId = "unzip_NEON_file", label = "Unzip/join file")
                                                                    )
                                                           )
                                                         )

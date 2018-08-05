@@ -1,6 +1,6 @@
 # Shiny server
 function(input, output, session) {
-  
+
   ####INTERACTIVE MAP TAB####
   
   # Reactive value for layer control
@@ -209,8 +209,10 @@ function(input, output, session) {
   ))
   NEONproductinfo_site <- reactive(req(filter(.data = NEONproducts_site(), dataProductCode == NEONproductID_site())))
   # Display products: list
-  output$NEONproductoptions_site <- renderDataTable(NEONproductlist_site(), options = list(autoWidth = TRUE))
+  output$NEONproductoptions_site <- renderDataTable(NEONproductlist_site(), options = list(lengthMenu = c(10,25),
+                                                                                           pageLength = 10))
   # Display products: single
+  output$NEONproductsite_site <- renderPrint(req(input$NEONsite_site))
   observeEvent(input$zoomtosite,
                leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite],
                                              lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite],
@@ -247,6 +249,7 @@ function(input, output, session) {
   # NEONproducts_product <- nneo_products()
   # list: getting data table with products and IDs
   NEONproductlist_product <- NEONproducts_product[c("productName", "productCode")]
+  NEONproductlist_product <- NEONproductlist_product[order(NEONproducts_product$productName),]
   names(NEONproductlist_product) <- c('Product Name', 'Product ID')
   # single: filtering one column of parent NEON products table through ID
   NEONproductID_product <- reactive(req(
@@ -256,7 +259,8 @@ function(input, output, session) {
   ))
   NEONproductinfo_product <- reactive(req(filter(.data = NEONproducts_product, productCode == NEONproductID_product())))
   # Display products: list
-  output$NEON_product_options <- renderDataTable(NEONproductlist_product)
+  output$NEON_product_options <- renderDataTable(NEONproductlist_product, options = list(lengthMenu = c(10,25),
+                                                                                         pageLength = 10))
   # Display products: single
   output$NEONproductname_product <- renderPrint(req(NEONproductinfo_product()$productName))
   output$NEONproductdesc_product <- renderPrint(req(NEONproductinfo_product()$productDescription))

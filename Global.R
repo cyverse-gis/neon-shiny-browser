@@ -1,5 +1,7 @@
+# Make sure packages are loaded in this order
 library(shiny)
 library(shinythemes)
+library(shinysky)
 library(leaflet)
 library(leaflet.extras)
 library(dplyr)
@@ -25,7 +27,7 @@ names(Fieldsites)[9] <- "geo_type"
 
 FieldSite_point_JSON <- fromJSON('http://data.neonscience.org/api/v0/sites')
 # Create a data frame using cbind()
-FieldSite_point <- FieldSite_point_JSON$data #cbind(FieldSite_point_JSON$features$properties,FieldSite_point_JSON$features$geometry)
+FieldSite_point <- FieldSite_point_JSON$data
 FieldSite_point$domainCode <- as.numeric(gsub(pattern = "D", replacement = "", x = FieldSite_point$domainCode))
 FieldSite_abbs <- FieldSite_point$siteCode
 ## Retrieve polygon data for NEON Field Sites
