@@ -1,3 +1,3 @@
 ##### Find data products, then availability based on site
 
-Start with a data product and browse sites included in that product. Then, see availability and more information using a product ID. Alternatively, browse NEON products through their [search portal](http://data.neonscience.org/static/browse.html).
+Start with a data product and browse sites included in that product. Then, see availability and more information using a product ID. Alternatively, browse NEON products through their [data portal](http://data.neonscience.org/static/browse.html).
