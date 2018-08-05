@@ -45,10 +45,8 @@ function(input, output, session) {
                                           filter(domainCode %in% Domain_IDs()))
   Domain_included <- reactive(domain_data %>% filter(DomainName %in% input$fieldsite_domain))
   Domain_unincluded <- reactive(domain_data %>% filter(!(DomainName %in% input$fieldsite_domain)))
-  TOS_data_filtered <- reactive(TOS_data %>% filter(siteType %in% input$fieldsite_type) %>%
-                                  filter(domanID %in% Domain_IDs()))
-  Flight_data_filtered <- reactive(flight_data %>% filter(SiteType %in% input$fieldsite_type) %>%
-                                     filter(DomainID %in% Domain_IDs()) %>% filter(Year %in% input$flightpath_year))
+  TOS_data_filtered <- reactive(TOS_data %>% filter(siteID %in% Field_sites_point_filtered()$siteCode))
+  Flight_data_filtered <- reactive(flight_data %>% filter(SiteAbb %in% Field_sites_point_filtered()$siteCode) %>% filter(Year %in% input$flightpath_year))
   #### —— Plot Domains #### 
   observe({
     proxy <- leafletProxy("map")
@@ -56,17 +54,77 @@ function(input, output, session) {
       clearGroup(group = "Domains") %>%
       addPolygons(data = Domain_unincluded(),
                   weight = 2,
-                  fillOpacity = '0.3',
+                  fillOpacity = '0.18',
                   group = "Domains",
                   popup = paste0(Domain_unincluded()$DomainName),
                   color = "gray") %>%
       addPolygons(data = Domain_included(),
                   weight = 2,
-                  fillOpacity = '0.3',
+                  fillOpacity = '0.18',
                   group = "Domains",
                   popup = paste0(Domain_included()$DomainName),
                   color = "blue")
   })
+
+  #### —— Plot Flightpaths ####
+  observe({
+    proxy <- leafletProxy("map")
+    # pal <- colorFactor(palette = c("#FFFFFF", "#0000FF"), domain = Flight_data_filtered()$Year)
+    if (nrow(Flight_data_filtered()) == 0) {
+      proxy %>% clearGroup(group = "Flightpaths")
+    } else {
+      proxy %>% clearGroup(group = "Flightpaths") %>%
+        # Areas for NEON flight paths (red)
+        addPolygons(data = Flight_data_filtered()$geometry,
+                    color = "Red",
+                    group = "Flightpaths",
+                    popup = paste0("<b>Year: </b>",
+                                   Flight_data_filtered()$Year,
+                                   "<br><b>Site: </b><br>",
+                                   Flight_data_filtered()$Site,
+                                   "<br><b>Domain: </b>",
+                                   domains[Flight_data_filtered()$DomainID,2],
+                                   "<br><b>Core/Relocatable: </b>",
+                                   Flight_data_filtered()$SiteType,
+                                   "<br><b>Flight Priority: </b>",
+                                   Flight_data_filtered()$Priority,
+                                   "<br><b>Version: </b>",
+                                   Flight_data_filtered()$Version),
+                    opacity = 0.3, 
+                    fillOpacity = 0.06
+        )
+    }
+  })
+  #### —— Plot TOS ####
+  observe({
+    proxy <- leafletProxy("map")
+    if (nrow(TOS_data_filtered()) == 0) {
+      proxy %>% clearGroup(group = "TOS")
+    } else {
+      proxy %>% clearGroup(group = "TOS") %>%
+        addMarkers(data = TOS_data_filtered(),
+                   lng = TOS_data_filtered()$longitd,
+                   lat = TOS_data_filtered()$latitud,
+                   popup = paste0("<b>Site: </b>",
+                                  TOS_data_filtered()$siteID,
+                                  "<br><b>Plot ID: </b>",
+                                  TOS_data_filtered()$plotID,
+                                  "<br><b>Dimensions: </b>",
+                                  TOS_data_filtered()$plotDim,
+                                  "<br><b>Plot Type: </b>",
+                                  TOS_data_filtered()$plotTyp, "/",
+                                  TOS_data_filtered()$subtype),
+                   group = "TOS",
+                   clusterOptions = markerClusterOptions()
+        ) %>%
+        addPolygons(data = TOS_data_filtered(),
+                    popup = paste0("Area of ", TOS_data_filtered()$plotID),
+                    group = "TOS",
+                    color = "gray")
+    }
+  })
+  # Hide TOS when launching app (TOS can make computer slow)
+  leafletProxy("map") %>% hideGroup("TOS")
   #### —— Plot Fieldsites ####
   # Markers
   observe({
@@ -107,87 +165,31 @@ function(input, output, session) {
             addPolygons(lng = Field_sites_poly_filtered()$coordinates[[i]][1,,1],
                         lat = Field_sites_poly_filtered()$coordinates[[i]][1,,2],
                         group = "Field Sites",
-                        color = "green",
+                        color = "#49E2BD",
                         layerId = Field_sites_poly_filtered()$siteCode[i],
                         popup = paste0("Boundaries for ",
                                        Field_sites_poly_filtered()$siteDescription[i]),
-                        fillOpacity = 0.4
+                        opacity = 1,
+                        fillOpacity = 0,
+                        highlightOptions = highlightOptions(stroke = TRUE, color = "#39ff14", weight = 7, bringToFront = TRUE)
             )
         } else if (is.list(Field_sites_poly_filtered()$coordinates[[i]])) {
           proxy %>%
             addPolygons(lng = Field_sites_poly_filtered()$coordinates[[i]][[1]][,1],
                         lat = Field_sites_poly_filtered()$coordinates[[i]][[1]][,2],
                         group = "Field Sites",
-                        color = "green",
+                        color = "#49E2BD",
                         layerId = Field_sites_poly_filtered()$siteCode[i],
                         popup = paste0("Boundaries for ",
                                        Field_sites_poly_filtered()$siteDescription[i]),
-                        fillOpacity = 0.4
+                        opacity = 1,
+                        fillOpacity = 0.4,
+                        highlightOptions = highlightOptions(stroke = TRUE, color = "#39ff14", weight = 7, bringToFront = TRUE)
             )
         }
       }
     }
   })
-  
-  #### —— Plot Flightpaths ####
-  observe({
-    proxy <- leafletProxy("map")
-    # pal <- colorFactor(palette = c("#FFFFFF", "#0000FF"), domain = Flight_data_filtered()$Year)
-    if (nrow(Flight_data_filtered()) == 0) {
-      proxy %>% clearGroup(group = "Flightpaths")
-    } else {
-      proxy %>% clearGroup(group = "Flightpaths") %>%
-        # Areas for NEON flight paths (red)
-        addPolygons(data = Flight_data_filtered()$geometry,
-                    color = "Red",
-                    group = "Flightpaths",
-                    popup = paste0("<b>Year: </b>",
-                                   Flight_data_filtered()$Year,
-                                   "<br><b>Site: </b><br>",
-                                   Flight_data_filtered()$Site,
-                                   "<br><b>Domain: </b>",
-                                   domains[Flight_data_filtered()$DomainID,2],
-                                   "<br><b>Core/Relocatable: </b>",
-                                   Flight_data_filtered()$SiteType,
-                                   "<br><b>Flight Priority: </b>",
-                                   Flight_data_filtered()$Priority,
-                                   "<br><b>Version: </b>",
-                                   Flight_data_filtered()$Version),
-                    opacity = 0.3, 
-                    fillOpacity = 0.2
-        )
-    }
-  })
-  #### —— Plot TOS ####
-  observe({
-    proxy <- leafletProxy("map")
-    if (nrow(TOS_data_filtered()) == 0) {
-      proxy %>% clearGroup(group = "TOS")
-    } else {
-      proxy %>% clearGroup(group = "TOS") %>%
-        addMarkers(data = TOS_data_filtered(),
-                   lng = TOS_data_filtered()$longitd,
-                   lat = TOS_data_filtered()$latitud,
-                   popup = paste0("<b>Site: </b>",
-                                  TOS_data_filtered()$siteID,
-                                  "<br><b>Plot ID: </b>",
-                                  TOS_data_filtered()$plotID,
-                                  "<br><b>Dimensions: </b>",
-                                  TOS_data_filtered()$plotDim,
-                                  "<br><b>Plot Type: </b>",
-                                  TOS_data_filtered()$plotTyp, "/",
-                                  TOS_data_filtered()$subtype),
-                   group = "TOS",
-                   clusterOptions = markerClusterOptions()
-        ) %>%
-        addPolygons(data = TOS_data_filtered(),
-                    popup = paste0("Area of ", TOS_data_filtered()$plotID),
-                    group = "TOS",
-                    color = "gray")
-    }
-  })
-  # Hide TOS when launching app (TOS can make computer slow)
-  leafletProxy("map") %>% hideGroup("TOS")
   
   
   #### NEON ####
