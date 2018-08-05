@@ -13,6 +13,7 @@ library(shinyWidgets)
 library(nneo)
 source('Functions/directoryWidget/directoryInput.R')
 source('Functions/flight_function.R')
+source('Functions/filter_keyword_function.R')
 
 ####———MAP DATA———####
 

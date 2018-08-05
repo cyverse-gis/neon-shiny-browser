@@ -197,10 +197,13 @@ function(input, output, session) {
   ####— NEON: Step 1- Find data ####
   ####—— 1a: By Site####
   # Variables
-  NEONproducts_site <- reactive(nneo_site(x = input$NEONsite_site)$dataProducts)
   NEONproducts_product <- nneo_products() # Added this variable up here because one item in finding by "site" needed it
+  NEONproducts_site <- reactive(nneo_site(x = input$NEONsite_site)$dataProducts)
+  
   # list: getting data frame of availability based on site code
   NEONproductlist_site <- reactive(as.data.frame(cbind("Product Name" = NEONproducts_site()$dataProductTitle, "Product ID" = NEONproducts_site()$dataProductCode))[order(NEONproducts_site()$dataProductTitle),])
+#  keyword_column <- NEONproducts_product[c('keywords', 'productCode','productName')]
+#  keyword_column <- reactive(keyword_column[(keyword_column$productCode %in% "DP1.00005.001"),])
   # single: filtering column of products for one site through ID
   NEONproductID_site <- reactive(req(
     if (gsub(pattern = " ", replacement = "", x = input$NEONproductID_site) == "") {
@@ -248,11 +251,20 @@ function(input, output, session) {
   
   ####—— 1b: By Product:####
   # Variables
-  # NEONproducts_product <- nneo_products()
   # list: getting data table with products and IDs
-  NEONproductlist_product <- NEONproducts_product[c("productName", "productCode")]
-  NEONproductlist_product <- NEONproductlist_product[order(NEONproducts_product$productName),]
-  names(NEONproductlist_product) <- c('Product Name', 'Product ID')
+  # Filter by keywords
+  keywords <- NULL
+  for (i in 1:180) {
+    keywords <- c(keywords, NEONproducts_product$keywords[[i]])
+  }
+  keywords <- unique(keywords)
+  keywords <- sort(keywords)
+  output$ui_selectkeywords_product <- renderUI(selectInput(inputId = "NEONproductkeywords_product", label = "Keywords", choices = keywords, multiple = TRUE))
+  NEONproducts_product_keyword <- NEONproducts_product[c("productName", "productCode", "keywords")]
+  names(NEONproducts_product_keyword) <- c('Product Name', 'Product ID', 'keywords')
+  NEONproducts_product_keyword <- NEONproducts_product_keyword[order(NEONproducts_product_keyword$`Product Name`),]
+  keyword_filters <- reactive(filter_keyword(column = NEONproducts_product_keyword$keywords, keywords = input$NEONproductkeywords_product))
+  NEONproductlist_product <- reactive(NEONproducts_product_keyword[keyword_filters(),])
   # single: filtering one column of parent NEON products table through ID
   NEONproductID_product <- reactive(req(
     ifelse(gsub(pattern = " ", replacement = "", x = input$NEONproductID_product) == "",
@@ -261,14 +273,14 @@ function(input, output, session) {
   ))
   NEONproductinfo_product <- reactive(req(filter(.data = NEONproducts_product, productCode == NEONproductID_product())))
   # Display products: list
-  output$NEON_product_options <- renderDataTable(NEONproductlist_product, options = list(lengthMenu = c(10,25),
+  output$NEON_product_options <- renderDataTable(NEONproductlist_product()[1:2], options = list(lengthMenu = c(10,25),
                                                                                          pageLength = 10))
   # Display products: single
   output$NEONproductname_product <- renderPrint(req(NEONproductinfo_product()$productName))
   output$NEONproductdesc_product <- renderPrint(req(NEONproductinfo_product()$productDescription))
   output$NEONproductdesign_product <- renderPrint(req(NEONproductinfo_product()$productDesignDescription))
   output$NEONproductnotes_product <- renderPrint(req(NEONproductinfo_product()$productRemarks))
-  output$ui_product<- renderUI({
+  output$ui_selectsite<- renderUI({
     sites <- if (length(NEONproductinfo_product()$siteCodes) == 0) {
       NA} else {
         sort(NEONproductinfo_product()$siteCodes[[1]]$siteCode)}
@@ -359,9 +371,9 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText("The current working directory is:")
+  output$text_me <- renderText("")
   #Text for troublshooting 2
-  output$text_me_two <- renderText(getwd())
+  output$text_me_two <- renderText(as.character(NEONproductlist_site()$`Product ID`))
   #Table for troubleshooting
-  #output$table_me <- renderDataTable()
+  output$table_me <- renderDataTable(NEONproductlist_site())
 }
