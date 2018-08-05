@@ -2,5 +2,5 @@
 
 Download NEON data products without filtering over time or location (although location can be filtered). This functionality requires a product ID from step 1 or the NEON [search portal](http://data.neonscience.org/static/browse.html). Optionally, one NEON site can be selected.
 
-The items will appear in a folder starting with **filesToStack**, located in the same directory containing **Calliope View**. These items are zipped and need to be put through step 2.
+The items will appear in a folder starting with **filesToStack**, located in the same directory containing **NEON Shiny Browser**. These items are zipped and need to be put through step 2.
 

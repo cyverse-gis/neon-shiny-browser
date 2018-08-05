@@ -1,1 +1,1 @@
-Select the **.zip** file that was downloaded from the NEON [search portal](http://data.neonscience.org/static/browse.html). If you cannot find your **.zip** file, check that it is in the directory containing **Calliope View**.
+Select the **.zip** file that was downloaded from the NEON [search portal](http://data.neonscience.org/static/browse.html). If you cannot find your **.zip** file, check that it is in the directory containing **NEON Shiny Browser**.
