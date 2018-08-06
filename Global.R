@@ -14,6 +14,8 @@ library(nneo)
 source('Functions/directoryWidget/directoryInput.R')
 source('Functions/flight_function.R')
 source('Functions/filter_keyword_function.R')
+source('Functions/filter_site_function.R')
+source('Functions/keyword_lists_function.R')
 
 ####———MAP DATA———####
 

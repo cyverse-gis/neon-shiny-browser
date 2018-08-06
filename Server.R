@@ -193,17 +193,27 @@ function(input, output, session) {
   
   
   #### NEON ####
-  
+  observeEvent(input$zoomtosite,
+               leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
+                                             lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
+                                             zoom = 10)
+  )
   ####— NEON: Step 1- Find data ####
   ####—— 1a: By Site####
   # Variables
-  NEONproducts_product <- nneo_products() # Added this variable up here because one item in finding by "site" needed it
-  NEONproducts_site <- reactive(nneo_site(x = input$NEONsite_site)$dataProducts)
-  
+  NEONproducts_site <- reactive(NEONproducts_product[filter_site(site = input$NEONsite_site),])
   # list: getting data frame of availability based on site code
-  NEONproductlist_site <- reactive(as.data.frame(cbind("Product Name" = NEONproducts_site()$dataProductTitle, "Product ID" = NEONproducts_site()$dataProductCode))[order(NEONproducts_site()$dataProductTitle),])
-#  keyword_column <- NEONproducts_product[c('keywords', 'productCode','productName')]
-#  keyword_column <- reactive(keyword_column[(keyword_column$productCode %in% "DP1.00005.001"),])
+  keyword_lists(list = FieldSite_abbs)
+  output$ui_selectkeywords_site <- renderUI({
+    selectInput(inputId = "NEONproductkeywords_site", label = "Keywords", choices = get(x = input$NEONsite_site, envir = .NEON_keywords) ,multiple = TRUE)
+  })
+  
+  NEONproducts_site_keyword <- reactive(as.data.frame(cbind('Product Name' = NEONproducts_site()$productName, 'Product ID' = NEONproducts_site()$productCode, "keywords" = NEONproducts_site()$keywords))[order(NEONproducts_site()$productName),])
+  keyword_filters_site <- reactive(filter_keyword(column = NEONproducts_site_keyword()$keywords, keywords = input$NEONproductkeywords_site))
+  NEONproductlist_site <- reactive(NEONproducts_site_keyword()[keyword_filters_site(),])
+  
+  
+  #NEONproductlist_site <- reactive(as.data.frame(cbind("Product Name" = NEONproducts_site()$productName, "Product ID" = NEONproducts_site()$productCode))[order(NEONproducts_site()$productName),])
   # single: filtering column of products for one site through ID
   NEONproductID_site <- reactive(req(
     if (gsub(pattern = " ", replacement = "", x = input$NEONproductID_site) == "") {
@@ -212,41 +222,36 @@ function(input, output, session) {
       gsub(pattern = " ", replacement = "", x = input$NEONproductID_site)
     }
   ))
-  NEONproductinfo_site <- reactive(req(filter(.data = NEONproducts_site(), dataProductCode == NEONproductID_site())))
+  NEONproductinfo_site <- reactive(req(filter(.data = NEONproducts_site(), productCode == NEONproductID_site())))
   # Display products: list
-  output$NEONproductoptions_site <- renderDataTable(NEONproductlist_site(), options = list(lengthMenu = c(10,25),
+  output$NEONproductoptions_site <- renderDataTable(NEONproductlist_site()[1:2], options = list(lengthMenu = c(10,25),
                                                                                            pageLength = 10))
   # Display products: single
   output$NEONproductsite_site <- renderPrint(req(input$NEONsite_site))
-  observeEvent(input$zoomtosite,
-               leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite],
-                                             lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite],
-                                             zoom = 10)
-  )
-  output$NEONproductname_site <- renderPrint(req(NEONproductinfo_site()$dataProductTitle))
-  output$NEONproductdesc_site <- renderPrint(req(ifelse(is.null(req(NEONproductinfo_site()$dataProductTitle)),
+
+  output$NEONproductname_site <- renderPrint(req(NEONproductinfo_site()$productName))
+  output$NEONproductdesc_site <- renderPrint(req(ifelse(is.null(req(NEONproductinfo_site()$productDescription)),
                                                         yes = NULL,
-                                                        no = NEONproducts_product$productDescription[NEONproducts_product$productCode %in% NEONproductID_site()]
-  )))
-  output$NEONproductdesign_site <- renderPrint(req(ifelse(is.null(req(NEONproductinfo_site()$dataProductTitle)),
+                                                        no = NEONproductinfo_site()$productDescription)))
+  output$NEONproductdesign_site <- renderPrint(req(ifelse(is.null(req(NEONproductinfo_site()$productDesignDescription)),
                                                           yes = NULL,
-                                                          no = NEONproducts_product$productDesignDescription[NEONproducts_product$productCode %in% NEONproductID_site()])))
-  output$NEONproductnotes_site <- renderPrint(req(ifelse(is.null(req(NEONproductinfo_site()$dataProductTitle)),
+                                                          no = NEONproductinfo_site()$productDesignDescription)))
+  output$NEONproductnotes_site <- renderPrint(req(ifelse(is.null(req(NEONproductinfo_site()$productRemarks)),
                                                          yes = NULL,
-                                                         no = NEONproducts_product$productRemarks[NEONproducts_product$productCode %in% NEONproductID_site()])))
+                                                         no = NEONproductinfo_site()$productRemarks)))
   output$NEONproductdates_site <- renderPrint({
-    dates <- if (length(NEONproductinfo_site()$availableMonths) == 0) {
+    dates <- if (length(NEONproductinfo_site()$siteCodes) == 0) {
       NA
     } else {
-      NEONproductinfo_site()$availableMonths[[1]]}
+      NEONproductinfo_site()$siteCodes[[1]]$availableMonths[NEONproductinfo_site()$siteCodes[[1]]$siteCode %in% input$NEONsite_site][[1]]}
     req(dates)
   })
   output$NEONproductURL_site <- renderPrint({
-    urls <- if (length(NEONproductinfo_site()$availableDataUrl) == 0) {
-      NA 
+    Urls <- if (length(NEONproductinfo_site()$siteCodes) == 0) {
+      NA
     } else {
-      NEONproductinfo_site()$availableDataUrl[[1]]}
-    req(urls)
+      NEONproductinfo_site()$siteCodes[[1]]$availableDataUrls[NEONproductinfo_site()$siteCodes[[1]]$siteCode %in% input$NEONsite_site][[1]]}
+    req(Urls)
   })
   
   ####—— 1b: By Product:####
@@ -254,7 +259,7 @@ function(input, output, session) {
   # list: getting data table with products and IDs
   # Filter by keywords
   keywords <- NULL
-  for (i in 1:180) {
+  for (i in 1:length(NEONproducts_product$keywords)) {
     keywords <- c(keywords, NEONproducts_product$keywords[[i]])
   }
   keywords <- unique(keywords)
@@ -263,8 +268,8 @@ function(input, output, session) {
   NEONproducts_product_keyword <- NEONproducts_product[c("productName", "productCode", "keywords")]
   names(NEONproducts_product_keyword) <- c('Product Name', 'Product ID', 'keywords')
   NEONproducts_product_keyword <- NEONproducts_product_keyword[order(NEONproducts_product_keyword$`Product Name`),]
-  keyword_filters <- reactive(filter_keyword(column = NEONproducts_product_keyword$keywords, keywords = input$NEONproductkeywords_product))
-  NEONproductlist_product <- reactive(NEONproducts_product_keyword[keyword_filters(),])
+  keyword_filters_product <- reactive(filter_keyword(column = NEONproducts_product_keyword$keywords, keywords = input$NEONproductkeywords_product))
+  NEONproductlist_product <- reactive(NEONproducts_product_keyword[keyword_filters_product(),])
   # single: filtering one column of parent NEON products table through ID
   NEONproductID_product <- reactive(req(
     ifelse(gsub(pattern = " ", replacement = "", x = input$NEONproductID_product) == "",
@@ -371,9 +376,9 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText("")
+  output$text_me <- renderText(keyword_filters_site())
   #Text for troublshooting 2
-  output$text_me_two <- renderText(as.character(NEONproductlist_site()$`Product ID`))
+  output$text_me_two <- renderText(length(keyword_filters_site()))
   #Table for troubleshooting
-  output$table_me <- renderDataTable(NEONproductlist_site())
+  output$table_me <- renderDataTable(NEONproductlist_siteaa())
 }

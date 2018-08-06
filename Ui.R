@@ -7,7 +7,7 @@ fluidPage(theme = shinytheme('cerulean'),
                      ####Tab 1: Includes the map, and key with features like filtering data####
                      tabPanel("Interactive Map",
                               dropdown(right = TRUE, status = "primary", size = "xs",
-                                       selectInput(inputId = "NEONsite", label = "Zoom to a site:", choices = FieldSite_abbs),
+                                       selectInput(inputId = "NEONsite_zoom", label = "Zoom to a site:", choices = FieldSite_abbs),
                                        shiny::actionButton(inputId = "zoomtosite", label = "See site")
                               ),
                               sidebarLayout(
@@ -25,6 +25,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                     radioButtons(inputId = "NEONbrowsingstep_site", label = NULL, choices = list("Find Product" = "list", "Get Availability" = "single"), inline = TRUE),
                                                                                     conditionalPanel("input.NEONbrowsingstep_site == 'list'",
                                                                                                      selectInput(inputId = "NEONsite_site", label = "Select site:", choices = FieldSite_abbs),
+                                                                                                     uiOutput(outputId = "ui_selectkeywords_site"),
                                                                                                      dataTableOutput(outputId = "NEONproductoptions_site")
                                                                                     ),
                                                                                     conditionalPanel("input.NEONbrowsingstep_site == 'single'",
