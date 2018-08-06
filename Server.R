@@ -201,6 +201,7 @@ function(input, output, session) {
   ####— NEON: Step 1- Find data ####
   ####—— 1a: By Site####
   # Variables
+  NEONproducts_product <<- nneo_products() # Added this variable up here because one item in finding by "site" needed it
   NEONproducts_site <- reactive(NEONproducts_product[filter_site(site = input$NEONsite_site),])
   # list: getting data frame of availability based on site code
   keyword_lists(list = FieldSite_abbs)
