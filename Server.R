@@ -204,17 +204,14 @@ function(input, output, session) {
   NEONproducts_product <<- nneo_products() # Added this variable up here because one item in finding by "site" needed it
   NEONproducts_site <- reactive(NEONproducts_product[filter_site(site = input$NEONsite_site),])
   # list: getting data frame of availability based on site code
+  # Filter by keywords
   keyword_lists(list = FieldSite_abbs)
   output$ui_selectkeywords_site <- renderUI({
     selectInput(inputId = "NEONproductkeywords_site", label = "Keywords", choices = get(x = input$NEONsite_site, envir = .NEON_keywords) ,multiple = TRUE)
   })
-  
   NEONproducts_site_keyword <- reactive(as.data.frame(cbind('Product Name' = NEONproducts_site()$productName, 'Product ID' = NEONproducts_site()$productCode, "keywords" = NEONproducts_site()$keywords))[order(NEONproducts_site()$productName),])
   keyword_filters_site <- reactive(filter_keyword(column = NEONproducts_site_keyword()$keywords, keywords = input$NEONproductkeywords_site))
   NEONproductlist_site <- reactive(NEONproducts_site_keyword()[keyword_filters_site(),])
-  
-  
-  #NEONproductlist_site <- reactive(as.data.frame(cbind("Product Name" = NEONproducts_site()$productName, "Product ID" = NEONproducts_site()$productCode))[order(NEONproducts_site()$productName),])
   # single: filtering column of products for one site through ID
   NEONproductID_site <- reactive(req(
     if (gsub(pattern = " ", replacement = "", x = input$NEONproductID_site) == "") {
@@ -229,7 +226,6 @@ function(input, output, session) {
                                                                                            pageLength = 10))
   # Display products: single
   output$NEONproductsite_site <- renderPrint(req(input$NEONsite_site))
-
   output$NEONproductname_site <- renderPrint(req(NEONproductinfo_site()$productName))
   output$NEONproductdesc_site <- renderPrint(req(ifelse(is.null(req(NEONproductinfo_site()$productDescription)),
                                                         yes = NULL,
