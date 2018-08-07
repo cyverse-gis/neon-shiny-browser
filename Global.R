@@ -19,9 +19,6 @@ source('Functions/keyword_lists_function.R')
 
 ####———MAP DATA———####
 
-Fieldsites_JSON <- fromJSON('http://guest:guest@128.196.38.100:9200/sites/_search?size=500')
-Fieldsites <- cbind(Fieldsites_JSON$hits$hits[-5], Fieldsites_JSON$hits$hits$`_source`[-4], Fieldsites_JSON$hits$hits$`_source`$boundary)
-names(Fieldsites)[9] <- "geo_type"
 
 ####——NEON——####
 
@@ -34,9 +31,9 @@ FieldSite_point <- FieldSite_point_JSON$data
 FieldSite_point$domainCode <- as.numeric(gsub(pattern = "D", replacement = "", x = FieldSite_point$domainCode))
 FieldSite_abbs <- FieldSite_point$siteCode
 ## Retrieve polygon data for NEON Field Sites
-FieldSite_poly_JSON <- fromJSON('http://guest:guest@128.196.38.100:9200/neon_sites/_search?size=500')
+FieldSite_poly_JSON <- fromJSON('http://guest:guest@128.196.38.73:9200/neon_sites/_search?size=500')
 # Unhashtag when index is down:
-#FieldSite_poly_JSON <- fromJSON('Field Sites.json')
+#FieldSite_poly_JSON <- fromJSON('NEON-data/Fieldsites.json')
 FieldSite_poly <- cbind(FieldSite_poly_JSON$hits$hits$`_source`$site, FieldSite_poly_JSON$hits$hits$`_source`$boundary)
 FieldSite_poly$domainCode <- as.numeric(gsub(pattern = "D", replacement = "", x = FieldSite_poly$domainCode))
 
