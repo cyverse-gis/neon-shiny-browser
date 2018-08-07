@@ -14,7 +14,7 @@ First, this app displays relevant features of NEON and their research on a map. 
 
 Additionally, this app provides an easy, in-app alternative to NEON's [data portal](http://data.neonscience.org/browse-data). Users can view data products and their availabilities, download them in various formats, and then stack those downloads to make them more organized and accessible.
 
-<**image/gif**>
+<img src = "Img/data_browse.gif" width = "420"/> <img src = "Img/data_download:unzip.gif" width = "420" align = "right"/>
 
 ### NEON
 
