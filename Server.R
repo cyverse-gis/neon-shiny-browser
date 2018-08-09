@@ -251,7 +251,7 @@ function(input, output, session) {
     req(Urls)
   })
   
-  ####—— 1b: By Product:####
+  ####—— 1b: By Product####
   # Variables
   # list: getting data table with products and IDs
   # Filter by keywords
@@ -322,16 +322,26 @@ function(input, output, session) {
   Date_specific <- reactive(req(paste0(Date_specific_parts()[1], "-", Date_specific_parts()[2])))
   Folder_path_specific <- reactive(paste0("../NEON_", Field_Site_specific(), "_", Date_specific()))
   # Download NEON data: general
-  observeEvent(input$download_NEON_general,
-               zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = '..') &
-                 sendSweetAlert(session, title = "File downloaded", text = "Check the directory containing 'Calliope View'. Go to step 2 to unzip files and make them more accesible.", type = 'success')
-  )
+  observeEvent(eventExpr = input$download_NEON_general,
+               handlerExpr = {
+                 download <- try(zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = '..'), silent = TRUE)
+                 if (class(download) == "try-error") {
+                   sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error code message: ", strsplit(download, ":")[[1]][2]), type = 'error')
+                 } else {
+                   sendSweetAlert(session, title = "File downloaded", text = "Check the directory containing 'Calliope View'. Go to step 2 to unzip files and make them more accesible.", type = 'success')
+                 }
+               })
   # Download NEON data: specific — creates a folder and adds files to folder
-  observeEvent(input$download_NEON_specific,
-               dir.create(path = Folder_path_specific()) &
-                 getPackage(dpID = Product_ID_specific(), site_code = Field_Site_specific(), year_month = Date_specific(), package = Package_type_specific(), savepath = Folder_path_specific()) &
-                 sendSweetAlert(session, title = "File downloaded", text = "Check the directory containing 'Calliope View'. Go to step 2 to unzip files and make them more accesible.", type = 'success')
-  )
+  observeEvent(eventExpr = input$download_NEON_specific,
+               handlerExpr = {
+                 dir.create(path = Folder_path_specific())
+                 download <- try(getPackage(dpID = Product_ID_specific(), site_code = Field_Site_specific(), year_month = Date_specific(), package = Package_type_specific(), savepath = Folder_path_specific()), silent = TRUE)
+                 if (class(download) == "try-error") {
+                   sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error message: ", download), type = 'error')
+                 } else {
+                   sendSweetAlert(session, title = "File downloaded", text = "Check the directory containing 'Calliope View'. Go to step 2 to unzip files and make them more accesible.", type = 'success')
+                 }
+  })
   
   ####— NEON: Step 3- Unzip/Join Downloads####
   # Variables
@@ -360,22 +370,32 @@ function(input, output, session) {
     updateSelectInput(session, inputId = 'NEON_unzip_file', choices = NEON_unzip_files())
   })
   # Unzip data: general/specific
-  observeEvent(input$unzip_NEON_folder,
-               stackByTable(filepath = NEON_folder_path(), folder = TRUE) &
-                 sendSweetAlert(session, title = "File unzipped", text = "The outer appearance of the folder should be the same. On the inside, there should be a new folder called 'stackedFiles' which contains the datasets.", type = "success")
-  )
+  observeEvent(eventExpr = input$unzip_NEON_folder,
+               handlerExpr = {
+                 unzip <- try(stackByTable(filepath = NEON_folder_path(), folder = TRUE), silent = TRUE) 
+                 if (class(unzip) == "try-error") {
+                   sendSweetAlert(session, title = "Unzip failed", text = paste0("Check that you are unzipping the folder from part 2. Read the error code message: ", unzip), type = "error")
+                 } else {
+                   sendSweetAlert(session, title = "File unzipped", text = "The outer appearance of the folder should be the same. On the inside, there should be a new folder called 'stackedFiles' which contains the datasets.", type = "success")
+                 }
+               })
   # Unzip data: manual
-  observeEvent(input$unzip_NEON_file,
-               stackByTable(filepath = NEON_file_path(), folder = FALSE) &
-                 sendSweetAlert(session, title = "File unzipped", text = paste0("There should now be a new folder titled '", strsplit(NEON_file_name(), ".zip")[[1]][1], "' with all of the datasets."), type = "success")
-  )
+  observeEvent(eventExpr = input$unzip_NEON_file,
+               handlerExpr = {
+                 unzip <- try(stackByTable(filepath = NEON_file_path(), folder = FALSE))
+                 if (class(unzip) == "try-error") {
+                   sendSweetAlert(session, title = "Unzip failed", text = paste0("Check that you are unzipping the .zip file that was manually downloaded. Read the error code message: ", unzip), type = "error")
+                 } else {
+                   sendSweetAlert(session, title = "File unzipped", text = paste0("There should now be a new folder titled '", strsplit(NEON_file_name(), ".zip")[[1]][1], "' with all of the datasets."), type = "success")
+                 }
+               })
   
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText(keyword_filters_site())
+  output$text_me <- renderText("")
   #Text for troublshooting 2
-  output$text_me_two <- renderText(length(keyword_filters_site()))
+  output$text_me_two <- renderText(getwd())
   #Table for troubleshooting
-  output$table_me <- renderDataTable(NEONproductlist_siteaa())
+  #output$table_me <- renderDataTable()
 }

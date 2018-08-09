@@ -121,13 +121,13 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                    conditionalPanel("input.NEON_unzip_type == 'general/specific'",
                                                                                     includeMarkdown('Rmd/NEON_unzip_general:specific.Rmd'),
                                                                                     directoryInput('NEON_unzip_folder', label = 'Select the directory', value = '..'),
-                                                                                    busyIndicator(text = "Unzipping...", wait = 2000),
+                                                                                    busyIndicator(text = "Unzipping...", wait = 3000),
                                                                                     shiny::actionButton(inputId = "unzip_NEON_folder", label = "Unzip/join folder")
                                                                    ),
                                                                    conditionalPanel("input.NEON_unzip_type == 'manual'",
                                                                                     includeMarkdown('Rmd/NEON_unzip_manual.Rmd'),
                                                                                     selectInput(inputId = 'NEON_unzip_file', label = "Choose .zip file", choices = list.files(path = '..', pattern = ".zip")),
-                                                                                    busyIndicator(text = "Unzipping...", wait = 2000),
+                                                                                    busyIndicator(text = "Unzipping...", wait = 3000),
                                                                                     shiny::actionButton(inputId = "unzip_NEON_file", label = "Unzip/join file")
                                                                    )
                                                           )

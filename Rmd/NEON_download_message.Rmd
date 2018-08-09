@@ -1,1 +1,1 @@
-This download might take a while, and progess can be tracked on the console (on RStudio). Any errors that occur may be due to the availability of NEON data, as no warning is given when attempting to pull an unavailable set.
+This download might take a while, and progess can be tracked on the console (on RStudio).
