@@ -321,6 +321,7 @@ function(input, output, session) {
   # Variables
   Product_ID_general <- reactive(req(gsub(pattern = " ", replacement = "", x = input$dpID_general)))
   Product_ID_specific <- reactive(req(gsub(pattern = " ", replacement = "", x = input$dpID_specific)))
+  Product_ID_AOP <- reactive(req(gsub(pattern = " ", replacement = "", x = input$dpID_AOP)))
   Field_Site_general <- reactive(req(
     if (input$location_NEON_general == "All (default)") {
       "all"
@@ -329,11 +330,13 @@ function(input, output, session) {
     })
   )
   Field_Site_specific <- reactive(req(input$location_NEON_specific))
+  Field_Site_AOP <- reactive(req(input$location_NEON_AOP))
   Package_type_general <- reactive(req(input$package_type_general))
   Package_type_specific <- reactive(req(input$package_type_specific))
   Date_specific_long <- reactive(req(as.character(input$date_NEON)))
   Date_specific_parts <- reactive(req(strsplit(Date_specific_long(), "-")[[1]]))
   Date_specific <- reactive(req(paste0(Date_specific_parts()[1], "-", Date_specific_parts()[2])))
+  Year_AOP <- reactive(req(strsplit(as.character(input$year_AOP), "-")[[1]][1]))
   Folder_path_specific <- reactive(paste0("../NEON_", Field_Site_specific(), "_", Date_specific()))
   # Download NEON data: general
   observeEvent(eventExpr = input$download_NEON_general,
@@ -356,6 +359,26 @@ function(input, output, session) {
                    sendSweetAlert(session, title = "File downloaded", text = "Check the directory containing 'Calliope View'. Go to step 2 to unzip files and make them more accesible.", type = 'success')
                  }
   })
+  # Download NEON data: AOP
+  output$check_AOP <- renderPrint({
+    product_table <- reactive(NEONproducts_product[NEONproducts_product$productCode == Product_ID_AOP(),])
+    if (nrow(product_table()) != 0) {
+      if (product_table()$productScienceTeamAbbr == "AOP") {
+        "YES"
+      } else {
+        "NO"
+      }
+    }
+  })
+  observeEvent(eventExpr = input$download_NEON_AOP,
+               handlerExpr = {
+                 download <- try(byFileAOP(dpID = Product_ID_AOP(), site = Field_Site_AOP(), year = Year_AOP(), check.size = FALSE, savepath = '..'), silent = TRUE)
+                 if (class(download) == "try-error") {
+                   sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error message: ", strsplit(download, ":")[[1]][2]), type = 'error')
+                 } else {
+                   sendSweetAlert(session, title = "File downloaded", text = "Check the directory containing 'Calliope View'. Go to step 2 to unzip files and make them more accesible.", type = 'success')
+                 }
+               })
   
   ####— NEON: Step 3- Unzip/Join Downloads####
   # Variables
@@ -388,7 +411,7 @@ function(input, output, session) {
                handlerExpr = {
                  unzip <- try(stackByTable(filepath = NEON_folder_path(), folder = TRUE), silent = TRUE) 
                  if (class(unzip) == "try-error") {
-                   sendSweetAlert(session, title = "Unzip failed", text = paste0("Check that you are unzipping the folder from part 2. Read the error code message: ", unzip), type = "error")
+                   sendSweetAlert(session, title = "Unzip failed", text = paste0("Check that you are unzipping the folder from part 2. Read the error code message: ", strsplit(unzip, ":")[[1]][2]), type = "error")
                  } else {
                    sendSweetAlert(session, title = "File unzipped", text = "The outer appearance of the folder should be the same. On the inside, there should be a new folder called 'stackedFiles' which contains the datasets.", type = "success")
                  }
@@ -398,7 +421,7 @@ function(input, output, session) {
                handlerExpr = {
                  unzip <- try(stackByTable(filepath = NEON_file_path(), folder = FALSE))
                  if (class(unzip) == "try-error") {
-                   sendSweetAlert(session, title = "Unzip failed", text = paste0("Check that you are unzipping the .zip file that was manually downloaded. Read the error code message: ", unzip), type = "error")
+                   sendSweetAlert(session, title = "Unzip failed", text = paste0("Check that you are unzipping the .zip file that was manually downloaded. Read the error code message: ", strsplit(unzip, ":")[[1]][2]), type = "error")
                  } else {
                    sendSweetAlert(session, title = "File unzipped", text = paste0("There should now be a new folder titled '", strsplit(NEON_file_name(), ".zip")[[1]][1], "' with all of the datasets."), type = "success")
                  }
@@ -407,7 +430,7 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText("")
+  output$text_me <- renderText(strsplit(as.character(input$year_AOP), "-")[[1]][1])
   #Text for troublshooting 2
   output$text_me_two <- renderText(getwd())
   #Table for troubleshooting
