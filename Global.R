@@ -67,7 +67,7 @@ flight_filenames_2017 <- Sys.glob('NEON-data/Flightdata/Flight_boundaries_2017/D
 flight_data(flightlist_info = flight_filenames_all_2017, flightlist_geo = flight_filenames_2017, year = "2017", name = "flight_data_2017")
 flight_data <- rbind(flight_data_2016, flight_data_2017)
 
-### TOS ####
+#### TOS ####
 # Point markers
 TOS_data <- st_read('TOS/NEON_TOS_Polygon.json')
 for (i in 1:length(TOS_data$siteID)) {
@@ -75,6 +75,9 @@ for (i in 1:length(TOS_data$siteID)) {
 }
 TOS_data$domanID <- as.numeric(gsub(pattern = "D", replacement = "", x = TOS_data$domanID))
 
+#### Miscellaneous Variables ####
+
+NEON_datatypes <- c("Airborne Observation Platform (AOP)", "Aquatic Instrument System (AIS)", "Aquatic Observation System (AOS)","Terrestrial Instrument System (TIS)", "Terrestrial Observation System (TOS)")
 
 ####———MAP ICONS———####
 NEON_icon <- makeIcon(iconUrl = "Img/NEON.png",

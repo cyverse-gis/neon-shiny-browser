@@ -204,14 +204,22 @@ function(input, output, session) {
   NEONproducts_product <<- nneo_products() # Added this variable up here because one item in finding by "site" needed it
   NEONproducts_site <- reactive(NEONproducts_product[filter_site(site = input$NEONsite_site),])
   # list: getting data frame of availability based on site code
-  # Filter by keywords
+  # Filter by keywords, type
   keyword_lists(list = FieldSite_abbs)
   output$ui_selectkeywords_site <- renderUI({
     selectInput(inputId = "NEONproductkeywords_site", label = "Keywords", choices = get(x = input$NEONsite_site, envir = .NEON_keywords) ,multiple = TRUE)
   })
-  NEONproducts_site_keyword <- reactive(as.data.frame(cbind('Product Name' = NEONproducts_site()$productName, 'Product ID' = NEONproducts_site()$productCode, "keywords" = NEONproducts_site()$keywords))[order(NEONproducts_site()$productName),])
-  keyword_filters_site <- reactive(filter_keyword(column = NEONproducts_site_keyword()$keywords, keywords = input$NEONproductkeywords_site))
-  NEONproductlist_site <- reactive(NEONproducts_site_keyword()[keyword_filters_site(),])
+  NEONproducts_site_filter <- reactive(as.data.frame(cbind('Product Name' = NEONproducts_site()$productName, 'Product ID' = NEONproducts_site()$productCode, "keywords" = NEONproducts_site()$keywords, "producttype" = NEONproducts_site()$productScienceTeam))[order(NEONproducts_site()$productName),])
+  keyword_filters_site <- reactive(filter_keyword(column = NEONproducts_site_filter()$keywords, keywords = input$NEONproductkeywords_site))
+  NEONproductlist_site_filtered_keyword <- reactive(NEONproducts_site_filter()[keyword_filters_site(),])
+  datatype_filters_site <- reactive({
+    if (is.null(input$selectproducttype_site)) {
+      NEON_datatypes
+    } else {
+      input$selectproducttype_site
+    }
+  })
+  NEONproductlist_site <- reactive(NEONproductlist_site_filtered_keyword()[(NEONproductlist_site_filtered_keyword()$producttype %in% datatype_filters_site()),])
   # single: filtering column of products for one site through ID
   NEONproductID_site <- reactive(req(
     if (gsub(pattern = " ", replacement = "", x = input$NEONproductID_site) == "") {
@@ -254,7 +262,7 @@ function(input, output, session) {
   ####—— 1b: By Product####
   # Variables
   # list: getting data table with products and IDs
-  # Filter by keywords
+  # Filter by keywords, type, theme
   keywords <- NULL
   for (i in 1:length(NEONproducts_product$keywords)) {
     keywords <- c(keywords, NEONproducts_product$keywords[[i]])
@@ -262,12 +270,19 @@ function(input, output, session) {
   keywords <- unique(keywords)
   keywords <- sort(keywords)
   output$ui_selectkeywords_product <- renderUI(selectInput(inputId = "NEONproductkeywords_product", label = "Keywords", choices = keywords, multiple = TRUE))
-  NEONproducts_product_keyword <- NEONproducts_product[c("productName", "productCode", "keywords")]
-  names(NEONproducts_product_keyword) <- c('Product Name', 'Product ID', 'keywords')
-  NEONproducts_product_keyword <- NEONproducts_product_keyword[order(NEONproducts_product_keyword$`Product Name`),]
-  keyword_filters_product <- reactive(filter_keyword(column = NEONproducts_product_keyword$keywords, keywords = input$NEONproductkeywords_product))
-  NEONproductlist_product <- reactive(NEONproducts_product_keyword[keyword_filters_product(),])
-  # single: filtering one column of parent NEON products table through ID
+  NEONproduct_products_filter <- NEONproducts_product[c("productName", "productCode", "keywords", "productScienceTeam")]
+  names(NEONproduct_products_filter) <- c('Product Name', 'Product ID', 'keywords', "producttype")
+  NEONproduct_products_filter <- NEONproduct_products_filter[order(NEONproduct_products_filter$`Product Name`),]
+  keyword_filters_product <- reactive(filter_keyword(column = NEONproduct_products_filter$keywords, keywords = input$NEONproductkeywords_product))
+  datatype_filters_product <- reactive({
+    if (is.null(input$selectproducttype_product)) {
+      NEON_datatypes
+    } else {
+      input$selectproducttype_product
+    }
+  })
+  NEONproductlist_product <- reactive(NEONproduct_products_filter[keyword_filters_product(),] %>% filter(`producttype` %in% datatype_filters_product()))
+  # single: filtering one row of parent NEON products table through ID
   NEONproductID_product <- reactive(req(
     ifelse(gsub(pattern = " ", replacement = "", x = input$NEONproductID_product) == "",
            yes = "random string that will not match to anything",
@@ -275,8 +290,7 @@ function(input, output, session) {
   ))
   NEONproductinfo_product <- reactive(req(filter(.data = NEONproducts_product, productCode == NEONproductID_product())))
   # Display products: list
-  output$NEON_product_options <- renderDataTable(NEONproductlist_product()[1:2], options = list(lengthMenu = c(10,25),
-                                                                                         pageLength = 10))
+  output$NEON_product_options <- renderDataTable(NEONproductlist_product()[1:2], options = list(lengthMenu = c(10,25), pageLength = 10))
   # Display products: single
   output$NEONproductname_product <- renderPrint(req(NEONproductinfo_product()$productName))
   output$NEONproductdesc_product <- renderPrint(req(NEONproductinfo_product()$productDescription))

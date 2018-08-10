@@ -19,13 +19,16 @@ fluidPage(theme = shinytheme('cerulean'),
                                                         tabsetPanel(
                                                           #### —— STEP 1: Find Data####
                                                           tabPanel("Step 1- Find Data",
-                                                                   radioButtons(inputId = "NEON_browsing_type", label = "Browsing method", choices = list("Start with Site" = "site", "Start with Product" = "product")),
+                                                                   radioButtons(inputId = "NEON_browsing_type", label = "Browsing method", choices = list("Start with Site" = "site", "Start with Product" = "product"), inline = TRUE),
                                                                    conditionalPanel("input.NEON_browsing_type == 'site'",
                                                                                     includeMarkdown('Rmd/NEON_browsing_site.Rmd'),
                                                                                     radioButtons(inputId = "NEONbrowsingstep_site", label = NULL, choices = list("Find Product" = "list", "Get Availability" = "single"), inline = TRUE),
                                                                                     conditionalPanel("input.NEONbrowsingstep_site == 'list'",
                                                                                                      selectInput(inputId = "NEONsite_site", label = "Select site:", choices = FieldSite_abbs),
-                                                                                                     uiOutput(outputId = "ui_selectkeywords_site"),
+                                                                                                     checkboxInput(inputId = "showmorefilters_site", label = "Show filters"),
+                                                                                                     conditionalPanel("input.showmorefilters_site",
+                                                                                                                      uiOutput(outputId = "ui_selectkeywords_site"),
+                                                                                                                      selectInput(inputId = "selectproducttype_site", label = "Product Type", choices = NEON_datatypes, multiple = TRUE)),
                                                                                                      dataTableOutput(outputId = "NEONproductoptions_site")
                                                                                     ),
                                                                                     conditionalPanel("input.NEONbrowsingstep_site == 'single'",
@@ -56,7 +59,12 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                     includeMarkdown('Rmd/NEON_browsing_product.Rmd'),
                                                                                     radioButtons(inputId = "NEON_browsing_step_product", label = NULL, choices = list("Find Product" = "list", "Get Availability" = "single"), inline = TRUE),
                                                                                     conditionalPanel("input.NEON_browsing_step_product == 'list'",
-                                                                                                     uiOutput(outputId = "ui_selectkeywords_product"),
+                                                                                                     checkboxInput(inputId = "showmorefilters_product", label = "Show filters"),
+                                                                                                     conditionalPanel("input.showmorefilters_product",
+                                                                                                                      uiOutput(outputId = "ui_selectkeywords_product"),
+                                                                                                                      selectInput(inputId = "selectproducttype_product", label = "Product Type", choices = NEON_datatypes, multiple = TRUE)
+                                                                                                                      ),
+
                                                                                                      dataTableOutput(outputId = "NEON_product_options")
                                                                                     ),
                                                                                     conditionalPanel("input.NEON_browsing_step_product == 'single'",

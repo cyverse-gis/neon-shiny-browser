@@ -1,4 +1,4 @@
 ##### Find site, then availability of data products
 
-Start with a NEON site and browse data products based on that site. Then, get availability and more information using a product ID. Alternatively, browse NEON products through their [data portal](http://data.neonscience.org/static/browse.html).
+Alternatively, browse NEON's [data portal](http://data.neonscience.org/static/browse.html).
 
