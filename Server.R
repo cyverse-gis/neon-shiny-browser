@@ -220,6 +220,9 @@ function(input, output, session) {
     }
   })
   NEONproductlist_site <- reactive(NEONproductlist_site_filtered_keyword()[(NEONproductlist_site_filtered_keyword()$producttype %in% datatype_filters_site()),])
+  # for dropdown
+  output$dropdown_site <- renderPrint(FieldSite_point$siteName[FieldSite_point$siteCode %in% input$NEONsite_zoom])
+  output$dataproduct_number <- renderPrint(nrow(NEONproducts_product[filter_site(site = input$NEONsite_zoom),]))
   # single: filtering column of products for one site through ID
   NEONproductID_site <- reactive(req(
     if (gsub(pattern = " ", replacement = "", x = input$NEONproductID_site) == "") {

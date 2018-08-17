@@ -6,9 +6,13 @@ fluidPage(theme = shinytheme('cerulean'),
           navbarPage(tags$b("NEON-Browser"),
                      ####Tab 1: Includes the map, and key with features like filtering data####
                      tabPanel("Interactive Map",
-                              dropdown(right = TRUE, status = "primary", size = "xs",
-                                       selectInput(inputId = "NEONsite_zoom", label = "Zoom to a site:", choices = FieldSite_abbs),
-                                       shiny::actionButton(inputId = "zoomtosite", label = "See site")
+                              dropdown(right = TRUE, status = "primary", size = "sm", icon = icon("info-circle"), width = "45vw",
+                                       selectInput(inputId = "NEONsite_zoom", label = "Site info:", choices = FieldSite_abbs),
+                                       tags$b("Name and type"),
+                                       verbatimTextOutput(outputId = "dropdown_site", placeholder = TRUE),
+                                       tags$b("Number of data products available"),
+                                       verbatimTextOutput(outputId = "dataproduct_number", placeholder = TRUE),
+                                       shiny::actionButton(inputId = "zoomtosite", label = "Zoom to site")
                               ),
                               sidebarLayout(
                                 position = "right",
