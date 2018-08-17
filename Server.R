@@ -1,6 +1,13 @@
 # Shiny server
 function(input, output, session) {
 
+  # Initialization
+  if (dir_created == TRUE) {
+    showNotification(ui = "'NEON Downloads' folder created. Check the directory containing 'NEON-Shiny-Browser'.", duration = NULL, type = "message")
+  } else {
+    showNotification(ui = "Welcome back!", duration = NULL, type = "message")
+  }
+  
   ####INTERACTIVE MAP TAB####
   
   # Reactive value for layer control
@@ -323,6 +330,8 @@ function(input, output, session) {
   ####— NEON: Step 2- Download Data####
   # Variables
   Product_ID_general <- reactive(req(gsub(pattern = " ", replacement = "", x = input$dpID_general)))
+  Product_ID_middle <- reactive(req(strsplit(Product_ID_general(), "[.]")[[1]][2]))
+  Folder_general <- reactive(req(paste0("filesToStack", Product_ID_middle())))
   Product_ID_specific <- reactive(req(gsub(pattern = " ", replacement = "", x = input$dpID_specific)))
   Product_ID_AOP <- reactive(req(gsub(pattern = " ", replacement = "", x = input$dpID_AOP)))
   Field_Site_general <- reactive(req(
@@ -340,18 +349,20 @@ function(input, output, session) {
   Date_specific_parts <- reactive(req(strsplit(Date_specific_long(), "-")[[1]]))
   Date_specific <- reactive(req(paste0(Date_specific_parts()[1], "-", Date_specific_parts()[2])))
   Year_AOP <- reactive(req(strsplit(as.character(input$year_AOP), "-")[[1]][1]))
-  Folder_path_specific <- reactive(paste0("../NEON_", Field_Site_specific(), "_", Date_specific()))
+  Folder_path_general <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_general(), "_", Product_ID_middle())))
+  Folder_path_specific <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_specific(), "_", Date_specific())))
   # Download NEON data: general
   observeEvent(eventExpr = input$download_NEON_general,
                handlerExpr = {
                  showNotification(ui = "Download in progess…", id = "download_general", type = "message")
-                 download <- try(zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = '..'), silent = TRUE)
+                 download <- try(zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = '../NEON Downloads/'), silent = TRUE)
                  if (class(download) == "try-error") {
                    removeNotification(id = "download_general")
                    sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error code message: ", strsplit(download, ":")[[1]][2]), type = 'error')
                  } else {
+                   file.rename(from = paste0("../NEON Downloads/", Folder_general()), to = Folder_path_general())
                    removeNotification(id = "download_general")
-                   sendSweetAlert(session, title = "File downloaded", text = "Check the directory containing 'Calliope View'. Go to step 2 to unzip files and make them more accesible.", type = 'success')
+                   sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Downloads' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
                  }
                })
   # Download NEON data: specific — creates a folder and adds files to folder
@@ -365,7 +376,7 @@ function(input, output, session) {
                    sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error message: ", download), type = 'error')
                  } else {
                    removeNotification(id = "download_specific")
-                   sendSweetAlert(session, title = "File downloaded", text = "Check the directory containing 'Calliope View'. Go to step 2 to unzip files and make them more accesible.", type = 'success')
+                   sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Downloads' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
                  }
   })
   # Download NEON data: AOP
@@ -388,7 +399,7 @@ function(input, output, session) {
                    sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error message: ", strsplit(download, ":")[[1]][2]), type = 'error')
                  } else {
                    removeNotification("download_AOP")
-                   sendSweetAlert(session, title = "File downloaded", text = "Check the directory containing 'Calliope View'. Go to step 2 to unzip files and make them more accesible.", type = 'success')
+                   sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Download' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
                  }
                })
   
@@ -396,7 +407,7 @@ function(input, output, session) {
   # Variables
   NEON_folder_path <- reactive(req(readDirectoryInput(session, 'NEON_unzip_folder')))
   NEON_file_name <- reactive(req(input$NEON_unzip_file))
-  NEON_file_path <- reactive(req(paste0("../", NEON_file_name())))
+  NEON_file_path <- reactive(req(paste0("../NEON Downloads/", NEON_file_name())))
   # Server function needed by directoryInput (https://github.com/wleepang/shiny-directory-input)
   observeEvent(ignoreNULL = TRUE,
                eventExpr = {input$NEON_unzip_folder},

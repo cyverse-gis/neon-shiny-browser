@@ -15,6 +15,14 @@ source('Functions/filter_keyword_function.R')
 source('Functions/filter_site_function.R')
 source('Functions/keyword_lists_function.R')
 
+if (!dir.exists("../NEON Downloads")) {
+  dir.create("../NEON Downloads")
+  dir_created <- TRUE
+} else {
+  dir_created <- FALSE
+}
+
+
 ####———MAP DATA———####
 
 
