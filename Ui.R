@@ -6,13 +6,9 @@ fluidPage(theme = shinytheme('cerulean'),
           navbarPage(tags$b("NEON-Browser"),
                      ####Tab 1: Includes the map, and key with features like filtering data####
                      tabPanel("Interactive Map",
-                              dropdown(right = TRUE, status = "primary", size = "sm", icon = icon("info-circle"), width = "45vw",
-                                       selectInput(inputId = "NEONsite_zoom", label = "Site info:", choices = FieldSite_abbs),
-                                       tags$b("Name and type"),
-                                       verbatimTextOutput(outputId = "dropdown_site", placeholder = TRUE),
-                                       tags$b("Number of data products available"),
-                                       verbatimTextOutput(outputId = "dataproduct_number", placeholder = TRUE),
-                                       shiny::actionButton(inputId = "zoomtosite", label = "Zoom to site")
+                              dropdown(right = TRUE, status = "primary", size = "xs",
+                                       selectInput(inputId = "NEONsite_zoom", label = "Zoom to a site:", choices = FieldSite_abbs),
+                                       actionButton(inputId = "zoomtosite", label = "See site")
                               ),
                               sidebarLayout(
                                 position = "right",
@@ -68,7 +64,6 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                                                       uiOutput(outputId = "ui_selectkeywords_product"),
                                                                                                                       selectInput(inputId = "selectproducttype_product", label = "Product Type", choices = NEON_datatypes, multiple = TRUE)
                                                                                                                       ),
-
                                                                                                      dataTableOutput(outputId = "NEON_product_options")
                                                                                     ),
                                                                                     conditionalPanel("input.NEON_browsing_step_product == 'single'",
@@ -106,8 +101,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                     conditionalPanel("input.extra_options_general",
                                                                                                      selectInput(inputId = "package_type_general", label = "Package Type", choices = c("basic", "expanded"))),
                                                                                     includeMarkdown('Rmd/NEON_download_message.Rmd'),
-                                                                                    busyIndicator(text = "Downloading...", wait = 3000),
-                                                                                    shiny::actionButton(inputId = "download_NEON_general", label = "Download items")
+                                                                                    actionButton(inputId = "download_NEON_general", label = "Download items")
                                                                    ),
                                                                    conditionalPanel("input.NEON_download_type == 'specific'",
                                                                                     includeMarkdown('Rmd/NEON_download_specific.Rmd'),
@@ -118,8 +112,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                     conditionalPanel("input.extra_options_specific",
                                                                                                      selectInput(inputId = "package_type_specific", label = "Package Type", choices = c("basic", "expanded"))),
                                                                                     includeMarkdown('Rmd/NEON_download_message.Rmd'),
-                                                                                    busyIndicator(text = "Downloading...", wait = 3000),
-                                                                                    shiny::actionButton(inputId = "download_NEON_specific", label = "Download items")
+                                                                                    actionButton(inputId = "download_NEON_specific", label = "Download items")
                                                                    ),
                                                                    conditionalPanel("input.NEON_download_type == 'AOP'",
                                                                                     includeMarkdown('Rmd/NEON_download_AOP.Rmd'),
@@ -128,8 +121,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                     verbatimTextOutput(outputId = "check_AOP", placeholder = TRUE),
                                                                                     selectInput(inputId = "location_NEON_AOP", label = "Field Site", choices = FieldSite_abbs),
                                                                                     airYearpickerInput(inputId = "year_AOP", label = "Year"),
-                                                                                    busyIndicator(text = "Downloading...", wait = 3000),
-                                                                                    shiny::actionButton(inputId = "download_NEON_AOP", label = "Download items")
+                                                                                    actionButton(inputId = "download_NEON_AOP", label = "Download items")
                                                                                     ),
                                                                    conditionalPanel("input.NEON_download_type == 'manual'",
                                                                                     includeMarkdown('Rmd/NEON_download_manual.Rmd')
@@ -143,14 +135,12 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                    conditionalPanel("input.NEON_unzip_type == 'general/specific'",
                                                                                     includeMarkdown('Rmd/NEON_unzip_general:specific.Rmd'),
                                                                                     directoryInput('NEON_unzip_folder', label = 'Select the directory', value = '..'),
-                                                                                    busyIndicator(text = "Unzipping...", wait = 3000),
-                                                                                    shiny::actionButton(inputId = "unzip_NEON_folder", label = "Unzip/join folder")
+                                                                                    actionButton(inputId = "unzip_NEON_folder", label = "Unzip/join folder")
                                                                    ),
                                                                    conditionalPanel("input.NEON_unzip_type == 'manual'",
                                                                                     includeMarkdown('Rmd/NEON_unzip_manual.Rmd'),
                                                                                     selectInput(inputId = 'NEON_unzip_file', label = "Choose .zip file", choices = list.files(path = '..', pattern = ".zip")),
-                                                                                    busyIndicator(text = "Unzipping...", wait = 3000),
-                                                                                    shiny::actionButton(inputId = "unzip_NEON_file", label = "Unzip/join file")
+                                                                                    actionButton(inputId = "unzip_NEON_file", label = "Unzip/join file")
                                                                    )
                                                           )
                                                         )

@@ -344,21 +344,27 @@ function(input, output, session) {
   # Download NEON data: general
   observeEvent(eventExpr = input$download_NEON_general,
                handlerExpr = {
+                 showNotification(ui = "Download in progess…", id = "download_general", type = "message")
                  download <- try(zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = '..'), silent = TRUE)
                  if (class(download) == "try-error") {
+                   removeNotification(id = "download_general")
                    sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error code message: ", strsplit(download, ":")[[1]][2]), type = 'error')
                  } else {
+                   removeNotification(id = "download_general")
                    sendSweetAlert(session, title = "File downloaded", text = "Check the directory containing 'Calliope View'. Go to step 2 to unzip files and make them more accesible.", type = 'success')
                  }
                })
   # Download NEON data: specific — creates a folder and adds files to folder
   observeEvent(eventExpr = input$download_NEON_specific,
                handlerExpr = {
+                 showNotification(ui = "Download in progess…", id = "download_specific", type = "message")
                  dir.create(path = Folder_path_specific())
                  download <- try(getPackage(dpID = Product_ID_specific(), site_code = Field_Site_specific(), year_month = Date_specific(), package = Package_type_specific(), savepath = Folder_path_specific()), silent = TRUE)
                  if (class(download) == "try-error") {
+                   removeNotification(id = "download_specific")
                    sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error message: ", download), type = 'error')
                  } else {
+                   removeNotification(id = "download_specific")
                    sendSweetAlert(session, title = "File downloaded", text = "Check the directory containing 'Calliope View'. Go to step 2 to unzip files and make them more accesible.", type = 'success')
                  }
   })
@@ -375,10 +381,13 @@ function(input, output, session) {
   })
   observeEvent(eventExpr = input$download_NEON_AOP,
                handlerExpr = {
+                 showNotification(ui = "Download in progess…", id = "download_AOP", type = "message")
                  download <- try(byFileAOP(dpID = Product_ID_AOP(), site = Field_Site_AOP(), year = Year_AOP(), check.size = FALSE, savepath = '..'), silent = TRUE)
                  if (class(download) == "try-error") {
+                   removeNotification("download_AOP")
                    sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error message: ", strsplit(download, ":")[[1]][2]), type = 'error')
                  } else {
+                   removeNotification("download_AOP")
                    sendSweetAlert(session, title = "File downloaded", text = "Check the directory containing 'Calliope View'. Go to step 2 to unzip files and make them more accesible.", type = 'success')
                  }
                })
@@ -412,20 +421,26 @@ function(input, output, session) {
   # Unzip data: general/specific
   observeEvent(eventExpr = input$unzip_NEON_folder,
                handlerExpr = {
+                 showNotification(ui = "Unzip in progess…", id = "unzip_normal", type = "message")
                  unzip <- try(stackByTable(filepath = NEON_folder_path(), folder = TRUE), silent = TRUE) 
                  if (class(unzip) == "try-error") {
+                   removeNotification("unzip_normal")
                    sendSweetAlert(session, title = "Unzip failed", text = paste0("Check that you are unzipping the folder from part 2. Read the error code message: ", strsplit(unzip, ":")[[1]][2]), type = "error")
                  } else {
+                   removeNotification("unzip_normal")
                    sendSweetAlert(session, title = "File unzipped", text = "The outer appearance of the folder should be the same. On the inside, there should be a new folder called 'stackedFiles' which contains the datasets.", type = "success")
                  }
                })
   # Unzip data: manual
   observeEvent(eventExpr = input$unzip_NEON_file,
                handlerExpr = {
+                 showNotification(ui = "Unzip in progess…", id = "unzip_manual", type = "message")
                  unzip <- try(stackByTable(filepath = NEON_file_path(), folder = FALSE))
                  if (class(unzip) == "try-error") {
+                   removeNotification("unzip_manual")
                    sendSweetAlert(session, title = "Unzip failed", text = paste0("Check that you are unzipping the .zip file that was manually downloaded. Read the error code message: ", strsplit(unzip, ":")[[1]][2]), type = "error")
                  } else {
+                   removeNotification("unzip_manual")
                    sendSweetAlert(session, title = "File unzipped", text = paste0("There should now be a new folder titled '", strsplit(NEON_file_name(), ".zip")[[1]][1], "' with all of the datasets."), type = "success")
                  }
                })

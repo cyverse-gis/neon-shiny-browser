@@ -1,7 +1,5 @@
-# Make sure packages are loaded in this order
 library(shiny)
 library(shinythemes)
-library(shinysky)
 library(leaflet)
 library(leaflet.extras)
 library(dplyr)
