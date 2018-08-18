@@ -3,9 +3,9 @@ function(input, output, session) {
 
   # Initialization
   if (dir_created == TRUE) {
-    showNotification(ui = "'NEON Downloads' folder created. Check the directory containing 'NEON-Shiny-Browser'.", duration = NULL, type = "message")
+    showNotification(ui = "'NEON Downloads' folder created in the directory containing this app. All downloads will go to this folder.", duration = 20, type = "message")
   } else {
-    showNotification(ui = "Welcome back!", duration = NULL, type = "message")
+    showNotification(ui = "Welcome back!", duration = 20, type = "message")
   }
   
   ####INTERACTIVE MAP TAB####

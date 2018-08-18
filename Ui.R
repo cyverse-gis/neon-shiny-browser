@@ -168,7 +168,12 @@ fluidPage(theme = shinytheme('cerulean'),
                      ),
                      #### Tab 2: Description of NEON ####
                      tabPanel("About NEON",
-                              includeMarkdown('Rmd/NEON_info_about.Rmd')),
+                              navlistPanel(well = FALSE, widths = c(2,10),
+                                tabPanel("Objective",
+                                         includeMarkdown('Rmd/NEON_info_about.Rmd')),
+                                tabPanel("Field Sites",
+                                         includeMarkdown('Rmd/NEON_info_sites.Rmd'))
+                              )),
                      ####Tab 3: Includes outputs to help with testing or troubleshooting####
                      tabPanel("For me (troubleshooting)",
                               textOutput("text_me"),
