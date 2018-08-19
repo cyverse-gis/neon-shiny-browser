@@ -40,14 +40,13 @@ A few packages need to be downloaded: <br>
 * [`devtools`](https://cran.r-project.org/web/packages/devtools/index.html): For installing packages from Github.
 * [`neonUtilities`](https://github.com/NEONScience/NEON-utilities/tree/master/neonUtilities) and [`nneo`](https://github.com/ropensci/nneo): Used to pull datasets from NEON.
 * [`shinythemes`](https://github.com/rstudio/shinythemes): Creates a theme for the Shiny app. 
-* [`shinyWidgets`](https://github.com/dreamRs/shinyWidgets) and [`shinysky`](https://github.com/AnalytixWare/ShinySky): Provide shiny widgets with increased capabilities and aesthetics.
+* [`shinyWidgets`](https://github.com/dreamRs/shinyWidgets): Provide shiny widgets with increased capabilities and aesthetics.
 * [`sf`](https://github.com/r-spatial/sf) and [`rgdal`](https://github.com/cran/rgdal): Provide access to simple feature geometries.
 * [`jsonlite`](https://github.com/cran/jsonlite): deals with JSON structures.
 
  ```
 install.packages(c('leaflet','leaflet.extras','devtools','nneo','shinythemes','shinyWidgets','sf','rgdal','jsonlite'))
 devtools::install_github("NEONScience/NEON-utilities/neonUtilities", dependencies=TRUE)
-devtools::install_github("AnalytixWare/ShinySky")
 ```
 
 **Note: [Mac OS X](https://cran.r-project.org/bin/macosx/tools/) currently requires that `gfortran` and `clang` be installed in addition to the latest version of R (v3.5.1 "Feather Spray")** 
