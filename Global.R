@@ -32,13 +32,14 @@ if (!dir.exists("../NEON Downloads")) {
 ## Retrieve point data for NEON Field Sites in JSON format
 
 FieldSite_point_JSON <- fromJSON('http://data.neonscience.org/api/v0/sites')
-# Create a data frame using cbind()
 FieldSite_point <- FieldSite_point_JSON$data
 FieldSite_point$domainCode <- as.numeric(gsub(pattern = "D", replacement = "", x = FieldSite_point$domainCode))
+# List of field site abbreviations
 FieldSite_abbs <- FieldSite_point$siteCode
 ## Retrieve polygon data for NEON Field Sites
+#Fieldsite_poly_JSON <- fromJSON('http://guest:guest@128.196.38.73:9200/sites/_search?size=500')
 # Unhashtag when index is down:
-Fieldsite_poly_JSON <- fromJSON('http://guest:guest@128.196.38.73:9200/sites/_search?size=500')
+Fieldsite_poly_JSON <- fromJSON('NEON-data/Fieldsites.json')
 FieldSite_poly <- cbind(Fieldsite_poly_JSON$hits$hits[-5], Fieldsite_poly_JSON$hits$hits$`_source`[-4], Fieldsite_poly_JSON$hits$hits$`_source`$boundary)
 names(FieldSite_poly)[9] <- "geo_type"
 FieldSite_poly <- FieldSite_poly %>% filter(type %in% "NEON")

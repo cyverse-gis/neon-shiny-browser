@@ -365,12 +365,43 @@ function(input, output, session) {
                  }
                })
   # Download NEON data: specific — creates a folder and adds files to folder
+      # Calculate download size
+  observeEvent(eventExpr = input$get_specific_size,
+               handlerExpr = {
+                 showNotification(ui = "Calculation in progress...", id = "calculation_specific", type = "message")
+                 data_test <- try(nneo_data(product_code = Product_ID_specific(), site_code = Field_Site_specific(), year_month = Date_specific(), package = Package_type_specific()))
+                 if (class(data_test) == "try-error") {
+                   removeNotification(id = "calculation_specific")
+                   sendSweetAlert(session, title = "Download failed", text = paste0("The product/site/year-month combination that you tried to calculate size for was invalid. Read the error message: ", strsplit(data_test, ":")[[1]][2]), type = 'error')
+                 } else {
+                   data <- nneo_data(product_code = Product_ID_specific(), site_code = Field_Site_specific(), year_month = Date_specific(), package = Package_type_specific())$data$files
+                   size <- as.numeric(data$size)
+                   size <- sum(size)
+                 if (size < 10^6 & size != 0) {
+                   size_kb <- size * 10^-3
+                   print_size <- paste0(as.character(size_kb), " KB")
+                 } else if (between(x = size, left = 10^6, right = 10^9)) {
+                   size_mb <- size * 10^-6
+                   print_size <- paste0(as.character(size_mb), " MB")
+                 } else if (size > 10^9) {
+                   size_gb <- size * 10^-9
+                   print_size <- paste0(as.character(size_gb), " GB")
+                 } else if (size == 0) {
+                   print_size <- "No data available"
+                 }
+                 removeNotification(id = "calculation_specific")
+                 output$specific_size <- renderPrint(print_size)
+                 }
+               })
   observeEvent(eventExpr = input$download_NEON_specific,
                handlerExpr = {
                  showNotification(ui = "Download in progess…", id = "download_specific", type = "message")
                  dir.create(path = Folder_path_specific())
                  download <- try(getPackage(dpID = Product_ID_specific(), site_code = Field_Site_specific(), year_month = Date_specific(), package = Package_type_specific(), savepath = Folder_path_specific()), silent = TRUE)
                  if (class(download) == "try-error") {
+                   if (length(dir(path = Folder_path_specific())) == 0) {
+                     unlink(x = Folder_path_specific(), recursive = TRUE)
+                     }
                    removeNotification(id = "download_specific")
                    sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error message: ", download), type = 'error')
                  } else {
@@ -389,32 +420,36 @@ function(input, output, session) {
     }
   })
   output$check_AOP <- renderPrint(is_AOP())
-      # Calculating Size
+  # Calculating Size
   observeEvent(eventExpr = input$get_AOP_size,
                handlerExpr = {
-                 showNotification(ui = "Calculation in progress...", id = "calculation_AOP", type = "message")
-                 data_test <- try(nneo_data(product_code = req(input$dpID_AOP), site_code = input$location_NEON_AOP, year_month = paste0(Year_AOP(), "-01")))
-                 if (class(data_test) == "try-error") {
-                   removeNotification(id = "calculation_AOP")
-                   sendSweetAlert(session, title = "Download failed", text = paste0("The product/site/year-month combination that you tried to calculate size for was invalid. Read the error message: ", strsplit(data_test, ":")[[1]][2]), type = 'error')
+                 if (is_AOP()== "NO") {
+                   sendSweetAlert(session, title = "Download failed", text = "Please choose an AOP product", type = 'error')
                  } else {
-                   total_size <- 0
-                   for (i in c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")) {
-                     data <- nneo_data(product_code = req(input$dpID_AOP), site_code = input$location_NEON_AOP, year_month = paste0(Year_AOP(), "-", i))$data$files
-                     size <- as.numeric(data$size)
-                     total_size <- total_size + sum(size)
+                   showNotification(ui = "Calculation in progress...", id = "calculation_AOP", type = "message")
+                   data_test <- try(nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-01")))
+                   if (class(data_test) == "try-error") {
+                     removeNotification(id = "calculation_AOP")
+                     sendSweetAlert(session, title = "Download failed", text = paste0("The product/site/year-month combination that you tried to calculate size for was invalid. Read the error message: ", strsplit(data_test, ":")[[1]][2]), type = 'error')
+                   } else {
+                     total_size <- 0
+                     for (i in c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")) {
+                       data <- nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-", i))$data$files
+                       size <- as.numeric(data$size)
+                       total_size <- total_size + sum(size)
+                     }
+                     if (total_size < 10^9 & total_size != 0) {
+                       size_mb <- total_size * 10^-6
+                       total_size <- paste0(as.character(size_mb), " MB")
+                     } else if (total_size > 10^9) {
+                       size_gb <- total_size * 10^-9
+                       total_size <- paste0(as.character(size_gb), " GB")
+                     } else if (total_size == 0) {
+                       total_size <- "No data available"
+                     }
+                     removeNotification(id = "calculation_AOP")
+                     output$AOP_size <- renderPrint(total_size)
                    }
-                   if (total_size < 10^9 & total_size != 0) {
-                     size_mb <- total_size * 10^-6
-                     total_size <- paste0(as.character(size_mb), " MB")
-                   } else if (total_size > 10^9) {
-                     size_gb <- total_size * 10^-9
-                     total_size <- paste0(as.character(size_gb), " GB")
-                   } else if (total_size == 0) {
-                     total_size <- "No data available"
-                   }
-                   removeNotification(id = "calculation_AOP")
-                   output$AOP_size <- renderPrint(total_size)
                  }
                })
   observeEvent(eventExpr = input$download_NEON_AOP,
@@ -486,9 +521,9 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText(paste0(Year_AOP(), "-", "01"))
+  output$text_me <- renderText(paste0(Product_ID_specific(), "-", Field_Site_specific()))
   #Text for troublshooting 2
-  output$text_me_two <- renderText(getwd())
+  output$text_me_two <- renderText( Date_specific())
   #Table for troubleshooting
   #output$table_me <- renderDataTable()
 }
