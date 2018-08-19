@@ -5,7 +5,7 @@ function(input, output, session) {
   if (dir_created == TRUE) {
     showNotification(ui = "'NEON Downloads' folder created in the directory containing this app. All downloads will go to this folder.", duration = 20, type = "message")
   } else {
-    showNotification(ui = "Welcome back!", duration = 20, type = "message")
+    showNotification(ui = "Welcome back!", duration = 10, type = "message")
   }
   
   ####INTERACTIVE MAP TAB####
@@ -48,8 +48,7 @@ function(input, output, session) {
   Domain_IDs <- reactive(domains$DomainID[domains$Domain %in% input$fieldsite_domain])
   Field_sites_point_filtered <- reactive(FieldSite_point %>% filter(siteType %in% input$fieldsite_type) %>%
                                            filter(domainCode %in% Domain_IDs()))
-  Field_sites_poly_filtered <- reactive(FieldSite_poly %>% filter(siteType %in% input$fieldsite_type) %>%
-                                          filter(domainCode %in% Domain_IDs()))
+  Field_sites_poly_filtered <- reactive(FieldSite_poly %>% filter(code %in% Field_sites_point_filtered()$siteCode))
   Domain_included <- reactive(domain_data %>% filter(DomainName %in% input$fieldsite_domain))
   Domain_unincluded <- reactive(domain_data %>% filter(!(DomainName %in% input$fieldsite_domain)))
   TOS_data_filtered <- reactive(TOS_data %>% filter(siteID %in% Field_sites_point_filtered()$siteCode))
@@ -162,7 +161,7 @@ function(input, output, session) {
   # Boundaries
   observe({
     proxy <- leafletProxy("map")
-    proxy %>% removeShape(layerId = unique(FieldSite_poly$siteCode))
+    proxy %>% removeShape(layerId = unique(FieldSite_poly$code))
     if (nrow(Field_sites_poly_filtered()) == 0) {
       proxy %>% clearGroup(group = "Field Sites")
     } else {
@@ -173,25 +172,25 @@ function(input, output, session) {
                         lat = Field_sites_poly_filtered()$coordinates[[i]][1,,2],
                         group = "Field Sites",
                         color = "#49E2BD",
-                        layerId = Field_sites_poly_filtered()$siteCode[i],
+                        layerId = Field_sites_poly_filtered()$code[i],
                         popup = paste0("Boundaries for ",
-                                       Field_sites_poly_filtered()$siteDescription[i]),
+                                       Field_sites_poly_filtered()$name[i]),
                         opacity = 1,
                         fillOpacity = 0,
                         highlightOptions = highlightOptions(stroke = TRUE, color = "#39ff14", weight = 7, bringToFront = TRUE)
             )
         } else if (is.list(Field_sites_poly_filtered()$coordinates[[i]])) {
           proxy %>%
-            addPolygons(lng = Field_sites_poly_filtered()$coordinates[[i]][[1]][,1],
-                        lat = Field_sites_poly_filtered()$coordinates[[i]][[1]][,2],
-                        group = "Field Sites",
-                        color = "#49E2BD",
-                        layerId = Field_sites_poly_filtered()$siteCode[i],
-                        popup = paste0("Boundaries for ",
-                                       Field_sites_poly_filtered()$siteDescription[i]),
-                        opacity = 1,
-                        fillOpacity = 0.4,
-                        highlightOptions = highlightOptions(stroke = TRUE, color = "#39ff14", weight = 7, bringToFront = TRUE)
+            addPolylines(lng = Field_sites_poly_filtered()$coordinates[[i]][[1]][,1],
+                         lat = Field_sites_poly_filtered()$coordinates[[i]][[1]][,2],
+                         group = "Field Sites",
+                         color = "#49E2BD",
+                         layerId = Field_sites_poly_filtered()$code[i],
+                         popup = paste0("Boundaries for ",
+                                        Field_sites_poly_filtered()$name[i]),
+                         opacity = 1,
+                         fillOpacity = 0.4,
+                         highlightOptions = highlightOptions(stroke = TRUE, color = "#39ff14", weight = 7, bringToFront = TRUE)
             )
         }
       }
@@ -358,7 +357,7 @@ function(input, output, session) {
                  download <- try(zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = '../NEON Downloads/'), silent = TRUE)
                  if (class(download) == "try-error") {
                    removeNotification(id = "download_general")
-                   sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error code message: ", strsplit(download, ":")[[1]][2]), type = 'error')
+                   sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
                  } else {
                    file.rename(from = paste0("../NEON Downloads/", Folder_general()), to = Folder_path_general())
                    removeNotification(id = "download_general")
@@ -380,16 +379,44 @@ function(input, output, session) {
                  }
   })
   # Download NEON data: AOP
-  output$check_AOP <- renderPrint({
-    product_table <- reactive(NEONproducts_product[NEONproducts_product$productCode == Product_ID_AOP(),])
-    if (nrow(product_table()) != 0) {
-      if (product_table()$productScienceTeamAbbr == "AOP") {
-        "YES"
-      } else {
-        "NO"
-      }
+  product_table <- reactive(NEONproducts_product[NEONproducts_product$productCode == Product_ID_AOP(),])
+      # Checking is data product is AOP
+  is_AOP <- reactive(if (nrow(product_table()) != 0) {
+    if (product_table()$productScienceTeamAbbr == "AOP") {
+      "YES"
+    } else {
+      "NO"
     }
   })
+  output$check_AOP <- renderPrint(is_AOP())
+      # Calculating Size
+  observeEvent(eventExpr = input$get_AOP_size,
+               handlerExpr = {
+                 showNotification(ui = "Calculation in progress...", id = "calculation_AOP", type = "message")
+                 data_test <- try(nneo_data(product_code = req(input$dpID_AOP), site_code = input$location_NEON_AOP, year_month = paste0(Year_AOP(), "-01")))
+                 if (class(data_test) == "try-error") {
+                   removeNotification(id = "calculation_AOP")
+                   sendSweetAlert(session, title = "Download failed", text = paste0("The product/site/year-month combination that you tried to calculate size for was invalid. Read the error message: ", strsplit(data_test, ":")[[1]][2]), type = 'error')
+                 } else {
+                   total_size <- 0
+                   for (i in c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")) {
+                     data <- nneo_data(product_code = req(input$dpID_AOP), site_code = input$location_NEON_AOP, year_month = paste0(Year_AOP(), "-", i))$data$files
+                     size <- as.numeric(data$size)
+                     total_size <- total_size + sum(size)
+                   }
+                   if (total_size < 10^9 & total_size != 0) {
+                     size_mb <- total_size * 10^-6
+                     total_size <- paste0(as.character(size_mb), " MB")
+                   } else if (total_size > 10^9) {
+                     size_gb <- total_size * 10^-9
+                     total_size <- paste0(as.character(size_gb), " GB")
+                   } else if (total_size == 0) {
+                     total_size <- "No data available"
+                   }
+                   removeNotification(id = "calculation_AOP")
+                   output$AOP_size <- renderPrint(total_size)
+                 }
+               })
   observeEvent(eventExpr = input$download_NEON_AOP,
                handlerExpr = {
                  showNotification(ui = "Download in progess…", id = "download_AOP", type = "message")
@@ -420,10 +447,10 @@ function(input, output, session) {
                })
   # Functions needed to make list of files reactive
   has.new.files <- function() {
-    unique(list.files(path = '..', pattern = ".zip"))
+    unique(list.files(path = '../NEON Downloads', pattern = ".zip"))
   }
   get.files <- function() {
-    list.files(path = '..', pattern = ".zip")
+    list.files(path = '../NEON Downloads', pattern = ".zip")
   }
   NEON_unzip_files <- reactivePoll(intervalMillis = 10, session, checkFunc = has.new.files, valueFunc = get.files)
   observeEvent(NEON_unzip_files(), ignoreInit = TRUE, ignoreNULL = TRUE, {
@@ -436,7 +463,7 @@ function(input, output, session) {
                  unzip <- try(stackByTable(filepath = NEON_folder_path(), folder = TRUE), silent = TRUE) 
                  if (class(unzip) == "try-error") {
                    removeNotification("unzip_normal")
-                   sendSweetAlert(session, title = "Unzip failed", text = paste0("Check that you are unzipping the folder from part 2. Read the error code message: ", strsplit(unzip, ":")[[1]][2]), type = "error")
+                   sendSweetAlert(session, title = "Unzip failed", text = paste0("Check that you are unzipping the folder from part 2. Read the error code message: ", strsplit(unzip, ":")[[1]][-1]), type = "error")
                  } else {
                    removeNotification("unzip_normal")
                    sendSweetAlert(session, title = "File unzipped", text = "The outer appearance of the folder should be the same. On the inside, there should be a new folder called 'stackedFiles' which contains the datasets.", type = "success")
@@ -449,7 +476,7 @@ function(input, output, session) {
                  unzip <- try(stackByTable(filepath = NEON_file_path(), folder = FALSE))
                  if (class(unzip) == "try-error") {
                    removeNotification("unzip_manual")
-                   sendSweetAlert(session, title = "Unzip failed", text = paste0("Check that you are unzipping the .zip file that was manually downloaded. Read the error code message: ", strsplit(unzip, ":")[[1]][2]), type = "error")
+                   sendSweetAlert(session, title = "Unzip failed", text = paste0("Check that you are unzipping the .zip file that was manually downloaded. Read the error code message: ", strsplit(unzip, ":")[[1]][-1]), type = "error")
                  } else {
                    removeNotification("unzip_manual")
                    sendSweetAlert(session, title = "File unzipped", text = paste0("There should now be a new folder titled '", strsplit(NEON_file_name(), ".zip")[[1]][1], "' with all of the datasets."), type = "success")
@@ -459,7 +486,7 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText(strsplit(as.character(input$year_AOP), "-")[[1]][1])
+  output$text_me <- renderText(paste0(Year_AOP(), "-", "01"))
   #Text for troublshooting 2
   output$text_me_two <- renderText(getwd())
   #Table for troubleshooting

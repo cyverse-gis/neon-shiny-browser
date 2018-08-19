@@ -2,5 +2,5 @@
 
 Download NEON products out of app through NEON's [data portal](http://data.neonscience.org/static/browse.html). While this option isn't recommended, it may be needed to find datasets and ranges that aren't included in the first two options (e.g. a range of 3 months, for sites 'ABBY' and 'SRER').
 
-This manual download should be in the form of a zip file. Due to limitations with `R Shiny`'s `fileInput`, for step 2 to work **this zip file must be stored in the directory containing NEON Shiny Browser**.
+This manual download should be in the form of a zip file. Due to limitations with `R Shiny`'s `fileInput`, for step 2 to work **the **NEON Downloads** folder**.
 

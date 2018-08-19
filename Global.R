@@ -9,6 +9,7 @@ library(rgdal)
 library(neonUtilities)
 library(shinyWidgets)
 library(nneo)
+library(elasticsearchr)
 source('Functions/directoryWidget/directoryInput.R')
 source('Functions/flight_function.R')
 source('Functions/filter_keyword_function.R')
@@ -21,7 +22,6 @@ if (!dir.exists("../NEON Downloads")) {
 } else {
   dir_created <- FALSE
 }
-
 
 ####———MAP DATA———####
 
@@ -37,11 +37,22 @@ FieldSite_point <- FieldSite_point_JSON$data
 FieldSite_point$domainCode <- as.numeric(gsub(pattern = "D", replacement = "", x = FieldSite_point$domainCode))
 FieldSite_abbs <- FieldSite_point$siteCode
 ## Retrieve polygon data for NEON Field Sites
-#FieldSite_poly_JSON <- fromJSON('http://guest:guest@128.196.38.73:9200/neon_sites/_search?size=500')
 # Unhashtag when index is down:
-FieldSite_poly_JSON <- fromJSON('NEON-data/Fieldsites.json')
-FieldSite_poly <- cbind(FieldSite_poly_JSON$hits$hits$`_source`$site, FieldSite_poly_JSON$hits$hits$`_source`$boundary)
-FieldSite_poly$domainCode <- as.numeric(gsub(pattern = "D", replacement = "", x = FieldSite_poly$domainCode))
+Fieldsite_poly_JSON <- fromJSON('http://guest:guest@128.196.38.73:9200/sites/_search?size=500')
+FieldSite_poly <- cbind(Fieldsite_poly_JSON$hits$hits[-5], Fieldsite_poly_JSON$hits$hits$`_source`[-4], Fieldsite_poly_JSON$hits$hits$`_source`$boundary)
+names(FieldSite_poly)[9] <- "geo_type"
+FieldSite_poly <- FieldSite_poly %>% filter(type %in% "NEON")
+for (i in 1:nrow(FieldSite_poly)) {
+  FieldSite_poly$code[i] <- strsplit(FieldSite_poly$code[i], "-")[[1]][2]
+  FieldSite_poly$siteType[i] <- strsplit(FieldSite_poly$name[i], ", ")[[1]][2]
+  FieldSite_poly$name[i] <- strsplit(FieldSite_poly$name[i], ", ")[[1]][1]
+  FieldSite_poly$domainName[i] <- strsplit(FieldSite_poly$details[[i]][1], ":")[[1]][2]
+  FieldSite_poly$domainCode[i] <- strsplit(FieldSite_poly$details[[i]][2], ":")[[1]][2]
+  FieldSite_poly$domainCode[i] <- strsplit(FieldSite_poly$domainCode[i], "D")[[1]][2]  
+  FieldSite_poly$stateCode[i] <- strsplit(FieldSite_poly$details[[i]][5], ":")[[1]][2]
+  FieldSite_poly$stateName[i] <- strsplit(FieldSite_poly$details[[i]][6], ":")[[1]][2]
+}
+FieldSite_poly$domainCode <- as.numeric(FieldSite_poly$domainCode)
 
 ####NEON Domains####
 ## Retrive data from NEON Domains in JSON format

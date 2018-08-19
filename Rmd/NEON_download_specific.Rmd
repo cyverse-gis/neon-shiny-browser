@@ -2,4 +2,4 @@
 
 Download files for a single NEON data product, site, and year-month combination to obtain smaller and more specific NEON datasets. This functionality requires a product ID from step 1 or the NEON [data portal](http://data.neonscience.org/static/browse.html).
 
-An item will appear in a new folder of the form **NEON\_\<site\>\_\<time range\>**, located in the same directory containing **NEON Shiny Browser**. The item is zipped and need to be put through step 2.
+The downloads will appear in a new folder of the form **NEON\_\<site\>\_\<time range\>**, located in the **NEON Downloads** folder. These items are zipped and need to be put through step 2.
