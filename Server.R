@@ -47,12 +47,14 @@ function(input, output, session) {
   #### —— Filtered Features ####
   Domain_IDs <- reactive(domains$DomainID[domains$Domain %in% input$fieldsite_domain])
   Field_sites_point_filtered <- reactive(FieldSite_point %>% filter(siteType %in% input$fieldsite_type) %>%
-                                           filter(domainCode %in% Domain_IDs()))
+                                           filter(domainCode %in% Domain_IDs()) %>%
+                                           filter(Habitat %in% input$fieldsite_habitat))
   Field_sites_poly_filtered <- reactive(FieldSite_poly %>% filter(code %in% Field_sites_point_filtered()$siteCode))
   Domain_included <- reactive(domain_data %>% filter(DomainName %in% input$fieldsite_domain))
   Domain_unincluded <- reactive(domain_data %>% filter(!(DomainName %in% input$fieldsite_domain)))
   TOS_data_filtered <- reactive(TOS_data %>% filter(siteID %in% Field_sites_point_filtered()$siteCode))
-  Flight_data_filtered <- reactive(flight_data %>% filter(SiteAbb %in% Field_sites_point_filtered()$siteCode) %>% filter(Year %in% input$flightpath_year))
+  Flight_data_filtered <- reactive(flight_data %>% filter(SiteAbb %in% Field_sites_point_filtered()$siteCode) %>%
+                                     filter(Year %in% input$flightpath_year))
   #### —— Plot Domains #### 
   observe({
     proxy <- leafletProxy("map")
@@ -111,9 +113,7 @@ function(input, output, session) {
         addMarkers(data = TOS_data_filtered(),
                    lng = TOS_data_filtered()$longitd,
                    lat = TOS_data_filtered()$latitud,
-                   popup = paste0("<b>Site: </b>",
-                                  TOS_data_filtered()$siteID,
-                                  "<br><b>Plot ID: </b>",
+                   popup = paste0("<b>Plot ID: </b>",
                                   TOS_data_filtered()$plotID,
                                   "<br><b>Dimensions: </b>",
                                   TOS_data_filtered()$plotDim,
@@ -151,7 +151,11 @@ function(input, output, session) {
                                   "<br><b>State: </b>",
                                   Field_sites_point_filtered()$stateName,
                                   "<br><b>Site Type: </b>",
-                                  Field_sites_point_filtered()$siteType),
+                                  Field_sites_point_filtered()$siteType,
+                                  "<br><b>Habitat: </b>",
+                                  Field_sites_point_filtered()$`Habitat Specific`,
+                                  "<br><b>Host: </b>",
+                                  Field_sites_point_filtered()$Host),
                    clusterOptions = markerClusterOptions(),
                    label = paste0(Field_sites_point_filtered()$siteDescription),
                    icon = NEON_icon
@@ -327,7 +331,7 @@ function(input, output, session) {
   })
   
   ####— NEON: Step 2- Download Data####
-  # Variables
+  ####—— Variables####
   Product_ID_general <- reactive(req(gsub(pattern = " ", replacement = "", x = input$dpID_general)))
   Product_ID_middle <- reactive(req(strsplit(Product_ID_general(), "[.]")[[1]][2]))
   Folder_general <- reactive(req(paste0("filesToStack", Product_ID_middle())))
@@ -350,7 +354,7 @@ function(input, output, session) {
   Year_AOP <- reactive(req(strsplit(as.character(input$year_AOP), "-")[[1]][1]))
   Folder_path_general <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_general(), "_", Product_ID_middle())))
   Folder_path_specific <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_specific(), "_", Date_specific())))
-  # Download NEON data: general
+  ####—— Download NEON data: general####
   observeEvent(eventExpr = input$download_NEON_general,
                handlerExpr = {
                  showNotification(ui = "Download in progess…", id = "download_general", type = "message")
@@ -364,35 +368,7 @@ function(input, output, session) {
                    sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Downloads' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
                  }
                })
-  # Download NEON data: specific — creates a folder and adds files to folder
-      # Calculate download size
-  observeEvent(eventExpr = input$get_specific_size,
-               handlerExpr = {
-                 showNotification(ui = "Calculation in progress...", id = "calculation_specific", type = "message")
-                 data_test <- try(nneo_data(product_code = Product_ID_specific(), site_code = Field_Site_specific(), year_month = Date_specific(), package = Package_type_specific()))
-                 if (class(data_test) == "try-error") {
-                   removeNotification(id = "calculation_specific")
-                   sendSweetAlert(session, title = "Download failed", text = paste0("The product/site/year-month combination that you tried to calculate size for was invalid. Read the error message: ", strsplit(data_test, ":")[[1]][2]), type = 'error')
-                 } else {
-                   data <- nneo_data(product_code = Product_ID_specific(), site_code = Field_Site_specific(), year_month = Date_specific(), package = Package_type_specific())$data$files
-                   size <- as.numeric(data$size)
-                   size <- sum(size)
-                 if (size < 10^6 & size != 0) {
-                   size_kb <- size * 10^-3
-                   print_size <- paste0(as.character(size_kb), " KB")
-                 } else if (between(x = size, left = 10^6, right = 10^9)) {
-                   size_mb <- size * 10^-6
-                   print_size <- paste0(as.character(size_mb), " MB")
-                 } else if (size > 10^9) {
-                   size_gb <- size * 10^-9
-                   print_size <- paste0(as.character(size_gb), " GB")
-                 } else if (size == 0) {
-                   print_size <- "No data available"
-                 }
-                 removeNotification(id = "calculation_specific")
-                 output$specific_size <- renderPrint(print_size)
-                 }
-               })
+  ####—— Download NEON data: specific ####— creates a folder and adds files to folder
   observeEvent(eventExpr = input$download_NEON_specific,
                handlerExpr = {
                  showNotification(ui = "Download in progess…", id = "download_specific", type = "message")
@@ -409,7 +385,7 @@ function(input, output, session) {
                    sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Downloads' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
                  }
   })
-  # Download NEON data: AOP
+  ####—— Download NEON data: AOP####
   product_table <- reactive(NEONproducts_product[NEONproducts_product$productCode == Product_ID_AOP(),])
       # Checking is data product is AOP
   is_AOP <- reactive(if (nrow(product_table()) != 0) {
@@ -418,19 +394,25 @@ function(input, output, session) {
     } else {
       "NO"
     }
+  } else {
+    "None"
   })
-  output$check_AOP <- renderPrint(is_AOP())
+  output$check_AOP <- renderPrint({
+    if (is_AOP() != "None") {
+      is_AOP()
+    }
+  })
   # Calculating Size
   observeEvent(eventExpr = input$get_AOP_size,
                handlerExpr = {
-                 if (is_AOP()== "NO") {
+                 if (is_AOP() != "YES") {
                    sendSweetAlert(session, title = "Download failed", text = "Please choose an AOP product", type = 'error')
                  } else {
                    showNotification(ui = "Calculation in progress...", id = "calculation_AOP", type = "message")
                    data_test <- try(nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-01")))
                    if (class(data_test) == "try-error") {
                      removeNotification(id = "calculation_AOP")
-                     sendSweetAlert(session, title = "Download failed", text = paste0("The product/site/year-month combination that you tried to calculate size for was invalid. Read the error message: ", strsplit(data_test, ":")[[1]][2]), type = 'error')
+                     sendSweetAlert(session, title = "Calculation failed", text = paste0("The product/site/year-month combination that you tried to calculate size for was invalid. Read the error message: ", strsplit(data_test, ":")[[1]][2]), type = 'error')
                    } else {
                      total_size <- 0
                      for (i in c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")) {
@@ -523,7 +505,7 @@ function(input, output, session) {
   #Text for troublshooting
   output$text_me <- renderText(paste0(Product_ID_specific(), "-", Field_Site_specific()))
   #Text for troublshooting 2
-  output$text_me_two <- renderText( Date_specific())
+  output$text_me_two <- renderText(nrow(product_table()))
   #Table for troubleshooting
   #output$table_me <- renderDataTable()
 }

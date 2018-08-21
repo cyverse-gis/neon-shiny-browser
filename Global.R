@@ -29,17 +29,32 @@ if (!dir.exists("../NEON Downloads")) {
 ####——NEON——####
 
 ###NEON Field Sites####
-## Retrieve point data for NEON Field Sites in JSON format
 
+## Retrieve point data for NEON Field Sites in JSON format
 FieldSite_point_JSON <- fromJSON('http://data.neonscience.org/api/v0/sites')
 FieldSite_point <- FieldSite_point_JSON$data
 FieldSite_point$domainCode <- as.numeric(gsub(pattern = "D", replacement = "", x = FieldSite_point$domainCode))
+FieldSite_extra <- read.csv('NEON-data/Fieldsites_extrainfo.csv', colClasses = "character")
+FieldSite_extra <- FieldSite_extra[order(FieldSite_extra$Site.ID),]
+for (i in 1:nrow(FieldSite_extra)) {
+  FieldSite_extra$Site.Type[i] <- strsplit(FieldSite_extra$Site.Type[i], " ")[[1]][2]
+  if (FieldSite_extra$Site.Type[i] == "Aquatic") {
+    FieldSite_extra$Site.Subtype[i] <- paste0(FieldSite_extra$Site.Type[i], " - ", FieldSite_extra$Site.Subtype[i]) 
+  } else {
+    FieldSite_extra$Site.Subtype[i] <- FieldSite_extra$Site.Type[i]
+  }
+}
+FieldSite_point$Habitat <- FieldSite_extra$Site.Type
+FieldSite_point$`Habitat Specific` <- FieldSite_extra$Site.Subtype
+FieldSite_point$Host <- FieldSite_extra$Site.Host
+
 # List of field site abbreviations
 FieldSite_abbs <- FieldSite_point$siteCode
+
 ## Retrieve polygon data for NEON Field Sites
-#Fieldsite_poly_JSON <- fromJSON('http://guest:guest@128.196.38.73:9200/sites/_search?size=500')
+Fieldsite_poly_JSON <- fromJSON('http://guest:guest@128.196.38.73:9200/sites/_search?size=500')
 # Unhashtag when index is down:
-Fieldsite_poly_JSON <- fromJSON('NEON-data/Fieldsites.json')
+#Fieldsite_poly_JSON <- fromJSON('NEON-data/Fieldsites.json')
 FieldSite_poly <- cbind(Fieldsite_poly_JSON$hits$hits[-5], Fieldsite_poly_JSON$hits$hits$`_source`[-4], Fieldsite_poly_JSON$hits$hits$`_source`$boundary)
 names(FieldSite_poly)[9] <- "geo_type"
 FieldSite_poly <- FieldSite_poly %>% filter(type %in% "NEON")
