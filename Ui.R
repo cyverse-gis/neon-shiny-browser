@@ -19,10 +19,10 @@ fluidPage(theme = shinytheme('cerulean'),
                                 sidebarPanel(width = 5,
                                              tabsetPanel(id = "main",
                                                #### — NEON ####
-                                               tabPanel(tags$h5("NEON Data"),
+                                               tabPanel(tags$h5("Data Manager"),
                                                         tabsetPanel(
                                                           #### —— STEP 1: Find Data####
-                                                          tabPanel("Step 1- Find Data",
+                                                          tabPanel("Find",
                                                                    radioButtons(inputId = "NEON_browsing_type", label = "Browsing method", choices = list("Start with Site" = "site", "Start with Product" = "product"), inline = TRUE),
                                                                    conditionalPanel("input.NEON_browsing_type == 'site'",
                                                                                     includeMarkdown('Rmd/NEON_browsing_site.Rmd'),
@@ -95,7 +95,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                    )
                                                           ),
                                                           #### —— STEP 2: Download Data####
-                                                          tabPanel("Step 2- Download Data",
+                                                          tabPanel("Download",
                                                                    radioButtons(inputId = "NEON_download_type", label = "Download method", choices = list("By Data Product— General" = "general", "By Data Product— Specific" = "specific", "By Data Product— AOP" = "AOP","By Data Product— Manual" = "manual"), inline = TRUE),
                                                                    conditionalPanel("input.NEON_download_type == 'general'",
                                                                                     includeMarkdown('Rmd/NEON_download_general.Rmd'),
@@ -136,7 +136,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                    )
                                                           ),
                                                           #### —— STEP 3: Unzip/Join Downloads ####
-                                                          tabPanel("Step 3- Unzip/Join Downloads",
+                                                          tabPanel("Unzip/Join",
                                                                    includeMarkdown('Rmd/NEON_unzip.Rmd'),
                                                                    radioButtons(inputId = "NEON_unzip_type", label = "Method of browsing (from step 1)", choices = list("By Data Product— General/Specific" = "general/specific", "By Data Product— Manual" = "manual")),
                                                                    tags$hr(),

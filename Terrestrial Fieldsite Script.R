@@ -48,6 +48,18 @@ for (i in FieldSite_Tes) {
   # }
   # assign(x = paste0(i, "_plots"), value = get(paste0(i, "_plots"))[order(get(paste0(i, "_plots"))$Description),], envir = .GlobalEnv)
 }
+
+#### Part 1.5- bind all variables ####
+FieldSites_locations <- data.frame("Site" = NA, "Description" = NA, "Name" = NA, "Type" = NA, "Latitude" = NA, "Longitude" = NA, "Properties" = NA, "Values" = NA)
+for (i in FieldSite_Tes) {
+  location <- get(paste0(i, "_locations"))
+  assign(x = "FieldSites_locations", value = rbind(FieldSites_locations, location))
+}
+
+for (i in 1:ncol(FieldSites_locations)) {
+  FieldSites_locations[[i]] <- as.character(FieldSites_locations[[i]])
+}
+
 #### Part 2- plots ####
 for (i in 1:nrow(FieldSite_plots_tes)) {
   FieldSite_plots_tes$`Plot Size`[i] <- if (FieldSite_plots_tes$Type[i] == "OS Plot - all") {

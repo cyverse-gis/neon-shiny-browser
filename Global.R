@@ -5,11 +5,9 @@ library(leaflet.extras)
 library(dplyr)
 library(jsonlite)
 library(sf)
-library(rgdal)
 library(neonUtilities)
 library(shinyWidgets)
 library(nneo)
-library(elasticsearchr)
 source('Functions/directoryWidget/directoryInput.R')
 source('Functions/flight_function.R')
 source('Functions/filter_keyword_function.R')
@@ -73,8 +71,9 @@ for (i in 1:nrow(FieldSite_poly)) {
 FieldSite_poly$domainCode <- as.numeric(FieldSite_poly$domainCode)
 
 ## Retrive Fieldsite Locations
-FieldSite_locations_tes <- 
-  
+FieldSite_locations_tes <- read.csv("NEON-data/Fieldsites_locations_tes", stringsAsFactors = FALSE)
+FieldSite_plots_tes <- read.csv("NEON-data/Fieldsites_plots_tes", stringsAsFactors = FALSE)[-1]
+FieldSite_locations_aqu <- read.csv("NEON-data/Fieldsites_locations_aqu", stringsAsFactors = FALSE)
 
 ####NEON Domains####
 ## Retrive data from NEON Domains in JSON format
@@ -123,14 +122,15 @@ NEON_icon <- makeIcon(iconUrl = "Img/NEON.png",
                       iconWidth = 30, iconHeight = 30,
                       iconAnchorX = 15, iconAnchorY = 15,
                       popupAnchorX = -1, popupAnchorY = -15)
-Locations <- iconList(
-  `OS Plot - all` = makeIcon(iconUrl = "Img/distributedBaseplot.png", iconWidth = 20, iconHeight = 20,
-                             iconAnchorX = 10, iconAnchorY = 10, popupAnchorX = -1, popupAnchorY = -10),
-  `OS Plot - mos` = makeIcon(iconUrl = "Img/mosquito.png", iconWidth = 20, iconHeight = 20,
-                             iconAnchorX = 10, iconAnchorY = 10, popupAnchorX = -1, popupAnchorY = -10),
-  `OS Plot - mam` = makeIcon(iconUrl = "Img/mammal.png", iconWidth = 20, iconHeight = 20,
-                             iconAnchorX = 10, iconAnchorY = 10, popupAnchorX = -1, popupAnchorY = -10),
-  `OS Plot - tck` = makeIcon(iconUrl = "Img/tick.png", iconWidth = 20, iconHeight = 20,
-                             iconAnchorX = 10, iconAnchorY = 10, popupAnchorX = -1, popupAnchorY = -10)
-  
+NEON_locations <- iconList(
+  `Distributed Base Plot` = makeIcon(iconUrl = "Img/distributedBaseplot.png", iconWidth = 15, iconHeight = 15,
+                                     iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
+  `Distributed Bird Grid` = makeIcon(iconUrl = "Img/birdGrid.png", iconWidth = 15, iconHeight = 15,
+                                     iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
+  `Distributed Mosquito Plot` = makeIcon(iconUrl = "Img/mosquito.png", iconWidth = 15, iconHeight = 15,
+                                         iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
+  `Distributed Mammal Grid` = makeIcon(iconUrl = "Img/mammal.png", iconWidth = 15, iconHeight = 15,
+                                       iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
+  `Distributed Tick Plot` = makeIcon(iconUrl = "Img/tick.png", iconWidth = 15, iconHeight = 15,
+                                     iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5)
 )

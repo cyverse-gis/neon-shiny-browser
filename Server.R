@@ -185,7 +185,7 @@ function(input, output, session) {
                                        Field_sites_poly_filtered()$name[i]),
                         opacity = 1,
                         fillOpacity = 0,
-                        highlightOptions = highlightOptions(stroke = TRUE, color = "#39ff14", weight = 7, bringToFront = TRUE)
+                        highlightOptions = highlightOptions(stroke = TRUE, color = "#39ff14", weight = 7)
             )
         } else if (is.list(Field_sites_poly_filtered()$coordinates[[i]])) {
           proxy %>%
@@ -198,7 +198,7 @@ function(input, output, session) {
                                         Field_sites_poly_filtered()$name[i]),
                          opacity = 1,
                          fillOpacity = 0.4,
-                         highlightOptions = highlightOptions(stroke = TRUE, color = "#39ff14", weight = 7, bringToFront = TRUE)
+                         highlightOptions = highlightOptions(stroke = TRUE, color = "#39ff14", weight = 7)
             )
         }
       }
@@ -220,20 +220,24 @@ function(input, output, session) {
                                   Subloc_tes_plots()$Type,
                                   "<br><b>Dimensions: </b>",
                                   Subloc_tes_plots()$Plot.Size),
-                   group = "Sub Locations") %>%
-        addRectangles(lng1 = destPoint(p = c(Subloc_tes_plots_bird()$Longitude, Subloc_tes_plots_bird()$Latitude), b = 225, d = 500*sqrt(2))[1],
-                      lat1 = destPoint(p = c(Subloc_tes_plots_bird()$Longitude, Subloc_tes_plots_bird()$Latitude), b = 225, d = 500*sqrt(2))[2],
-                      lng2 = destPoint(p = c(Subloc_tes_plots_bird()$Longitude, Subloc_tes_plots_bird()$Latitude), b = 45, d = 500*sqrt(2))[1],
-                      lat2 = destPoint(p = c(Subloc_tes_plots_bird()$Longitude, Subloc_tes_plots_bird()$Latitude), b = 45, d = 500*sqrt(2))[2],
-                      group = "Sub Locations",
-                      color = "#155AA8",
-                      popup = paste0("<b>Plot: </b><br>",
-                                     Subloc_tes_plots_bird()$Description,
-                                     "<br><b>Type: </b>",
-                                     Subloc_tes_plots_bird()$Type,
-                                     "<br><b>Dimensions: </b>",
-                                     Subloc_tes_plots_bird()$Plot.Size)
-                      )
+                   group = "Sub Locations")
+      for (i in 1:nrow(Subloc_tes_plots_bird())) {
+        proxy %>%
+          addRectangles(lng1 = geosphere::destPoint(p = c(Subloc_tes_plots_bird()$Longitude[i], Subloc_tes_plots_bird()$Latitude[i]), b = 225, d = 500*sqrt(2))[1],
+                        lat1 = geosphere::destPoint(p = c(Subloc_tes_plots_bird()$Longitude[i], Subloc_tes_plots_bird()$Latitude[i]), b = 225, d = 500*sqrt(2))[2],
+                        lng2 = geosphere::destPoint(p = c(Subloc_tes_plots_bird()$Longitude[i], Subloc_tes_plots_bird()$Latitude[i]), b = 45, d = 500*sqrt(2))[1],
+                        lat2 = geosphere::destPoint(p = c(Subloc_tes_plots_bird()$Longitude[i], Subloc_tes_plots_bird()$Latitude[i]), b = 45, d = 500*sqrt(2))[2],
+                        group = "Sub Locations",
+                        color = "#155AA8",
+                        weight = 3,
+                        popup = paste0("<b>Plot: </b><br>",
+                                       Subloc_tes_plots_bird()$Description[i],
+                                       "<br><b>Type: </b>",
+                                       Subloc_tes_plots_bird()$Type[i],
+                                       "<br><b>Dimensions: </b>",
+                                       Subloc_tes_plots_bird()$Plot.Size[i])
+          )
+      }
     }
   })
   
@@ -242,7 +246,7 @@ function(input, output, session) {
   observeEvent(input$zoomtosite,
                leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
                                              lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
-                                             zoom = 10)
+                                             zoom = 11)
   )
   observeEvent(eventExpr = input$addsublocs,
                handlerExpr = {updateTabsetPanel(session, inputId = "main", selected = "filter")})
