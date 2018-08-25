@@ -41,11 +41,11 @@ A few packages need to be downloaded: <br>
 * [`neonUtilities`](https://github.com/NEONScience/NEON-utilities/tree/master/neonUtilities) and [`nneo`](https://github.com/ropensci/nneo): Used to pull datasets from NEON.
 * [`shinythemes`](https://github.com/rstudio/shinythemes): Creates a theme for the Shiny app. 
 * [`shinyWidgets`](https://github.com/dreamRs/shinyWidgets): Provide shiny widgets with increased capabilities and aesthetics.
-* [`sf`](https://github.com/r-spatial/sf) and [`rgdal`](https://github.com/cran/rgdal): Provide access to simple feature geometries.
+* [`sf`](https://github.com/r-spatial/sf) and [`geosphere`](https://github.com/cran/geosphere): Deal with geometries and coordinates necesary for the interactive map.
 * [`jsonlite`](https://github.com/cran/jsonlite): deals with JSON structures.
 
  ```
-install.packages(c('leaflet','leaflet.extras','devtools','nneo','shinythemes','shinyWidgets','sf','rgdal','jsonlite'))
+install.packages(c('leaflet','leaflet.extras','devtools','nneo','shinythemes','shinyWidgets','sf','geosphere','jsonlite'))
 devtools::install_github("NEONScience/NEON-utilities/neonUtilities", dependencies=TRUE)
 ```
 
