@@ -11,7 +11,7 @@ function(input, output, session) {
   ####INTERACTIVE MAP TAB####
   
   # Reactive value for layer control
-  legend <- reactiveValues(group = c("Field Sites", "Domains", "Flightpaths", "TOS"))
+  legend <- reactiveValues(group = c("Field Sites", "Domains", "Flightpaths", "TOS", "Loc"))
   
   #### Map ####
   output$map <- renderLeaflet({
@@ -39,7 +39,17 @@ function(input, output, session) {
                          options = layersControlOptions(collapsed = FALSE)
         ) %>%
         # Add option for fullscreen
-        leaflet.extras::addFullscreenControl(pseudoFullscreen = TRUE) 
+        leaflet.extras::addFullscreenControl(pseudoFullscreen = TRUE) %>%
+        addMarkers(data = FieldSite_plots_tes,
+                   icon = ~NEON_locations[FieldSite_plots_tes$Type],
+                   popup = paste0("<b>Plot: </b><br>",
+                                  FieldSite_plots_tes$Description,
+                                  "<br><b>Type: </b>",
+                                  FieldSite_plots_tes$Type,
+                                  "<br><b>Dimensions: </b>",
+                                  FieldSite_plots_tes$Plot.Size),
+                   group = "Loc"
+                   )
     )
     map %>% setView(lng = -98.5795, lat = 39.8283, zoom = 2.5)
   })
@@ -208,6 +218,8 @@ function(input, output, session) {
                                              lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
                                              zoom = 10)
   )
+  observeEvent(eventExpr = input$addlocs,
+               handlerExpr = {updateTabsetPanel(session, inputId = "main", selected = "filter")})
   ####— NEON: Step 1- Find data ####
   ####—— 1a: By Site####
   # Variables
@@ -368,7 +380,7 @@ function(input, output, session) {
                    sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Downloads' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
                  }
                })
-  ####—— Download NEON data: specific ####— creates a folder and adds files to folder
+  ####—— Download NEON data: specific ####
   observeEvent(eventExpr = input$download_NEON_specific,
                handlerExpr = {
                  showNotification(ui = "Download in progess…", id = "download_specific", type = "message")

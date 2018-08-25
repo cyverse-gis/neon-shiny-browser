@@ -6,17 +6,18 @@ fluidPage(theme = shinytheme('cerulean'),
           navbarPage(tags$b("NEON-Browser"),
                      ####Tab 1: Includes the map, and key with features like filtering data####
                      tabPanel("Interactive Map",
-                              dropdown(right = TRUE, status = "primary", size = "sm", icon = icon("info-circle"), width = "45vw",
+                              dropdown(right = TRUE, status = "primary", size = "sm", icon = icon("info-circle"), width = "38vw",
                                        selectInput(inputId = "NEONsite_zoom", label = "Site info:", choices = FieldSite_abbs),
                                        tags$b("Name and type"),
                                        verbatimTextOutput(outputId = "dropdown_site", placeholder = TRUE),
                                        tags$b("Number of data products available"),
                                        verbatimTextOutput(outputId = "dataproduct_number", placeholder = TRUE),
+                                       actionButton(inputId = "addlocs", label = "Add sub-locations for site"),
                                        actionButton(inputId = "zoomtosite", label = "Zoom to site")),
                               sidebarLayout(
                                 position = "right",
-                                sidebarPanel(width = 6,
-                                             tabsetPanel(
+                                sidebarPanel(width = 5,
+                                             tabsetPanel(id = "main",
                                                #### — NEON ####
                                                tabPanel(tags$h5("NEON Data"),
                                                         tabsetPanel(
@@ -153,7 +154,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                         )
                                                ),
                                                #### — MAP FEATURES ####
-                                               tabPanel(tags$h5("Filter Map Features"),
+                                               tabPanel(title = tags$h5("Filter Map Features"), value = "filter",
                                                         radioButtons(inputId = "map_features", label = "Map feature:", choices = list("Field Sites"= "fieldsites", "Domains" = "domains", "Flightpaths" = "flightpath")),
                                                         conditionalPanel("input.map_features == 'fieldsites'",
                                                                          selectInput(inputId = "fieldsite_type", label = "Site Type:", choices = c("CORE", "RELOCATABLE"), selected = c("CORE", "RELOCATABLE"), multiple = TRUE),
@@ -166,7 +167,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                )
                                              )
                                 ),
-                                mainPanel(width = 6,
+                                mainPanel(width = 7,
                                           leafletOutput(outputId = "map", width = 'auto', height = '85vh')
                                 )
                               )
@@ -176,8 +177,10 @@ fluidPage(theme = shinytheme('cerulean'),
                               navlistPanel(well = FALSE, widths = c(2,10),
                                 tabPanel("Objective",
                                          includeMarkdown('Rmd/NEON_info_about.Rmd')),
-                                tabPanel("Field Sites",
-                                         includeMarkdown('Rmd/NEON_info_sites.Rmd'))
+                                tabPanel("Field Site Selection",
+                                         includeMarkdown('Rmd/NEON_info_site_selection.Rmd')),
+                                tabPanel("Field Site Types",
+                                         includeMarkdown('Rmd/NEON_info_site_types.Rmd'))
                               )),
                      ####Tab 3: Includes outputs to help with testing or troubleshooting####
                      tabPanel("For me (troubleshooting)",
