@@ -11,7 +11,7 @@ function(input, output, session) {
   ####INTERACTIVE MAP TAB####
   
   # Reactive value for layer control
-  legend <- reactiveValues(group = c("Field Sites", "Domains", "Flightpaths", "TOS", "Loc"))
+  legend <- reactiveValues(group = c("Field Sites", "Domains", "Flightpaths", "TOS", "Sub Locations"))
   
   #### Map ####
   output$map <- renderLeaflet({
@@ -39,17 +39,7 @@ function(input, output, session) {
                          options = layersControlOptions(collapsed = FALSE)
         ) %>%
         # Add option for fullscreen
-        leaflet.extras::addFullscreenControl(pseudoFullscreen = TRUE) %>%
-        addMarkers(data = FieldSite_plots_tes,
-                   icon = ~NEON_locations[FieldSite_plots_tes$Type],
-                   popup = paste0("<b>Plot: </b><br>",
-                                  FieldSite_plots_tes$Description,
-                                  "<br><b>Type: </b>",
-                                  FieldSite_plots_tes$Type,
-                                  "<br><b>Dimensions: </b>",
-                                  FieldSite_plots_tes$Plot.Size),
-                   group = "Loc"
-                   )
+        leaflet.extras::addFullscreenControl(pseudoFullscreen = TRUE)
     )
     map %>% setView(lng = -98.5795, lat = 39.8283, zoom = 2.5)
   })
@@ -65,6 +55,10 @@ function(input, output, session) {
   TOS_data_filtered <- reactive(TOS_data %>% filter(siteID %in% Field_sites_point_filtered()$siteCode))
   Flight_data_filtered <- reactive(flight_data %>% filter(SiteAbb %in% Field_sites_point_filtered()$siteCode) %>%
                                      filter(Year %in% input$flightpath_year))
+  Subloc_tes_plots <- reactive(FieldSite_plots_tes %>% filter(!(Type %in% "Distributed Bird Grid")) %>%
+                                 filter(Site %in% input$fieldsite_sublocs))
+  Subloc_tes_plots_bird <- reactive(FieldSite_plots_tes %>% filter(Type %in% "Distributed Bird Grid") %>%
+                                 filter(Site %in% input$fieldsite_sublocs))
   #### —— Plot Domains #### 
   observe({
     proxy <- leafletProxy("map")
@@ -210,6 +204,38 @@ function(input, output, session) {
       }
     }
   })
+  #### —— Plot Sub Locations ####
+  # Terrestrial; without bird
+  observe({
+    proxy <- leafletProxy('map')
+    if (nrow(Subloc_tes_plots())==0) {
+      proxy %>% clearGroup("Sub Locations")
+    } else {
+      proxy %>% clearGroup("Sub Locations") %>%
+        addMarkers(data = Subloc_tes_plots(),
+                   icon = ~NEON_locations[Subloc_tes_plots()$Type],
+                   popup = paste0("<b>Plot: </b><br>",
+                                  Subloc_tes_plots()$Description,
+                                  "<br><b>Type: </b>",
+                                  Subloc_tes_plots()$Type,
+                                  "<br><b>Dimensions: </b>",
+                                  Subloc_tes_plots()$Plot.Size),
+                   group = "Sub Locations") %>%
+        addRectangles(lng1 = destPoint(p = c(Subloc_tes_plots_bird()$Longitude, Subloc_tes_plots_bird()$Latitude), b = 225, d = 500*sqrt(2))[1],
+                      lat1 = destPoint(p = c(Subloc_tes_plots_bird()$Longitude, Subloc_tes_plots_bird()$Latitude), b = 225, d = 500*sqrt(2))[2],
+                      lng2 = destPoint(p = c(Subloc_tes_plots_bird()$Longitude, Subloc_tes_plots_bird()$Latitude), b = 45, d = 500*sqrt(2))[1],
+                      lat2 = destPoint(p = c(Subloc_tes_plots_bird()$Longitude, Subloc_tes_plots_bird()$Latitude), b = 45, d = 500*sqrt(2))[2],
+                      group = "Sub Locations",
+                      color = "#155AA8",
+                      popup = paste0("<b>Plot: </b><br>",
+                                     Subloc_tes_plots_bird()$Description,
+                                     "<br><b>Type: </b>",
+                                     Subloc_tes_plots_bird()$Type,
+                                     "<br><b>Dimensions: </b>",
+                                     Subloc_tes_plots_bird()$Plot.Size)
+                      )
+    }
+  })
   
   
   #### NEON ####
@@ -218,7 +244,7 @@ function(input, output, session) {
                                              lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
                                              zoom = 10)
   )
-  observeEvent(eventExpr = input$addlocs,
+  observeEvent(eventExpr = input$addsublocs,
                handlerExpr = {updateTabsetPanel(session, inputId = "main", selected = "filter")})
   ####— NEON: Step 1- Find data ####
   ####—— 1a: By Site####

@@ -45,7 +45,7 @@ A few packages need to be downloaded: <br>
 * [`jsonlite`](https://github.com/cran/jsonlite): deals with JSON structures.
 
  ```
-install.packages(c('leaflet','leaflet.extras','devtools','nneo','shinythemes','shinyWidgets','sf','rgdal','jsonlite','elasticsearchr'))
+install.packages(c('leaflet','leaflet.extras','devtools','nneo','shinythemes','shinyWidgets','sf','rgdal','jsonlite'))
 devtools::install_github("NEONScience/NEON-utilities/neonUtilities", dependencies=TRUE)
 ```
 
