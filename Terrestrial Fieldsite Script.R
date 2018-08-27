@@ -8,7 +8,7 @@ for (i in FieldSite_Tes) {
   # Find locations (everything that's not a plot)
   location_filter <- !startsWith(x = children_names, prefix = i)
   # Find plots of desired type
-  plot_filter <- endsWith(x = children_names, suffix = "all") | endsWith(x = children_names, suffix = "brd") | endsWith(x = children_names, suffix = "mam") | endsWith(x = children_names, suffix = "mos") | endsWith(x = children_names, suffix = "tck")
+  plot_filter <- endsWith(x = children_names, suffix = "all") | endsWith(x = children_names, suffix = "brd") | endsWith(x = children_names, suffix = "mam") | endsWith(x = children_names, suffix = "mos") | endsWith(x = children_names, suffix = "tck") | endsWith(x = children_names, suffix = "phe")
   # Create locations and plots data frames
   assign(x = paste0(i, "_locations"), value = data.frame("Site" = NA, "Description" = NA, "Name" = NA, "Type" = NA, "Latitude" = NA, "Longitude" = NA, "Properties" = NA, "Values" = NA, stringsAsFactors = FALSE), envir = .GlobalEnv)
   assign(x = paste0(i, "_plots"), value = data.frame("Site" = NA, "Description" = NA, "Name" = NA, "Type" = NA, "Latitude" = NA, "Longitude" = NA, "Properties" = NA, "Values" = NA, stringsAsFactors = FALSE), envir = .GlobalEnv)  
