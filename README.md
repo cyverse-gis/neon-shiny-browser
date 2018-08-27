@@ -49,3 +49,8 @@ devtools::install_github("NEONScience/NEON-utilities/neonUtilities", dependencie
 ```
 
 **Note: [Mac OS X](https://cran.r-project.org/bin/macosx/tools/) currently requires that `gfortran` and `clang` be installed in addition to the latest version of R (v3.5.1 "Feather Spray")** 
+
+## FEEDBACK
+This is a message from the main developer of this app, [Daniel Lee](https://github.com/Danielslee51). I am an intern at [CyVerse](http://www.cyverse.org/). I don't personally know much about NEON data, sensors, etc. Due to this, when displaying NEON data I put relevant attributes to the best of my ability, but sometimes I do not know what is actually useful to a scientist. For example, on the popup for my TOS location polygons, I included the dimensions of the area, but maybe what really matters is the elevation (I have no clue). Or, when searching for NEON data products in-app, maybe people would like to see the methodology of collecting that product, which I did not include. If anyone notices anything like this on any feature, please email me at dantheman6100@gmail.com.
+
+And of course, any other feedback or suggestions would be nice. I'd love to hear reactions from anyone who would potentially use the app in the future, as ultimately the app is here to help scientists who want to use it.
