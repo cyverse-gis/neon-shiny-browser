@@ -35,7 +35,7 @@ Open an instance of RStudio and navigate to the `/NEON-Shiny-Browser` folder. Cl
 
 Download the latest version of [R](https://cran.r-project.org/) and [RStudio](https://www.rstudio.com/) for your local or virtual machine.
 
-A few packages need to be downloaded: <br>
+In addition to shiny itself, a few packages need to be downloaded: <br>
 * [`leaflet`](https://github.com/rstudio/leaflet) and [`leaflet.extras`](https://github.com/bhaskarvk/leaflet.extras): These are responsible for the map and its features.
 * [`devtools`](https://cran.r-project.org/web/packages/devtools/index.html): For installing packages from Github.
 * [`neonUtilities`](https://github.com/NEONScience/NEON-utilities/tree/master/neonUtilities) and [`nneo`](https://github.com/ropensci/nneo): Used to pull datasets from NEON.
@@ -44,7 +44,7 @@ A few packages need to be downloaded: <br>
 * [`jsonlite`](https://github.com/cran/jsonlite): deals with JSON structures.
 
  ```
-install.packages(c('leaflet','leaflet.extras','devtools','nneo','shinythemes','shinyWidgets','sf','geosphere','jsonlite'))
+install.packages(c('leaflet','leaflet.extras','devtools','nneo','shinythemes','shinyWidgets','shinyBS','sf','geosphere','jsonlite'))
 devtools::install_github("NEONScience/NEON-utilities/neonUtilities", dependencies=TRUE)
 ```
 
