@@ -39,8 +39,7 @@ A few packages need to be downloaded: <br>
 * [`leaflet`](https://github.com/rstudio/leaflet) and [`leaflet.extras`](https://github.com/bhaskarvk/leaflet.extras): These are responsible for the map and its features.
 * [`devtools`](https://cran.r-project.org/web/packages/devtools/index.html): For installing packages from Github.
 * [`neonUtilities`](https://github.com/NEONScience/NEON-utilities/tree/master/neonUtilities) and [`nneo`](https://github.com/ropensci/nneo): Used to pull datasets from NEON.
-* [`shinythemes`](https://github.com/rstudio/shinythemes): Creates a theme for the Shiny app. 
-* [`shinyWidgets`](https://github.com/dreamRs/shinyWidgets): Provide shiny widgets with increased capabilities and aesthetics.
+* [`shinythemes`](https://github.com/rstudio/shinythemes), [`shinyWidgets`](https://github.com/dreamRs/shinyWidgets) and [`shinyBS`](https://github.com/ebailey78/shinyBS): Creates a shiny theme, provides shiny widgets with increased capabilities and aesthetics, and adds boostrap components to shiny.
 * [`sf`](https://github.com/r-spatial/sf) and [`geosphere`](https://github.com/cran/geosphere): Deal with geometries and coordinates necesary for the interactive map.
 * [`jsonlite`](https://github.com/cran/jsonlite): deals with JSON structures.
 
