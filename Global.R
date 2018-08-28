@@ -75,9 +75,24 @@ FieldSite_poly$domainCode <- as.numeric(FieldSite_poly$domainCode)
 FieldSite_locations_tes <- read.csv("NEON-data/Fieldsites_locations_tes", stringsAsFactors = FALSE)
 FieldSite_plots_tes <- read.csv("NEON-data/Fieldsites_plots_tes", stringsAsFactors = FALSE)[-1]
 FieldSite_locations_aqu <- read.csv("NEON-data/Fieldsites_locations_aqu", stringsAsFactors = FALSE)
-aqu_location_filter <- startsWith(FieldSite_locations_aqu$Name, "WELL") | startsWith(FieldSite_locations_aqu$Name, "METSTN") | grepl("S*LOC", FieldSite_locations_aqu$Name) |startsWith(FieldSite_locations_aqu$Name, "INLET") | startsWith(FieldSite_locations_aqu$Name, "OUTLET") | startsWith(FieldSite_locations_aqu$Name, "BUOY") | startsWith(FieldSite_locations_aqu$Name, "SGAUGE") |
+aqu_location_filter <- startsWith(FieldSite_locations_aqu$Name, "WELL") | startsWith(FieldSite_locations_aqu$Name, "METSTN") | grepl("S.LOC", FieldSite_locations_aqu$Name) |startsWith(FieldSite_locations_aqu$Name, "INLET") | startsWith(FieldSite_locations_aqu$Name, "OUTLET") | startsWith(FieldSite_locations_aqu$Name, "BUOY") | startsWith(FieldSite_locations_aqu$Name, "SGAUGE") |
 endsWith(FieldSite_locations_aqu$Name, "reach.bottom") | endsWith(FieldSite_locations_aqu$Name, "reach.top") | grepl("riparian[.]point", FieldSite_locations_aqu$Name) | grepl("riparian[.]transect", FieldSite_locations_aqu$Name)
 FieldSite_locations_aqu <- FieldSite_locations_aqu[aqu_location_filter,]
+for (i in 1:nrow(FieldSite_locations_aqu)) {
+  FieldSite_locations_aqu$`General Type`[i] <- if (startsWith(FieldSite_locations_aqu$Type[i], "GROUND")) {
+    "Groundwater Well"
+  } else if (startsWith(FieldSite_locations_aqu$Type[i], "MET")) {
+    "Met. Station"
+  } else if (grepl( "_LOC", FieldSite_locations_aqu$Type[i]) | grepl("BUOY", FieldSite_locations_aqu$Type[i])) {
+    "Sensor Station"
+  } else if (startsWith(FieldSite_locations_aqu$Type[i], "STAFF")) {
+    "Staff gauge/camera"
+  } else if (grepl("reach", FieldSite_locations_aqu$Type[i])) {
+    "Sampling Reach Boundary"
+  } else if (grepl("riparian", FieldSite_locations_aqu$Type[i])) {
+    "Riparian Assessment"
+  }
+}
 
 ####NEON Domains####
 ## Retrive data from NEON Domains in JSON format
@@ -122,15 +137,24 @@ TOS_data$domanID <- as.numeric(gsub(pattern = "D", replacement = "", x = TOS_dat
 NEON_datatypes <- c("Airborne Observation Platform (AOP)", "Aquatic Instrument System (AIS)", "Aquatic Observation System (AOS)","Terrestrial Instrument System (TIS)", "Terrestrial Observation System (TOS)")
 baseplot_text <- "30/site: Distributed Base Plots support a variety of plant productivity, plant diversity, soil, biogeochemistry, microbe and beetle sampling. Distributed Base Plots are 40m x 40m."
 birdgrid_text <- "5-15/site: Bird Grids consist of 9 sampling points within a 500m x 500m square. Each point is 250m apart. Where possible, Bird Grids are colocated with Distributed Base Plots by placing the Bird Grid center in close proximity to the center of the Base Plot. At smaller sites, a single point count is done at the south-west corner of the Distributed Base Plot."
+mammalgrid_text <- "6-8/site: Mammal Grids are 90m x 90m and include 10m spacing. Where possible, these grids are colocated with Distributed Base Plots by placing them a specified distance (150m +/- 50m) and random direction from the center of the Base Plot."
 mosquitoplot_text <- "10/site: At each Mosquito Point, one CO2 trap is established. Due to the frequency of sampling and the temporal sampling constraints, Mosquito Points are located within 45m of roads."
+tickplot_text <- "6/site: Tick Plots are sampled by conducting cloth dragging or flagging around the perimeter of a 40m x 40m plot. Tick plots are colocated with Distributed Base Plots by placing them a specified distance (150m +/- 15m) and random direction from the center of the Base Plot."
 phenologyplot_text <- "1-2/site: Plant phenology observations are made along a transect loop or plot in or around the primaru airshed. When possible, one plot is established north of the tower to calibrate phenology camera images captured from sensors on the tower. If there is insufficient space north of the tower for a 200m x 200m plot or if the vegetation does not match the primary airshed an additional plot is established."
+
+well_text <- ""
+metstn_text <- ""
+sensor_text <- ""
+gauge_text <- ""
+reach_text <- ""
+riparian_text <- ""
 
 ####———MAP ICONS———####
 NEON_icon <- makeIcon(iconUrl = "Img/NEON.png",
                       iconWidth = 30, iconHeight = 30,
                       iconAnchorX = 15, iconAnchorY = 15,
                       popupAnchorX = -1, popupAnchorY = -15)
-NEON_locations <- iconList(
+NEON_locations_tes <- iconList(
   `Distributed Base Plot` = makeIcon(iconUrl = "Img/distributedBaseplot.png", iconWidth = 15, iconHeight = 15,
                                      iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
   `Distributed Bird Grid` = makeIcon(iconUrl = "Img/birdGrid.png", iconWidth = 15, iconHeight = 15,
@@ -143,4 +167,18 @@ NEON_locations <- iconList(
                                      iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
   `Tower Phenology Plot` = makeIcon(iconUrl = "Img/phenology.png", iconWidth = 15, iconHeight = 15,
                                     iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5)
+)
+NEON_locations_aqu <- iconList(
+  `Groundwater Well` = makeIcon(iconUrl = "Img/groundwaterWell.png", iconWidth = 15, iconHeight = 15,
+                                iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
+  `Met. Station` = makeIcon(iconUrl = "Img/metStation.png", iconWidth = 15, iconHeight = 15,
+                            iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
+  `Sensor Station` = makeIcon(iconUrl = "Img/sensorStation.png", iconWidth = 15, iconHeight = 15,
+                              iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
+  `Staff gauge/camera` = makeIcon(iconUrl = "Img/staffGaugeCamera.png", iconWidth = 15, iconHeight = 15,
+                                  iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
+  `Sampling Reach Boundary` = makeIcon(iconUrl = "Img/reach-icon.png", iconWidth = 15, iconHeight = 15,
+                                       iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
+  `Riparian Assessment` = makeIcon(iconUrl = "Img/riparianAssessment.png", iconWidth = 15, iconHeight = 15,
+                                   iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5) 
 )
