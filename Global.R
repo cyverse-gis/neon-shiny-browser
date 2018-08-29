@@ -21,6 +21,9 @@ if (!dir.exists("../NEON Downloads")) {
 } else {
   dir_created <- FALSE
 }
+if (sum(as.data.frame(installed.packages())$Package %in% 'geosphere') < 1) {
+  sendSweetAlert(session, title = "Startup Failed", text = "Please install the package 'geosphere'.", type = "error")
+}
 
 ####———MAP DATA———####
 
