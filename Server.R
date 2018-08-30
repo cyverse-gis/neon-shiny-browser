@@ -577,7 +577,7 @@ function(input, output, session) {
                  } else if (input$NEONsite_zoom %in% FieldSite_Aqu) {
                    leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
                                                  lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
-                                                 zoom = 15)
+                                                 zoom = 15.5)
                  }
                }
   )
