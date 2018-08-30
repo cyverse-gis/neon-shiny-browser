@@ -2,7 +2,7 @@ fluidPage(theme = shinytheme('cerulean'),
           tags$a(href = "https://github.com/Danielslee51/NEON-Shiny-Browser", tags$b("Github")),
           " | ",
           tags$a(href = "https://icons8.com", tags$b("Icon pack by Icons8")),
-          title = ("Calliope View"),
+          title = ("NEON Browser"),
           navbarPage(tags$b("NEON-Browser"),
                      ####Tab 1: Includes the map, and key with features like filtering data####
                      tabPanel("Interactive Map",
