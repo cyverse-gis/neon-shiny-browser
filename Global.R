@@ -146,12 +146,12 @@ mosquitoplot_text <- "10/site: At each Mosquito Point, one CO2 trap is establish
 tickplot_text <- "6/site: Tick Plots are sampled by conducting cloth dragging or flagging around the perimeter of a 40m x 40m plot. Tick plots are colocated with Distributed Base Plots by placing them a specified distance (150m +/- 15m) and random direction from the center of the Base Plot."
 phenologyplot_text <- "1-2/site: Plant phenology observations are made along a transect loop or plot in or around the primaru airshed. When possible, one plot is established north of the tower to calibrate phenology camera images captured from sensors on the tower. If there is insufficient space north of the tower for a 200m x 200m plot or if the vegetation does not match the primary airshed an additional plot is established."
 
-well_text <- ""
-metstn_text <- ""
-sensor_text <- ""
-gauge_text <- ""
-reach_text <- ""
-riparian_text <- ""
+well_text <- "Each site has up to eight groundwater wells outfitted with sensors that measure high temporal resolution groundwater elevation (pressure transducer-based), temperature, and specific conductance."
+metstn_text <- "A met. station is located on the shore of the most aquatic sites and collects data comparable with flux tower measurements at terrestrial sites. Lake and wadeable rivers also have an above water met. station buoy. These data are unique with different sensors and data frequencies due to power and data storage constraints."
+sensor_text <- "Wadeable streams have a sensor station near the top of the reach and the bottom of the reach; non-wadeable rivers have a sensor station on a buoy and one near the bank; Lakes have an inlet sensor stations, and outlet sensor station and a sensor station sensor on a buoy. Data collection varies by type of sensor station. Click on sensor station on the map to learn more."
+gauge_text <- "The staff gauge measures gauge height, in meters, measured at lakes, wadeable rivers and non-wadeable streams. A phenocam is installed near most gauges. It collects RGB and IR images of the lake, river, or stream vegetation, stream surface, and stream gauge every 15 minutes."
+reach_text <- "These icons mark the top and bottom of the observational sampling reach at wadeable streams and non-wadeable rivers. The reach for lake sites is the shape of the lake itself. Observational sampling activities may include: Reaeration sampling; water chemistry, isotopes, dissolved gas; zooplankton, phytoplankton; secchi depth profile; bathymetric and morphologic mapping; discharge; sediment chemistry; riparian assessment; macroinvertebrates, plants, algae, and microbes; and fish."
+riparian_text <- "Number of locations for assessment of riparian vegetation composition and physical structure vary by site type. Lakes and non-wadeable rivers have ten locations. Wadeable streams have 20 locations and also include assessment of riparian vegetation percent cover in wadeable streams."
 
 ####———MAP ICONS———####
 NEON_icon <- makeIcon(iconUrl = "Img/NEON.png",
