@@ -590,6 +590,26 @@ function(input, output, session) {
                  choices <- input$fieldsite_sublocs
                  updateSelectInput(session, inputId = "fieldsite_sublocs", selected = c(choices, input$NEONsite_zoom))
                })
+  observeEvent(eventExpr = input$togglesite,
+               handlerExpr = {
+                 if (input$NEONsite_zoom %in% FieldSite_Tes) {
+                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
+                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
+                                                 zoom = 12)
+                 } else if (input$NEONsite_zoom %in% FieldSite_Aqu) {
+                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
+                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
+                                                 zoom = 15.5)
+                 }
+                 leafletProxy('map') %>% showGroup(group = "Sub Locations")
+                 choices <- input$fieldsite_sublocs
+                 updateSelectInput(session, inputId = "fieldsite_sublocs", selected = c(choices, input$NEONsite_zoom))
+                 updateTabsetPanel(session, inputId = "main", selected = "data")
+                 updateTabsetPanel(session, inputId = "data", selected = "find")
+                 updateRadioButtons(session, inputId = "NEON_browsing_type", selected = "site")
+                 updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
+                 updateSelectInput(session, inputId = "NEONsite_site", selected = input$NEONsite_zoom)
+               })
   ####— NEON: Step 1- Find data ####
   ####—— 1a: By Site####
   # Variables
@@ -612,8 +632,10 @@ function(input, output, session) {
     }
   })
   NEONproductlist_site <- reactive(NEONproductlist_site_filtered_keyword()[(NEONproductlist_site_filtered_keyword()$producttype %in% datatype_filters_site()),])
+  
   # for dropdown
   output$dropdown_site <- renderPrint(paste0(FieldSite_point$siteName[FieldSite_point$siteCode %in% input$NEONsite_zoom], " ", FieldSite_point$`Habitat Specific`[FieldSite_point$siteCode %in% input$NEONsite_zoom]))
+  output$dropdown_state <- renderPrint(FieldSite_point$stateName[FieldSite_point$siteCode %in% input$NEONsite_zoom])
   output$dataproduct_number <- renderPrint(nrow(NEONproducts_product[filter_site(site = input$NEONsite_zoom),]))
   # single: filtering column of products for one site through ID
   NEONproductID_site <- reactive(req(
@@ -625,8 +647,18 @@ function(input, output, session) {
   ))
   NEONproductinfo_site <- reactive(req(filter(.data = NEONproducts_site(), productCode == NEONproductID_site())))
   # Display products: list
-  output$NEONproductoptions_site <- renderDataTable(NEONproductlist_site()[1:2], options = list(lengthMenu = c(10,25),
-                                                                                                pageLength = 10))
+  output$NEONproductoptions_site <- renderDT(datatable(data.frame(unlist(NEONproductlist_site()[1]), unlist(NEONproductlist_site()[2])),
+                                                       colnames = c("Product Name", "Product Code"), rownames = FALSE, extensions = 'Scroller', class = 'cell-border stripe hover order-column', filter = "bottom",
+                                                       options = list(lengthMenu = c(10,25),
+                                                                      pageLength = 10,
+                                                                      deferRender = TRUE,
+                                                                      scrollY = '40vh'
+                                                                      ),
+                                                       selection = list(mode = 'single', target = 'cell')))
+  observeEvent(eventExpr = input$NEONproductoptions_site_cells_selected,
+               handlerExpr = {
+                 updateTextInput(session = session, inputId = "NEONproductID_site", value = ifelse(length(input$NEONproductoptions_site_cells_selected)==0,NA,NEONproductlist_site()[[2]][[input$NEONproductoptions_site_cells_selected[1]]]))
+               })
   # Display products: single
   output$NEONproductsite_site <- renderPrint(req(input$NEONsite_site))
   output$NEONproductname_site <- renderPrint(req(NEONproductinfo_site()$productName))
@@ -885,9 +917,9 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText(input$sublocs_birdgrid & nrow(Subloc_tes_plots_bird()) != 0)
+  output$text_me <- renderText(unlist(NEONproductlist_site()[1]))
   #Text for troublshooting 2
-  output$text_me_two <- renderText(!input$sublocs_birdgrid | (nrow(Subloc_tes_plots_bird()) == 0))
+  output$text_me_two <- renderText(length(unlist(NEONproductlist_site()[1])))
   #Table for troubleshooting
-  #output$table_me <- renderDataTable()
+  output$table_me <- shiny::renderDataTable(NEONproductlist_site()[1:2])
 }

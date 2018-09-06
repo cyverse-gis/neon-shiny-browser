@@ -8,21 +8,24 @@ fluidPage(theme = shinytheme('cerulean'),
                      tabPanel("Interactive Map",
                               dropdown(right = TRUE, status = "primary", size = "sm", icon = icon("info-circle"), width = "38vw",
                                        selectInput(inputId = "NEONsite_zoom", label = "Site info:", choices = FieldSite_abbs),
-                                       tags$b("Name and type"),
+                                       tags$b("Name and type:"),
                                        verbatimTextOutput(outputId = "dropdown_site", placeholder = TRUE),
-                                       tags$b("Number of data products available"),
+                                       tags$b("State:"),
+                                       verbatimTextOutput(outputId = "dropdown_state",placeholder = TRUE),
+                                       tags$b("Number of data products available:"),
                                        verbatimTextOutput(outputId = "dataproduct_number", placeholder = TRUE),
                                        actionButton(inputId = "addsublocs", label = "Add sub-locations for site"),
-                                       actionButton(inputId = "zoomtosite", label = "Zoom to site")),
+                                       actionButton(inputId = "zoomtosite", label = "Zoom to site"),
+                                       actionButton(inputId = "togglesite", label = "Toggle for viewing and download")),
                               sidebarLayout(
                                 position = "right",
                                 sidebarPanel(width = 5,
                                              tabsetPanel(id = "main",
                                                #### — NEON ####
-                                               tabPanel(tags$h5("Data Manager"),
-                                                        tabsetPanel(
+                                               tabPanel(tags$h5("Data Manager"), value = "data",
+                                                        tabsetPanel(id = "data",
                                                           #### —— STEP 1: Find Data####
-                                                          tabPanel("Find",
+                                                          tabPanel("Find", value = "find",
                                                                    radioButtons(inputId = "NEON_browsing_type", label = "Browsing method", choices = list("Start with Site" = "site", "Start with Product" = "product"), inline = TRUE),
                                                                    conditionalPanel("input.NEON_browsing_type == 'site'",
                                                                                     includeMarkdown('Rmd/NEON_browsing_site.Rmd'),
@@ -33,7 +36,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                                      conditionalPanel("input.showmorefilters_site",
                                                                                                                       uiOutput(outputId = "ui_selectkeywords_site"),
                                                                                                                       selectInput(inputId = "selectproducttype_site", label = "Product Type", choices = NEON_datatypes, multiple = TRUE)),
-                                                                                                     dataTableOutput(outputId = "NEONproductoptions_site")
+                                                                                                     DTOutput(outputId = "NEONproductoptions_site")
                                                                                     ),
                                                                                     conditionalPanel("input.NEONbrowsingstep_site == 'single'",
                                                                                                      tags$b("Site:"),
@@ -225,6 +228,6 @@ fluidPage(theme = shinytheme('cerulean'),
                      tabPanel("For me (troubleshooting)",
                               textOutput("text_me"),
                               textOutput("text_me_two"),
-                              dataTableOutput("table_me"))
+                              shiny::dataTableOutput("table_me"))
           )
 )
