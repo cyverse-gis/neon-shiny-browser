@@ -44,7 +44,7 @@ In addition to shiny itself, a few packages need to be downloaded: <br>
 * [`jsonlite`](https://github.com/cran/jsonlite): deals with JSON structures.
 
  ```
-install.packages(c('leaflet','leaflet.extras','devtools','nneo','shinythemes','shinyWidgets','shinyBS','sf','geosphere','jsonlite'))
+install.packages(c('leaflet','leaflet.extras','devtools','nneo','shinythemes','shinyWidgets','shinyBS','sf','geosphere','jsonlite', 'dplyr', 'DT'))
 devtools::install_github("NEONScience/NEON-utilities/neonUtilities", dependencies=TRUE)
 ```
 
