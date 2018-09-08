@@ -39,12 +39,13 @@ In addition to shiny itself, a few packages need to be downloaded: <br>
 * [`leaflet`](https://github.com/rstudio/leaflet) and [`leaflet.extras`](https://github.com/bhaskarvk/leaflet.extras): These are responsible for the map and its features.
 * [`devtools`](https://cran.r-project.org/web/packages/devtools/index.html): For installing packages from Github.
 * [`neonUtilities`](https://github.com/NEONScience/NEON-utilities/tree/master/neonUtilities) and [`nneo`](https://github.com/ropensci/nneo): Used to pull datasets from NEON.
-* [`shinythemes`](https://github.com/rstudio/shinythemes), [`shinyWidgets`](https://github.com/dreamRs/shinyWidgets) and [`shinyBS`](https://github.com/ebailey78/shinyBS): Creates a shiny theme, provides shiny widgets with increased capabilities and aesthetics, and adds boostrap components to shiny.
+* [`shinythemes`](https://github.com/rstudio/shinythemes), [`shinyWidgets`](https://github.com/dreamRs/shinyWidgets), [`shinyBS`](https://github.com/ebailey78/shinyBS), and [`shinyjs`](https://github.com/daattali/shinyjs): Adds themes, "pimped-up" widgets, boostrap, and JavaScript functions to the app.
 * [`sf`](https://github.com/r-spatial/sf) and [`geosphere`](https://github.com/cran/geosphere): Deal with geometries and coordinates necesary for the interactive map.
-* [`jsonlite`](https://github.com/cran/jsonlite): deals with JSON structures.
+* [`jsonlite`](https://github.com/cran/jsonlite): Deals with JSON structures.
+* [`DT`](https://github.com/rstudio/DT) and [`dplyr`](https://github.com/tidyverse/dplyr): Help with data table manipulation.
 
  ```
-install.packages(c('leaflet','leaflet.extras','devtools','nneo','shinythemes','shinyWidgets','shinyBS','sf','geosphere','jsonlite', 'dplyr', 'DT'))
+install.packages(c('leaflet','leaflet.extras','devtools','nneo','shinythemes','shinyWidgets','shinyBS','shinyjs','sf','geosphere','jsonlite', 'dplyr', 'DT'))
 devtools::install_github("NEONScience/NEON-utilities/neonUtilities", dependencies=TRUE)
 ```
 
