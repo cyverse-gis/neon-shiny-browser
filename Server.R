@@ -7,6 +7,9 @@ function(input, output, session) {
   } else {
     showNotification(ui = "Welcome back!", duration = 10, type = "message")
   }
+  hideElement(id = "togglegeneral_site")
+  hideElement(id = "togglespecific_site")
+  hideElement(id = "toggleAOP_site")
   
   ####INTERACTIVE MAP TAB####
   
@@ -633,10 +636,11 @@ function(input, output, session) {
   })
   NEONproductlist_site <- reactive(NEONproductlist_site_filtered_keyword()[(NEONproductlist_site_filtered_keyword()$producttype %in% datatype_filters_site()),])
   
-  # for dropdown
+  ## for dropdown
   output$dropdown_site <- renderPrint(paste0(FieldSite_point$siteName[FieldSite_point$siteCode %in% input$NEONsite_zoom], " ", FieldSite_point$`Habitat Specific`[FieldSite_point$siteCode %in% input$NEONsite_zoom]))
   output$dropdown_state <- renderPrint(FieldSite_point$stateName[FieldSite_point$siteCode %in% input$NEONsite_zoom])
   output$dataproduct_number <- renderPrint(nrow(NEONproducts_product[filter_site(site = input$NEONsite_zoom),]))
+  
   # single: filtering column of products for one site through ID
   NEONproductID_site <- reactive(req(
     if (gsub(pattern = " ", replacement = "", x = input$NEONproductID_site) == "") {
@@ -648,12 +652,13 @@ function(input, output, session) {
   NEONproductinfo_site <- reactive(req(filter(.data = NEONproducts_site(), productCode == NEONproductID_site())))
   # Display products: list
   output$NEONproductoptions_site <- renderDT(datatable(data.frame(unlist(NEONproductlist_site()[1]), unlist(NEONproductlist_site()[2])),
-                                                       colnames = c("Product Name", "Product Code"), rownames = FALSE, extensions = 'Scroller', class = 'cell-border stripe hover order-column', filter = "bottom",
-                                                       options = list(lengthMenu = c(10,25),
+                                                       colnames = c("Product Name", "Product Code"), rownames = as.character(1:nrow(NEONproductlist_site())), extensions = 'Scroller', class = 'cell-border stripe hover order-column',
+                                                       options = list(dom = 'tlfipr',
+                                                                      lengthMenu = c(10,25,50),
                                                                       pageLength = 10,
                                                                       deferRender = TRUE,
                                                                       scrollY = '40vh'
-                                                                      ),
+                                                       ),
                                                        selection = list(mode = 'single', target = 'cell')))
   observeEvent(eventExpr = input$NEONproductoptions_site_cells_selected,
                handlerExpr = {
@@ -662,6 +667,53 @@ function(input, output, session) {
   # Display products: single
   output$NEONproductsite_site <- renderPrint(req(input$NEONsite_site))
   output$NEONproductname_site <- renderPrint(req(NEONproductinfo_site()$productName))
+  observe({
+    if (nrow(NEONproductinfo_product()) == 0) {
+      hideElement(id = "togglegeneral_site", anim = TRUE, animType = "slide")
+      hideElement(id = "togglespecific_site", anim = TRUE, animType = "slide") 
+      hideElement(id = "toggleAOP_site", anim = TRUE, animType = "slide")
+    }
+    is_AOP <- if (nrow(NEONproductinfo_site()) > 0) {
+      if (NEONproductinfo_site()$productScienceTeamAbbr == "AOP") {
+        TRUE
+      } else {
+        FALSE
+      }
+    }
+    if (nrow(NEONproductinfo_site()) > 0) {
+      if (is_AOP == FALSE) {
+        hideElement(id = "toggleAOP_site", anim = TRUE, animType = "slide")
+        showElement(id = "togglegeneral_site", anim = TRUE, animType = "slide")
+        showElement(id = "togglespecific_site", anim = TRUE, animType = "slide")  
+      } else if (is_AOP == TRUE) {
+        hideElement(id = "togglegeneral_site", anim = TRUE, animType = "slide")
+        hideElement(id = "togglespecific_site", anim = TRUE, animType = "slide") 
+        showElement(id = "toggleAOP_site", anim = TRUE, animType = "slide")
+      }
+    }
+  })
+  observeEvent(eventExpr = input$togglegeneral_site,
+               handlerExpr = {
+                 updateTextInput(session, inputId = "dpID_general", value = input$NEONproductID_site)
+                 updateSelectInput(session, inputId = "location_NEON_general", selected = input$NEONsite_site)
+                 updateTabsetPanel(session, inputId = "data", selected = "download")
+                 updateRadioButtons(session, inputId = "NEON_download_type", selected = "general")
+               })
+  observeEvent(eventExpr = input$togglespecific_site,
+               handlerExpr = {
+                 updateTextInput(session, inputId = "dpID_specific", value = input$NEONproductID_site)
+                 updateSelectInput(session, inputId = "location_NEON_specific", selected = input$NEONsite_site)
+                 updateTabsetPanel(session, inputId = "data", selected = "download")
+                 updateRadioButtons(session, inputId = "NEON_download_type", selected = "specific")
+               })
+  observeEvent(eventExpr = input$toggleAOP_site,
+               handlerExpr = {
+                 updateTextInput(session, inputId = "dpID_AOP", value = input$NEONproductID_site)
+                 updateSelectInput(session, inputId = "location_NEON_AOP", selected = input$NEONsite_site)
+                 updateTabsetPanel(session, inputId = "data", selected = "download")
+                 updateRadioButtons(session, inputId = "NEON_download_type", selected = "AOP")
+               })
+  
   output$NEONproductdesc_site <- renderPrint(req(ifelse(is.null(req(NEONproductinfo_site()$productDescription)),
                                                         yes = NULL,
                                                         no = NEONproductinfo_site()$productDescription)))
@@ -717,9 +769,69 @@ function(input, output, session) {
   ))
   NEONproductinfo_product <- reactive(req(filter(.data = NEONproducts_product, productCode == NEONproductID_product())))
   # Display products: list
-  output$NEON_product_options <- renderDataTable(NEONproductlist_product()[1:2], options = list(lengthMenu = c(10,25), pageLength = 10))
+  output$NEONproductoptions_product <- renderDT(datatable(NEONproductlist_product()[1:2], class = 'cell-border stripe hover order-column',
+                                                    options = list(dom = 'tlfipr',
+                                                                   lengthMenu = c(10,25,50),
+                                                                   pageLength = 25,
+                                                                   deferRender = TRUE,
+                                                                   scrollY = '40vh'
+                                                    ),
+                                                    selection = list(mode = 'single', target = 'cell')))
+  observeEvent(eventExpr = input$NEONproductoptions_product_cells_selected,
+               handlerExpr = {
+                 updateTextInput(session = session, inputId = "NEONproductID_product", value = ifelse(length(input$NEONproductoptions_product_cells_selected)==0,NA,NEONproductlist_product()[[2]][[input$NEONproductoptions_product_cells_selected[1]]]))
+               })
   # Display products: single
   output$NEONproductname_product <- renderPrint(req(NEONproductinfo_product()$productName))
+  
+  # Buttons to toggle downloads
+  observe({
+    if (nrow(NEONproductinfo_product()) == 0) {
+      hideElement(id = "togglegeneral_product", anim = TRUE, animType = "slide")
+      hideElement(id = "togglespecific_product", anim = TRUE, animType = "slide") 
+      hideElement(id = "toggleAOP_product", anim = TRUE, animType = "slide")
+    }
+    is_AOP <- if (nrow(NEONproductinfo_product()) > 0) {
+      if (NEONproductinfo_product()$productScienceTeamAbbr == "AOP") {
+        TRUE
+      } else {
+        FALSE
+      }
+    }
+    if (nrow(NEONproductinfo_product()) > 0) {
+      if (is_AOP == FALSE) {
+        hideElement(id = "toggleAOP_product", anim = TRUE, animType = "slide")
+        showElement(id = "togglegeneral_product", anim = TRUE, animType = "slide")
+        showElement(id = "togglespecific_product", anim = TRUE, animType = "slide")  
+      } else if (is_AOP == TRUE) {
+        hideElement(id = "togglegeneral_product", anim = TRUE, animType = "slide")
+        hideElement(id = "togglespecific_product", anim = TRUE, animType = "slide") 
+        showElement(id = "toggleAOP_product", anim = TRUE, animType = "slide")
+      }
+    }
+  })
+  observeEvent(eventExpr = input$togglegeneral_product,
+               handlerExpr = {
+                 updateTextInput(session, inputId = "dpID_general", value = input$NEONproductID_product)
+                 updateSelectInput(session, inputId = "location_NEON_general", selected = input$NEONsite_product)
+                 updateTabsetPanel(session, inputId = "data", selected = "download")
+                 updateRadioButtons(session, inputId = "NEON_download_type", selected = "general")
+  })
+  observeEvent(eventExpr = input$togglespecific_product,
+               handlerExpr = {
+                 updateTextInput(session, inputId = "dpID_specific", value = input$NEONproductID_product)
+                 updateSelectInput(session, inputId = "location_NEON_specific", selected = input$NEONsite_product)
+                 updateTabsetPanel(session, inputId = "data", selected = "download")
+                 updateRadioButtons(session, inputId = "NEON_download_type", selected = "specific")
+               })
+  observeEvent(eventExpr = input$toggleAOP_product,
+               handlerExpr = {
+                 updateTextInput(session, inputId = "dpID_AOP", value = input$NEONproductID_product)
+                 updateSelectInput(session, inputId = "location_NEON_AOP", selected = input$NEONsite_product)
+                 updateTabsetPanel(session, inputId = "data", selected = "download")
+                 updateRadioButtons(session, inputId = "NEON_download_type", selected = "AOP")
+               })
+  
   output$NEONproductdesc_product <- renderPrint(req(NEONproductinfo_product()$productDescription))
   output$NEONproductdesign_product <- renderPrint(req(NEONproductinfo_product()$productDesignDescription))
   output$NEONproductnotes_product <- renderPrint(req(NEONproductinfo_product()$productRemarks))
@@ -917,9 +1029,9 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText(unlist(NEONproductlist_site()[1]))
+  output$text_me <- renderText(input$NEONproductoptions_product_cells_selected)
   #Text for troublshooting 2
-  output$text_me_two <- renderText(length(unlist(NEONproductlist_site()[1])))
+  output$text_me_two <- renderText(input$NEONproductoptions_site_cells_selected)
   #Table for troubleshooting
   output$table_me <- shiny::renderDataTable(NEONproductlist_site()[1:2])
 }
