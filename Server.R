@@ -698,6 +698,7 @@ function(input, output, session) {
                  updateSelectInput(session, inputId = "location_NEON_general", selected = input$NEONsite_site)
                  updateTabsetPanel(session, inputId = "data", selected = "download")
                  updateRadioButtons(session, inputId = "NEON_download_type", selected = "general")
+                 updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
                })
   observeEvent(eventExpr = input$togglespecific_site,
                handlerExpr = {
@@ -705,6 +706,7 @@ function(input, output, session) {
                  updateSelectInput(session, inputId = "location_NEON_specific", selected = input$NEONsite_site)
                  updateTabsetPanel(session, inputId = "data", selected = "download")
                  updateRadioButtons(session, inputId = "NEON_download_type", selected = "specific")
+                 updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
                })
   observeEvent(eventExpr = input$toggleAOP_site,
                handlerExpr = {
@@ -712,6 +714,7 @@ function(input, output, session) {
                  updateSelectInput(session, inputId = "location_NEON_AOP", selected = input$NEONsite_site)
                  updateTabsetPanel(session, inputId = "data", selected = "download")
                  updateRadioButtons(session, inputId = "NEON_download_type", selected = "AOP")
+                 updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
                })
   
   output$NEONproductdesc_site <- renderPrint(req(ifelse(is.null(req(NEONproductinfo_site()$productDescription)),
@@ -816,6 +819,7 @@ function(input, output, session) {
                  updateSelectInput(session, inputId = "location_NEON_general", selected = input$NEONsite_product)
                  updateTabsetPanel(session, inputId = "data", selected = "download")
                  updateRadioButtons(session, inputId = "NEON_download_type", selected = "general")
+                 updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
   })
   observeEvent(eventExpr = input$togglespecific_product,
                handlerExpr = {
@@ -823,6 +827,7 @@ function(input, output, session) {
                  updateSelectInput(session, inputId = "location_NEON_specific", selected = input$NEONsite_product)
                  updateTabsetPanel(session, inputId = "data", selected = "download")
                  updateRadioButtons(session, inputId = "NEON_download_type", selected = "specific")
+                 updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
                })
   observeEvent(eventExpr = input$toggleAOP_product,
                handlerExpr = {
@@ -830,6 +835,7 @@ function(input, output, session) {
                  updateSelectInput(session, inputId = "location_NEON_AOP", selected = input$NEONsite_product)
                  updateTabsetPanel(session, inputId = "data", selected = "download")
                  updateRadioButtons(session, inputId = "NEON_download_type", selected = "AOP")
+                 updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
                })
   
   output$NEONproductdesc_product <- renderPrint(req(NEONproductinfo_product()$productDescription))
