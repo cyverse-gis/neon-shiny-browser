@@ -111,9 +111,9 @@ domains$Domain <- as.character(domains$Domain)
 # Retrieve geometry data using st_read()
 domain_data <- st_read('NEON-data/NEON_Domains.json')
 
-####NEON Flightpaths####
-## Retrieve info for NEON flightpaths
-# Get human info about flightpaths
+####NEON Flight Boxes####
+## Retrieve info for NEON flight boxes
+# Get human info about flight boxes
 FieldSite_table <- data.frame("Abb"=c("BART","HARV","BLAN","SCBI","SERC","DSNY","JERC","OSBS","STEI-CHEQ","STEI-TREE","UNDE","KONZ-KONA","GRSM","MLBS","ORNL","DELA","LENO","TALL","DCFS-WOOD","NOGP","CLBJ","OAES","CHEQ", "BARO"),
                               "Site"=c("Bartlett Experimental Forest North-South flight box", "Harvard Forest flight box","Blandy Experimental Farm flight box","Smithsonian Conservation Biology Institute flight box","Smithsonian Ecological Research Center flight box","Disney Wilderness Preserve flight box","Jones Ecological Research Center Priority 1 flight box","Ordway-Swisher Biological Station Priority 1 flight box","Chequamegon-Nicolet National Forest flight box","Steigerwaldt-Treehaven Priority 2 flight box","UNDERC flight box","Konza Prairie Biological Station and KONA agricultural site flight box","Great Smoky Mountains National Park priority 2 flight box","Mountain Lake Biological Station flight box","Oak Ridge National Laboratory flight box","Dead Lake flight box","Lenoir Landing flight box","Talladega National Forest flight box","Woodworth and Dakota Coteau Field School flight box","Northern Great Plains flight box","LBJ Grasslands flight box","Klemme Range Research Station flight box",
                                        "Chequamegon-Nicolet National Forest", "Barrow"))
@@ -129,14 +129,6 @@ flight_filenames_all_2017 <- Sys.glob('NEON-data/Flightdata/Flight_boundaries_20
 flight_filenames_2017 <- Sys.glob('NEON-data/Flightdata/Flight_boundaries_2017/D*.geojson')
 flight_data(flightlist_info = flight_filenames_all_2017, flightlist_geo = flight_filenames_2017, year = "2017", name = "flight_data_2017")
 flight_data <- rbind(flight_data_2016, flight_data_2017)
-
-#### TOS ####
-# Point markers
-TOS_data <- st_read('TOS/NEON_TOS_Polygon.json')
-for (i in 1:length(TOS_data$siteID)) {
-  TOS_data$siteType[i] <- FieldSite_point$siteType[FieldSite_point$siteCode %in% TOS_data$siteID[i]]
-}
-TOS_data$domanID <- as.numeric(gsub(pattern = "D", replacement = "", x = TOS_data$domanID))
 
 #### Miscellaneous Variables ####
 

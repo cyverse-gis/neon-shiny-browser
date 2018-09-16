@@ -14,7 +14,7 @@ function(input, output, session) {
   ####INTERACTIVE MAP TAB####
   
   # Reactive value for layer control
-  legend <- reactiveValues(group = c("Field Sites", "Domains", "Flightpaths", "TOS", "Sub Locations"))
+  legend <- reactiveValues(group = c("Field Sites", "Domains", "Flight Boxes", "Sub Locations"))
   
   #### Map ####
   output$map <- renderLeaflet({
@@ -55,7 +55,6 @@ function(input, output, session) {
   Field_sites_poly_filtered <- reactive(FieldSite_poly %>% filter(code %in% Field_sites_point_filtered()$siteCode))
   Domain_included <- reactive(domain_data %>% filter(DomainName %in% input$fieldsite_domain))
   Domain_unincluded <- reactive(domain_data %>% filter(!(DomainName %in% input$fieldsite_domain)))
-  TOS_data_filtered <- reactive(TOS_data %>% filter(siteID %in% Field_sites_point_filtered()$siteCode))
   Flight_data_filtered <- reactive(flight_data %>% filter(SiteAbb %in% Field_sites_point_filtered()$siteCode) %>%
                                      filter(Year %in% input$flightpath_year))
  
@@ -104,18 +103,18 @@ function(input, output, session) {
                   color = "blue")
   })
   
-  #### —— Plot Flightpaths ####
+  #### —— Plot Flight Boxes ####
   observe({
     proxy <- leafletProxy("map")
     # pal <- colorFactor(palette = c("#FFFFFF", "#0000FF"), domain = Flight_data_filtered()$Year)
     if (nrow(Flight_data_filtered()) == 0) {
-      proxy %>% clearGroup(group = "Flightpaths")
+      proxy %>% clearGroup(group = "Flight Boxes")
     } else {
-      proxy %>% clearGroup(group = "Flightpaths") %>%
+      proxy %>% clearGroup(group = "Flight Boxes") %>%
         # Areas for NEON flight paths (red)
         addPolygons(data = Flight_data_filtered()$geometry,
                     color = "Red",
-                    group = "Flightpaths",
+                    group = "Flight Boxes",
                     popup = paste0("<b>Year: </b>",
                                    Flight_data_filtered()$Year,
                                    "<br><b>Site: </b><br>",
@@ -131,32 +130,6 @@ function(input, output, session) {
                     opacity = 0.3, 
                     fillOpacity = 0.06
         )
-    }
-  })
-  #### —— Plot TOS ####
-  observe({
-    proxy <- leafletProxy("map")
-    if (nrow(TOS_data_filtered()) == 0) {
-      proxy %>% clearGroup(group = "TOS")
-    } else {
-      proxy %>% clearGroup(group = "TOS") %>%
-        addMarkers(data = TOS_data_filtered(),
-                   lng = TOS_data_filtered()$longitd,
-                   lat = TOS_data_filtered()$latitud,
-                   popup = paste0("<b>Plot ID: </b>",
-                                  TOS_data_filtered()$plotID,
-                                  "<br><b>Dimensions: </b>",
-                                  TOS_data_filtered()$plotDim,
-                                  "<br><b>Plot Type: </b>",
-                                  TOS_data_filtered()$plotTyp, "/",
-                                  TOS_data_filtered()$subtype),
-                   group = "TOS",
-                   clusterOptions = markerClusterOptions()
-        ) %>%
-        addPolygons(data = TOS_data_filtered(),
-                    popup = paste0("Area of ", TOS_data_filtered()$plotID),
-                    group = "TOS",
-                    color = "gray")
     }
   })
   #### —— Plot Fieldsites ####
@@ -569,8 +542,8 @@ function(input, output, session) {
     updateCheckboxInput(session, inputId = "sublocs_reach", value = FALSE)
     updateCheckboxInput(session, inputId = "sublocs_riparian", value = FALSE)
   })
-  # Hide TOS and Flightpaths when launching app (TOS can make computer slow)
-  leafletProxy("map") %>% hideGroup("TOS") %>% hideGroup("Flightpaths")
+  # Hide Flight Boxes when launching app
+  leafletProxy("map") %>% hideGroup("Flight Boxes")
   
   #### NEON ####
   observeEvent(eventExpr = input$zoomtosite,
