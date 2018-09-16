@@ -145,8 +145,9 @@ function(input, output, session) {
                    lat = Field_sites_point_filtered()$siteLatitude,
                    group = "Field Sites",
                    popup = paste0("<b>Site Name: </b>",
+                                  "<a href='https://www.neonscience.org/field-sites/field-sites-map/", Field_sites_point_filtered()$siteCode, "' target='_blank'>",
                                   Field_sites_point_filtered()$siteDescription, " (",
-                                  Field_sites_point_filtered()$siteCode, ")",
+                                  Field_sites_point_filtered()$siteCode, ")", "</a>",
                                   "<br><b>Region: </b>",
                                   Field_sites_point_filtered()$domainName,
                                   "<br><b>State: </b>",
@@ -179,7 +180,8 @@ function(input, output, session) {
                         color = "#49E2BD",
                         layerId = Field_sites_poly_filtered()$code[i],
                         popup = paste0("Boundaries for ",
-                                       Field_sites_poly_filtered()$name[i]),
+                                       "<a href='https://www.neonscience.org/field-sites/field-sites-map/", Field_sites_point_filtered()$code[i], "' target='_blank'>",
+                                       Field_sites_poly_filtered()$name[i], "</a>"),
                         opacity = 1,
                         fillOpacity = 0,
                         highlightOptions = highlightOptions(stroke = TRUE, color = "#39ff14", weight = 7)
@@ -193,7 +195,8 @@ function(input, output, session) {
                          color = "#49E2BD",
                         # layerId = Field_sites_poly_filtered()$code[i],
                          popup = paste0("Boundaries for ",
-                                        Field_sites_poly_filtered()$name[i]),
+                                        "<a href='https://www.neonscience.org/field-sites/field-sites-map/", Field_sites_point_filtered()$code[i], "' target='_blank'>",
+                                        Field_sites_poly_filtered()$name[i], "</a>"),
                          opacity = 1,
                          fillOpacity = 0.4,
                          highlightOptions = highlightOptions(stroke = TRUE, color = "#39ff14", weight = 7)
@@ -625,7 +628,7 @@ function(input, output, session) {
   NEONproductinfo_site <- reactive(req(filter(.data = NEONproducts_site(), productCode == NEONproductID_site())))
   # Display products: list
   output$NEONproductoptions_site <- renderDT(datatable(data.frame(unlist(NEONproductlist_site()[1]), unlist(NEONproductlist_site()[2])),
-                                                       colnames = c("Product Name", "Product Code"), rownames = as.character(1:nrow(NEONproductlist_site())), extensions = 'Scroller', class = 'cell-border stripe hover order-column',
+                                                       colnames = c("Product Name", "Product Code"), rownames = FALSE, extensions = 'Scroller', class = 'cell-border stripe hover order-column',
                                                        options = list(dom = 'tlfipr',
                                                                       lengthMenu = c(10,25,50),
                                                                       pageLength = 10,
@@ -745,14 +748,14 @@ function(input, output, session) {
   ))
   NEONproductinfo_product <- reactive(req(filter(.data = NEONproducts_product, productCode == NEONproductID_product())))
   # Display products: list
-  output$NEONproductoptions_product <- renderDT(datatable(NEONproductlist_product()[1:2], class = 'cell-border stripe hover order-column',
-                                                    options = list(dom = 'tlfipr',
-                                                                   lengthMenu = c(10,25,50),
-                                                                   pageLength = 25,
-                                                                   deferRender = TRUE,
-                                                                   scrollY = '40vh'
-                                                    ),
-                                                    selection = list(mode = 'single', target = 'cell')))
+  output$NEONproductoptions_product <- renderDT(datatable(NEONproductlist_product()[1:2], class = 'cell-border stripe hover order-column', rownames = FALSE,
+                                                          options = list(dom = 'tlfipr',
+                                                                         lengthMenu = c(10,25,50),
+                                                                         pageLength = 25,
+                                                                         deferRender = TRUE,
+                                                                         scrollY = '40vh'
+                                                          ),
+                                                          selection = list(mode = 'single', target = 'cell')))
   observeEvent(eventExpr = input$NEONproductoptions_product_cells_selected,
                handlerExpr = {
                  updateTextInput(session = session, inputId = "NEONproductID_product", value = ifelse(length(input$NEONproductoptions_product_cells_selected)==0,NA,NEONproductlist_product()[[2]][[input$NEONproductoptions_product_cells_selected[1]]]))
@@ -1008,9 +1011,9 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText(input$NEONproductoptions_product_cells_selected)
+  output$text_me <- renderText(nrow(NEONproductlist_site()) > 0)
   #Text for troublshooting 2
-  output$text_me_two <- renderText(input$NEONproductoptions_site_cells_selected)
+  output$text_me_two <- renderText(as.character(1:nrow(NEONproductlist_site())))
   #Table for troubleshooting
-  output$table_me <- shiny::renderDataTable(NEONproductlist_site()[1:2])
+  #output$table_me <- shiny::renderDataTable(NEONproductlist_site()[1:2])
 }

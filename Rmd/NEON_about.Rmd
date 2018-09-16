@@ -1,6 +1,6 @@
 ## NEON
 
-The [National Ecological Observatory Network is a "continental-scale ecological observation facility"](https://www.neonscience.org/) that provides open data on our ecosystems. The envisioned 30-year project collects environmental data like precipitation, soil temperature, humidity, and pressure across 81 field sites (47 terrestrial and 34 aquatic) to measure the patterns and changes in our environment. With over 180 data products describing the characteristics of a diverse range of ecosystems, their data will be crucial to future studies of biology and climate change over time.
+The [National Ecological Observatory Network](https://www.neonscience.org/) is a "continental-scale ecological observation facility" that provides open data on our ecosystems. The envisioned 30-year project collects environmental data like precipitation, soil temperature, humidity, and pressure across 81 field sites (47 terrestrial and 34 aquatic) to measure the patterns and changes in our environment. With over 180 data products describing the characteristics of a diverse range of ecosystems, their data will be crucial to future studies of biology and climate change over time.
 
 ### Resources
-To find out more about NEONhttps://www.neonscience.org/, check out their [website](https://www.neonscience.org/).
+To find out more about NEON, check out their [website](https://www.neonscience.org/).
