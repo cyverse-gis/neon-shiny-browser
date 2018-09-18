@@ -1,6 +1,22 @@
 ## NEON
 
-The [National Ecological Observatory Network](https://www.neonscience.org/) is a "continental-scale ecological observation facility" that provides open data on our ecosystems. The envisioned 30-year project collects environmental data like precipitation, soil temperature, humidity, and pressure across 81 field sites (47 terrestrial and 34 aquatic) to measure the patterns and changes in our environment. With over 180 data products describing the characteristics of a diverse range of ecosystems, their data will be crucial to future studies of biology and climate change over time.
+The <a href='https://www.neonscience.org/' target='_blank'>National Ecological Observatory Network</a> is a "continental-scale ecological observation facility" that provides open data on our ecosystems. The envisioned 30-year project collects environmental data like precipitation, soil temperature, humidity, and pressure across 81 field sites (47 terrestrial and 34 aquatic) to measure the patterns and changes in our environment. With over 180 data products describing the characteristics of a diverse range of ecosystems, their data will be crucial to future studies of biology and climate change over time.
+
+Here is a video detailing how NEON will enable scientific discovery in ecology and beyond (found <a href='https://www.youtube.com/channel/UCNodgIxpGyEjhV3XXMxFO5g' target='_blank'>here</a>):
+<iframe width="640" height="360" src="https://www.youtube.com/embed/sSD84bIkWDw" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+### Goal
+
+By providing comprehensive data across many ecosystems, NEON hopes to stimulate research at a level not acheivable by previous generations of ecologists. With an anticipated 30 years of operation, NEON will be critical for analyzing the human impact on ecology and "how our society can more effectively address critical ecological questions and issues". According to NEON, their primary purpose is to provide:
+* <a href='https://www.neonscience.org/data/neon-data-portal' target='_blank'>Continental-scale environmental data</a>
+* <a href='https://www.neonscience.org/resources/information-researchers' target='_blank'>Infrastructure for research</a>
+* <a href='https://www.neonscience.org/opportunities/learning-opportunities' target='_blank'>Educational tools to work with large data</a>
 
 ### Resources
-To find out more about NEON, check out their [website](https://www.neonscience.org/).
+To find out more about NEON, visit their <a href='https://www.neonscience.org/' target='_blank'>website</a>. To get an overview about a specific aspect of NEON, check out these links:
+* <a href='https://www.neonscience.org/observatory/about' target='_blank'>About</a>
+* <a href='https://www.neonscience.org/field-sites/field-sites-map/list' target='_blank'>Field Sites</a>
+* <a href='http://data.neonscience.org/home' target='_blank'>Data Portal</a>
+  + <a href='http://data.neonscience.org/static/browse.html' target='_blank'>Data Browser</a>
+* <a href='https://www.neonscience.org/data/code-resources' target='_blank'>Code Resources</a>
+* <a href='https://www.neonscience.org/observatory/contact-us' target='_blank'>Contact</a>
