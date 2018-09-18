@@ -243,7 +243,7 @@ fluidPage(theme = shinytheme('cerulean'),
                      tabPanel("About This Project",
                               navlistPanel(well = FALSE, widths = c(2,10),
                                            tabPanel("Overview",
-                                                    includeMarkdown('Project_description.Rmd')),
+                                                    includeMarkdown('Rmd/Project_description.Rmd')),
                                            tabPanel("Credits"),
                                            tabPanel("About NEON",
                                                     includeMarkdown('Rmd/NEON_about.Rmd'))
