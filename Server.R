@@ -1090,6 +1090,30 @@ function(input, output, session) {
   Folder_path_general <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_general(), "_", Product_ID_middle())))
   Folder_path_specific <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_specific(), "_", Date_specific())))
   ####—— Download NEON data: general####
+  # Calculate Size
+  observeEvent(eventExpr = input$get_general_size, ignoreInit = TRUE,
+               handlerExpr = {
+                 output$general_size <- renderPrint("")
+                 showNotification(ui = "Calculation in progress...", id = "calculation_general", type = "message")
+                 size <- try(getProductSize(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general()), silent = TRUE)
+                 if (class(size) == "try-error") {
+                   removeNotification(id = "calculation_general")
+                   sendSweetAlert(session, title = "Calculation failed", text = paste0("The product that you tried to calculate size for was invalid. Read the error message: ", size), type = 'error')
+                 } else {
+                   if (size < 1 & size != 0) {
+                     size_kb <- size * 10^3
+                     total_size <- paste0(as.character(size_kb), " KB")
+                   } else if (size > 1) {
+                     size_mb <- size
+                     total_size <- paste0(as.character(size_mb), " MB")
+                   } else if (size == 0) {
+                     total_size <- "No data available"
+                   }
+                 }
+                 removeNotification(id = "calculation_general")
+                 output$general_size <- renderPrint(total_size)
+               })
+  # Download
   observeEvent(eventExpr = input$download_NEON_general,
                handlerExpr = {
                  showNotification(ui = "Download in progess…", id = "download_general", type = "message")
@@ -1141,7 +1165,7 @@ function(input, output, session) {
   observeEvent(eventExpr = input$get_AOP_size,
                handlerExpr = {
                  if (is_AOP() != "YES") {
-                   sendSweetAlert(session, title = "Download failed", text = "Please choose an AOP product", type = 'error')
+                   sendSweetAlert(session, title = "Calculation failed", text = "Please choose an AOP product", type = 'error')
                  } else {
                    showNotification(ui = "Calculation in progress...", id = "calculation_AOP", type = "message")
                    data_test <- try(nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-01")))
