@@ -134,7 +134,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                     checkboxInput(inputId = "general_size", label = "Calculate download size"),
                                                                                     conditionalPanel("input.general_size",
                                                                                                      actionLink(inputId = "get_general_size", label = "Calculate size"),
-                                                                                                     bsTooltip(id = "get_general_size", title = "Note that this is an order of magnitude estimate. Due to the stacking process, your final zip file will deviate from this value.", placement = "left"),
+                                                                                                     bsTooltip(id = "get_general_size", title = "Note that this is an order of magnitude estimate. Due to the stacking process, your final zip file will deviate from this value, especially for smaller sizes.", placement = "left"),
                                                                                                      verbatimTextOutput(outputId = "general_size", placeholder = TRUE)),
                                                                                     includeMarkdown('Rmd/NEON_download_message.Rmd'),
                                                                                     actionButton(inputId = "download_NEON_general", label = "Download items")
