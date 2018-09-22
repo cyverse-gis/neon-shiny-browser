@@ -60,9 +60,9 @@ FieldSite_Tes <- FieldSite_point$siteCode[FieldSite_point$Habitat %in% "Terrestr
 FieldSite_Aqu <- FieldSite_point$siteCode[FieldSite_point$Habitat %in% "Aquatic"]
 
 ## Retrieve polygon data for NEON Field Sites
-Fieldsite_poly_JSON <- fromJSON('http://guest:guest@128.196.38.73:9200/sites/_search?size=500')
+#Fieldsite_poly_JSON <- fromJSON('http://guest:guest@128.196.38.73:9200/sites/_search?size=500')
 # Unhashtag when index is down:
-#Fieldsite_poly_JSON <- fromJSON('NEON-data/Fieldsites.json')
+Fieldsite_poly_JSON <- fromJSON('NEON-data/Fieldsites.json')
 FieldSite_poly <- cbind(Fieldsite_poly_JSON$hits$hits[-5], Fieldsite_poly_JSON$hits$hits$`_source`[-4], Fieldsite_poly_JSON$hits$hits$`_source`$boundary)
 names(FieldSite_poly)[9] <- "geo_type"
 FieldSite_poly <- FieldSite_poly %>% filter(type %in% "NEON")

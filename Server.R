@@ -878,28 +878,47 @@ function(input, output, session) {
   output$NEONproductname_product <- renderPrint(req(NEONproductinfo_product()$productName))
   
   # Buttons to toggle downloads
+  output$nodates_download <- renderUI({
+    if (nrow(NEONproductinfo_product()) > 0) {
+      if (NEONproductinfo_product()$productStatus == "ACTIVE") {
+      } else {
+        HTML(paste0("<p style='border-left:5px solid #44ADE9;'>", "This product cannot be downloaded.", "</p>"))
+      }
+    } 
+    else {
+      NULL
+    }
+  })
   observe({
     if (nrow(NEONproductinfo_product()) == 0) {
       hideElement(id = "togglegeneral_product", anim = TRUE, animType = "slide")
       hideElement(id = "togglespecific_product", anim = TRUE, animType = "slide") 
       hideElement(id = "toggleAOP_product", anim = TRUE, animType = "slide")
-    }
-    is_AOP <- if (nrow(NEONproductinfo_product()) > 0) {
-      if (NEONproductinfo_product()$productScienceTeamAbbr == "AOP") {
+    } else {
+      available <- if (NEONproductinfo_product()$productStatus == "ACTIVE") {
         TRUE
       } else {
         FALSE
       }
-    }
-    if (nrow(NEONproductinfo_product()) > 0) {
-      if (is_AOP == FALSE) {
-        hideElement(id = "toggleAOP_product", anim = TRUE, animType = "slide")
-        showElement(id = "togglegeneral_product", anim = TRUE, animType = "slide")
-        showElement(id = "togglespecific_product", anim = TRUE, animType = "slide")  
-      } else if (is_AOP == TRUE) {
+      is_AOP <- if (NEONproductinfo_product()$productScienceTeamAbbr == "AOP") {
+        TRUE
+      } else {
+        FALSE
+      }
+      if (available == TRUE) {
+        if (is_AOP == FALSE) {
+          hideElement(id = "toggleAOP_product", anim = TRUE, animType = "slide")
+          showElement(id = "togglegeneral_product", anim = TRUE, animType = "slide")
+          showElement(id = "togglespecific_product", anim = TRUE, animType = "slide")  
+        } else if (is_AOP == TRUE) {
+          hideElement(id = "togglegeneral_product", anim = TRUE, animType = "slide")
+          hideElement(id = "togglespecific_product", anim = TRUE, animType = "slide") 
+          showElement(id = "toggleAOP_product", anim = TRUE, animType = "slide")
+        }
+      } else {
         hideElement(id = "togglegeneral_product", anim = TRUE, animType = "slide")
         hideElement(id = "togglespecific_product", anim = TRUE, animType = "slide") 
-        showElement(id = "toggleAOP_product", anim = TRUE, animType = "slide")
+        hideElement(id = "toggleAOP_product", anim = TRUE, animType = "slide")
       }
     }
   })
@@ -940,6 +959,24 @@ function(input, output, session) {
         sort(NEONproductinfo_product()$siteCodes[[1]]$siteCode)}
     selectInput(inputId = "NEONsite_product", label = "Available sites:", choices = req(sites))
   })
+  output$nodates_message <- renderUI({
+    if (nrow(NEONproductinfo_product()) > 0) {
+      if (NEONproductinfo_product()$productStatus == "ACTIVE") {
+      } else if (NEONproductinfo_product()$productStatus == "ONREQUEST") {
+        HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>","This product is only available by request.", "</p>"))
+      } else if (NEONproductinfo_product()$productStatus == "FUTURE") {
+        if (NEONproductinfo_product()$productCode %in% c('DP1.00010.001', 'DP1.00007.001', 'DP1.00036.001', 'DP1.00037.001',
+                                                         'DP4.00067.001', 'DP1.00099.001', 'DP1.00034.001', 'DP2.00008.001',
+                                                         'DP3.00009.001', 'DP4.00201.001', 'DP1.00100.001', 'DP1.00035.001', 
+                                                         'DP2.00009.001', 'DP3.00010.001', 'DP4.00137.001', 'DP4.00007.001',
+                                                         'DP4.00002.001', 'DP2.00024.001', 'DP3.00008.001')) {
+          HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", "This data product is bundled into DP4.00200.001, ", actionLink(inputId = "eddy_covariance", label = "Bundled data products - eddy covariance"), " and is not available as a stand-alone download." ,"</p>"))
+        }
+      }
+    } 
+    else {}
+  })
+  observeEvent(input$eddy_covariance, updateTextInput(session, inputId = "NEONproductID_product", value = "DP4.00200.001"))
   output$NEONproducttable_product <- renderDT({
     dates <- if (length(NEONproductinfo_product()$siteCodes) == 0) {
       NA
