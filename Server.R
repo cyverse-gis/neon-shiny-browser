@@ -6,9 +6,6 @@ function(input, output, session) {
   } else {
     showNotification(ui = "Welcome back!", duration = 10, type = "message")
   }
-  hideElement(id = "togglegeneral_site")
-  hideElement(id = "togglespecific_site")
-  hideElement(id = "toggleAOP_site")
   
   ####INTERACTIVE MAP TAB####
   
@@ -686,6 +683,10 @@ function(input, output, session) {
                handlerExpr = {
                  updateTextInput(session, inputId = "dpID_specific", value = input$NEONproductID_site)
                  updateSelectInput(session, inputId = "location_NEON_specific", selected = input$NEONsite_site)
+                 if (length(input$NEONproducttable_site_cells_selected) > 0 & input$NEONproducttable_site_cells_selected[2] > 0) {
+                   month_date <- datesTable(dates = NEONproductinfo_site()$siteCodes[[1]]$availableMonths[NEONproductinfo_site()$siteCodes[[1]]$siteCode %in% input$NEONsite_site][[1]], process = "cell", cells = input$NEONproducttable_site_cells_selected)
+                   updateAirDateInput(session, inputId = "date_NEON", value = month_date)
+                 }
                  updateTabsetPanel(session, inputId = "data", selected = "download")
                  updateRadioButtons(session, inputId = "NEON_download_type", selected = "specific")
                  updateCheckboxInput(session, inputId = "toggledownload_site", value = FALSE)
@@ -726,75 +727,10 @@ function(input, output, session) {
       }
       years <- unique(years)
       years <- years[order(years)]
-      for (year in years) {
-        dates_year <- dates[grepl(year, dates)]
-        if (sum(dates %in% paste0(year, "-01"))) {
-          Jan <- "✅"
-        } else {
-          Jan <- NA
-        }
-        if (sum(dates %in% paste0(year, "-02"))) {
-          Feb <- "✅"
-        } else {
-          Feb <- NA
-        }
-        if (sum(dates %in% paste0(year, "-03"))) {
-          Mar <- "✅"
-        } else {
-          Mar <- NA
-        }
-        if (sum(dates %in% paste0(year, "-04"))) {
-          Apr <- "✅"
-        } else {
-          Apr <- NA
-        }
-        if (sum(dates %in% paste0(year, "-05"))) {
-          May <- "✅"
-        } else {
-          May <- NA
-        }
-        if (sum(dates %in% paste0(year, "-06"))) {
-          Jun <- "✅"
-        } else {
-          Jun <- NA
-        }
-        if (sum(dates %in% paste0(year, "-07"))) {
-          Jul <- "✅"
-        } else {
-          Jul <- NA
-        }
-        if (sum(dates %in% paste0(year, "-08"))) {
-          Aug <- "✅"
-        } else {
-          Aug <- NA
-        }
-        if (sum(dates %in% paste0(year, "-09"))) {
-          Sep <- "✅"
-        } else {
-          Sep <- NA
-        }
-        if (sum(dates %in% paste0(year, "-10"))) {
-          Oct <- "✅"
-        } else {
-          Oct <- NA
-        }
-        if (sum(dates %in% paste0(year, "-11"))) {
-          Nov <- "✅"
-        } else {
-          Nov <- NA
-        }
-        if (sum(dates %in% paste0(year, "-12"))) {
-          Dec <- "✅"
-        } else {
-          Dec <- NA
-        }
-        year_table <- data.frame(year = c(Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec))
-        date_tables <- cbind(date_tables, year_table)
-      }
-      datatable(date_tables[-1], colnames = years, rownames = date_table_names, extensions = 'ColReorder', class = 'cell-border stripe hover order-column compact',
+      datatable(datesTable(dates, "table"), colnames = years, rownames = date_table_names, class = 'cell-border stripe hover order-column compact',
                 options = list(dom = "t",
                                pageLength = 12,
-                               colReorder = TRUE),
+                               ordering = FALSE),
                 selection = list(mode = 'single', target = 'cell'))
     }
   })
@@ -935,6 +871,10 @@ function(input, output, session) {
                handlerExpr = {
                  updateTextInput(session, inputId = "dpID_specific", value = input$NEONproductID_product)
                  updateSelectInput(session, inputId = "location_NEON_specific", selected = input$NEONsite_product)
+                 if (length(input$NEONproducttable_product_cells_selected) > 0 & input$NEONproducttable_product_cells_selected[2] > 0) {
+                   month_date <- datesTable(dates = NEONproductinfo_product()$siteCodes[[1]]$availableMonths[NEONproductinfo_product()$siteCodes[[1]]$siteCode %in% input$NEONsite_product][[1]], process = "cell", cells = input$NEONproducttable_product_cells_selected)
+                   updateAirDateInput(session, inputId = "date_NEON", value = month_date)
+                 }
                  updateTabsetPanel(session, inputId = "data", selected = "download")
                  updateRadioButtons(session, inputId = "NEON_download_type", selected = "specific")
                  updateCheckboxInput(session, inputId = "toggledownload_product", value = FALSE)
@@ -973,8 +913,7 @@ function(input, output, session) {
           HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", "This data product is bundled into DP4.00200.001, ", actionLink(inputId = "eddy_covariance", label = "Bundled data products - eddy covariance"), " and is not available as a stand-alone download." ,"</p>"))
         }
       }
-    } 
-    else {}
+    } else {}
   })
   observeEvent(input$eddy_covariance, updateTextInput(session, inputId = "NEONproductID_product", value = "DP4.00200.001"))
   output$NEONproducttable_product <- renderDT({
@@ -993,75 +932,10 @@ function(input, output, session) {
       }
       years <- unique(years)
       years <- years[order(years)]
-      for (year in years) {
-        dates_year <- dates[grepl(year, dates)]
-        if (sum(dates %in% paste0(year, "-01"))) {
-          Jan <- "✅"
-        } else {
-          Jan <- NA
-        }
-        if (sum(dates %in% paste0(year, "-02"))) {
-          Feb <- "✅"
-        } else {
-          Feb <- NA
-        }
-        if (sum(dates %in% paste0(year, "-03"))) {
-          Mar <- "✅"
-        } else {
-          Mar <- NA
-        }
-        if (sum(dates %in% paste0(year, "-04"))) {
-          Apr <- "✅"
-        } else {
-          Apr <- NA
-        }
-        if (sum(dates %in% paste0(year, "-05"))) {
-          May <- "✅"
-        } else {
-          May <- NA
-        }
-        if (sum(dates %in% paste0(year, "-06"))) {
-          Jun <- "✅"
-        } else {
-          Jun <- NA
-        }
-        if (sum(dates %in% paste0(year, "-07"))) {
-          Jul <- "✅"
-        } else {
-          Jul <- NA
-        }
-        if (sum(dates %in% paste0(year, "-08"))) {
-          Aug <- "✅"
-        } else {
-          Aug <- NA
-        }
-        if (sum(dates %in% paste0(year, "-09"))) {
-          Sep <- "✅"
-        } else {
-          Sep <- NA
-        }
-        if (sum(dates %in% paste0(year, "-10"))) {
-          Oct <- "✅"
-        } else {
-          Oct <- NA
-        }
-        if (sum(dates %in% paste0(year, "-11"))) {
-          Nov <- "✅"
-        } else {
-          Nov <- NA
-        }
-        if (sum(dates %in% paste0(year, "-12"))) {
-          Dec <- "✅"
-        } else {
-          Dec <- NA
-        }
-        year_table <- data.frame(year = c(Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec))
-        date_tables <- cbind(date_tables, year_table)
-      }
-      datatable(date_tables[-1], colnames = years, rownames = date_table_names, extensions = 'ColReorder', class = 'cell-border stripe hover order-column compact',
+      datatable(datesTable(dates, "table"), colnames = years, rownames = date_table_names, class = 'cell-border stripe hover order-column compact',
                 options = list(dom = "t",
                                pageLength = 12,
-                               colReorder = TRUE),
+                               ordering = FALSE),
                 selection = list(mode = 'single', target = 'cell'))
     }
   })
