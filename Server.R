@@ -642,7 +642,10 @@ function(input, output, session) {
                })
   # Display products: single
   output$NEONproductsite_site <- renderPrint(req(input$NEONsite_site))
-  output$NEONproductname_site <- renderPrint(req(NEONproductinfo_site()$productName))
+  output$NEONproductname_site <- renderUI({
+    name <- req(NEONproductinfo_site()$productName)
+    HTML(paste0("<font face='Monaco'><p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'><a href='http://data.neonscience.org/data-product-view?dpCode=", NEONproductID_site(),"' target='_blank'>",name, "</a></p>"))
+  })
   
   # Buttons to toggle downloads
   observe({
@@ -811,8 +814,10 @@ function(input, output, session) {
                  updateTextInput(session = session, inputId = "NEONproductID_product", value = ifelse(length(input$NEONproductoptions_product_cells_selected)==0,NA,NEONproductlist_product()[[2]][[input$NEONproductoptions_product_cells_selected[1]]]))
                })
   # Display products: single
-  output$NEONproductname_product <- renderPrint(req(NEONproductinfo_product()$productName))
-  
+  output$NEONproductname_product <- renderUI({
+    name <- req(NEONproductinfo_product()$productName)
+    HTML(paste0("<font face='Monaco'><p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'><a href='http://data.neonscience.org/data-product-view?dpCode=", NEONproductID_product(),"' target='_blank'>",name, "</a></p>"))
+  })
   # Buttons to toggle downloads
   output$nodates_download <- renderUI({
     if (nrow(NEONproductinfo_product()) > 0) {
