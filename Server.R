@@ -641,10 +641,16 @@ function(input, output, session) {
                  updateTextInput(session = session, inputId = "NEONproductID_site", value = ifelse(length(input$NEONproductoptions_site_cells_selected)==0,NA,NEONproductlist_site()[[2]][[input$NEONproductoptions_site_cells_selected[1]]]))
                })
   # Display products: single
-  output$NEONproductsite_site <- renderPrint(req(input$NEONsite_site))
+  output$NEONproductsite_site <- renderUI({
+    site <- input$NEONsite_site
+    HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>",site, "</p>"))
+    })
   output$NEONproductname_site <- renderUI({
-    name <- req(NEONproductinfo_site()$productName)
-    HTML(paste0("<font face='Monaco'><p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'><a href='http://data.neonscience.org/data-product-view?dpCode=", NEONproductID_site(),"' target='_blank'>",name, "</a></p>"))
+    if (length(NEONproductinfo_site()$productName) == 0) {
+      HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", "<br>", "</p>"))
+    } else {
+      HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'><a href='http://data.neonscience.org/data-product-view?dpCode=", NEONproductID_site(),"' target='_blank'>", NEONproductinfo_site()$productName, "</a></p>"))
+    }
   })
   
   # Buttons to toggle downloads
@@ -705,15 +711,24 @@ function(input, output, session) {
                  updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
                })
   
-  output$NEONproductdesc_site <- renderPrint(req(ifelse(is.null(req(NEONproductinfo_site()$productDescription)),
-                                                        yes = NULL,
-                                                        no = NEONproductinfo_site()$productDescription)))
-  output$NEONproductdesign_site <- renderPrint(req(ifelse(is.null(req(NEONproductinfo_site()$productDesignDescription)),
-                                                          yes = NULL,
-                                                          no = NEONproductinfo_site()$productDesignDescription)))
-  output$NEONproductnotes_site <- renderPrint(req(ifelse(is.null(req(NEONproductinfo_site()$productRemarks)),
-                                                         yes = NULL,
-                                                         no = NEONproductinfo_site()$productRemarks)))
+  output$NEONproductdesc_site <- renderUI({
+    desc <- ifelse(length(NEONproductinfo_site()$productDescription) == 0,
+                                                        yes = "<br>",
+                                                        no = NEONproductinfo_site()$productDescription)
+    HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", desc, "</p>"))
+    })
+  output$NEONproductdesign_site <- renderUI({
+    design <- ifelse(length(NEONproductinfo_site()$productDesignDescription) == 0,
+                                                          yes = "<br>",
+                                                          no = NEONproductinfo_site()$productDesignDescription)
+    HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", design, "</p>"))
+    })
+  output$NEONproductnotes_site <- renderUI({
+    notes <- ifelse(length(NEONproductinfo_site()$productRemarks) == 0,
+                                                         yes = "<br>",
+                                                         no = NEONproductinfo_site()$productRemarks)
+    HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", notes, "</p>"))
+    })
   output$NEONproducttable_site <- renderDT({
     dates <- if (length(NEONproductinfo_site()$siteCodes) == 0) {
       NA
@@ -742,8 +757,8 @@ function(input, output, session) {
       NULL
     } else {
       NEONproductinfo_site()$siteCodes[[1]]$availableMonths[NEONproductinfo_site()$siteCodes[[1]]$siteCode %in% input$NEONsite_site][[1]]}
-    if (is.na(dates) == 0) {
-      req(dates)
+    if (sum(is.na(dates)) | length(dates) == 0) {
+      NULL
     } else {
       years <- NULL
       for (date in dates) {
@@ -815,8 +830,11 @@ function(input, output, session) {
                })
   # Display products: single
   output$NEONproductname_product <- renderUI({
-    name <- req(NEONproductinfo_product()$productName)
-    HTML(paste0("<font face='Monaco'><p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'><a href='http://data.neonscience.org/data-product-view?dpCode=", NEONproductID_product(),"' target='_blank'>",name, "</a></p>"))
+    if (length(NEONproductinfo_product()$productName) == 0) {
+      HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", "<br>", "</p>"))
+    } else {
+      HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'><a href='http://data.neonscience.org/data-product-view?dpCode=", NEONproductID_product(),"' target='_blank'>", NEONproductinfo_product()$productName, "</a></p>"))
+    }
   })
   # Buttons to toggle downloads
   output$nodates_download <- renderUI({
@@ -895,20 +913,36 @@ function(input, output, session) {
                  updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "list")
                })
   
-  output$NEONproductdesc_product <- renderPrint(req(NEONproductinfo_product()$productDescription))
-  output$NEONproductdesign_product <- renderPrint(req(NEONproductinfo_product()$productDesignDescription))
-  output$NEONproductnotes_product <- renderPrint(req(NEONproductinfo_product()$productRemarks))
+  output$NEONproductdesc_product <- renderUI({
+    desc <- ifelse(length(NEONproductinfo_product()$productDescription) == 0,
+                   yes = "<br>",
+                   no = NEONproductinfo_product()$productDescription)
+    HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", desc, "</p>"))
+    })
+  output$NEONproductdesign_product <- renderUI({
+    design <- ifelse(length(NEONproductinfo_product()$productDesignDescription) == 0,
+                     yes = "<br>",
+                     no = NEONproductinfo_product()$productDesignDescription)
+    HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", design, "</p>"))
+  })
+  output$NEONproductnotes_product <- renderPrint({
+    notes <- ifelse(length(NEONproductinfo_product()$productRemarks) == 0,
+                    yes = "<br>",
+                    no = NEONproductinfo_product()$productRemarks)
+    HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", notes, "</p>"))
+  })
   output$ui_selectsite<- renderUI({
     sites <- if (length(NEONproductinfo_product()$siteCodes) == 0) {
-      NA} else {
-        sort(NEONproductinfo_product()$siteCodes[[1]]$siteCode)}
+      NA
+    } else {
+      sort(NEONproductinfo_product()$siteCodes[[1]]$siteCode)}
     selectInput(inputId = "NEONsite_product", label = "Available sites:", choices = req(sites))
   })
   output$nodates_message <- renderUI({
     if (nrow(NEONproductinfo_product()) > 0) {
       if (NEONproductinfo_product()$productStatus == "ACTIVE") {
       } else if (NEONproductinfo_product()$productStatus == "ONREQUEST") {
-        HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>","This product is only available by request.", "</p>"))
+        HTML("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>This product is only available by request.</p>")
       } else if (NEONproductinfo_product()$productStatus == "FUTURE") {
         if (NEONproductinfo_product()$productCode %in% c('DP1.00010.001', 'DP1.00007.001', 'DP1.00036.001', 'DP1.00037.001',
                                                          'DP4.00067.001', 'DP1.00099.001', 'DP1.00034.001', 'DP2.00008.001',
@@ -1175,7 +1209,7 @@ function(input, output, session) {
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText(as.character(input$date_NEON))
+  output$text_me <- renderText(length(NEONproductinfo_site()$productName) == 0)
   #Text for troublshooting 2
   output$text_me_two <- renderText(input$NEONproducttable_product_cells_selected)
   #Table for troubleshooting
