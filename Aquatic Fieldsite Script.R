@@ -37,3 +37,15 @@ for (i in FieldSite_Aqu) {
   }
   assign(x = paste0(i, "_locations"), value = get(paste0(i, "_locations"))[-1,], envir = .GlobalEnv)
 }
+
+FieldSites_locations <- data.frame("Site" = NA, "Description" = NA, "Name" = NA, "Type" = NA, "Latitude" = NA, "Longitude" = NA, "Properties" = NA, "Values" = NA, "Parent" = NA, "Children" = NA)
+for (i in FieldSite_Aqu) {
+  location <- get(paste0(i, "_locations"))
+  assign(x = "FieldSites_locations", value = rbind(FieldSites_locations, location))
+}
+for (i in 1:ncol(FieldSites_locations)) {
+  FieldSites_locations[[i]] <- as.character(FieldSites_locations[[i]])
+}
+FieldSites_locations <- FieldSites_locations[-1,]
+
+write.csv(x = FieldSites_locations, file = "Fieldsites_locations_aqu")

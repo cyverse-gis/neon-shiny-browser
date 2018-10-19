@@ -55,35 +55,50 @@ for (i in FieldSite_Tes) {
   location <- get(paste0(i, "_locations"))
   assign(x = "FieldSites_locations", value = rbind(FieldSites_locations, location))
 }
-
 for (i in 1:ncol(FieldSites_locations)) {
   FieldSites_locations[[i]] <- as.character(FieldSites_locations[[i]])
 }
+FieldSites_locations <- FieldSites_locations[-1,]
 
-#### Part 2- plots ####
-for (i in 1:nrow(FieldSite_plots_tes)) {
-  FieldSite_plots_tes$`Plot Size`[i] <- if (FieldSite_plots_tes$Type[i] == "OS Plot - all") {
-    "40m x 40m"
-  } else if (FieldSite_plots_tes$Type[i] == "OS Plot - brd") {
-    "500m x 500m"
-  } else if (FieldSite_plots_tes$Type[i] == "OS Plot - mos") {
-    "NA"
-  } else if (FieldSite_plots_tes$Type[i] == "OS Plot - mam") {
-    "90m x 90m"
-  } else if (FieldSite_plots_tes$Type[i] =="OS Plot - tck") {
-    "40m x 40m"
-  }
-  FieldSite_plots_tes$Type[i] <- if (FieldSite_plots_tes$Type[i] == "OS Plot - all") {
-    "Distributed Base Plot"
-  } else if (FieldSite_plots_tes$Type[i] == "OS Plot - brd") {
-    "Distributed Bird Grid"
-  } else if (FieldSite_plots_tes$Type[i] == "OS Plot - mos") {
-    "Distributed Mosquito Plot"
-  } else if (FieldSite_plots_tes$Type[i] == "OS Plot - mam") {
-    "Distributed Mammal Grid"
-  } else if (FieldSite_plots_tes$Type[i] =="OS Plot - tck") {
-    "Distributed Tick Plot"
-  }
-  FieldSite_plots_tes$Description[i] <- strsplit(FieldSite_plots_tes$Name[i], "[.]")[[1]][1]
+FieldSites_plots <- data.frame("Site" = NA, "Description" = NA, "Name" = NA, "Type" = NA, "Latitude" = NA, "Longitude" = NA, "Properties" = NA, "Values" = NA)
+for (i in FieldSite_Tes) {
+  plot <- get(paste0(i, "_plots"))
+  assign(x = "FieldSites_plots", value = rbind(FieldSites_plots, plot))
+}
+for (i in 1:ncol(FieldSites_plots)) {
+  FieldSites_locations[[i]] <- as.character(FieldSites_plots[[i]])
 }
 
+#### Part 2- plots ####
+for (i in 1:nrow(FieldSites_plots)) {
+  FieldSites_plots$`Plot Size`[i] <- if (FieldSites_plots$Type[i] == "OS Plot - all") {
+    "40m x 40m"
+  } else if (FieldSites_plots$Type[i] == "OS Plot - brd") {
+    "500m x 500m"
+  } else if (FieldSites_plots$Type[i] == "OS Plot - mos") {
+    "NA"
+  } else if (FieldSites_plots$Type[i] == "OS Plot - mam") {
+    "90m x 90m"
+  } else if (FieldSites_plots$Type[i] =="OS Plot - tck") {
+    "40m x 40m"
+  } else if (FieldSites_plots$Type[i] =="OS Plot - phe") {
+    "200m x 200m"
+  }
+  FieldSites_plots$Type[i] <- if (FieldSites_plots$Type[i] == "OS Plot - all") {
+    "Distributed Base Plot"
+  } else if (FieldSites_plots$Type[i] == "OS Plot - brd") {
+    "Distributed Bird Grid"
+  } else if (FieldSites_plots$Type[i] == "OS Plot - mos") {
+    "Distributed Mosquito Plot"
+  } else if (FieldSites_plots$Type[i] == "OS Plot - mam") {
+    "Distributed Mammal Grid"
+  } else if (FieldSites_plots$Type[i] =="OS Plot - tck") {
+    "Distributed Tick Plot"
+  } else if (FieldSites_plots$Type[i] =="OS Plot - phe") {
+    "Tower Phenology Plot"
+  }
+  FieldSites_plots$Description[i] <- strsplit(FieldSites_plots$Name[i], "[.]")[[1]][1]
+}
+
+write.csv(x = FieldSites_plots, file = "Fieldsites_plots_tes")
+write.csv(x = FieldSites_locations, file = "Fieldsites_locations_tes")
