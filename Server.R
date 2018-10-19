@@ -10,7 +10,7 @@ function(input, output, session) {
   ####INTERACTIVE MAP TAB####
   
   # Reactive value for layer control
-  legend <- reactiveValues(group = c("Field Sites", "Domains", "Flight Boxes", "Sublocations"))
+  legend <- reactiveValues(group = c("Field Sites", "Domains", "Flight Boxes", "Sub Locations"))
   
   #### Map ####
   output$map <- renderLeaflet({
@@ -37,6 +37,7 @@ function(input, output, session) {
                          overlayGroups = legend$group,
                          options = layersControlOptions(collapsed = FALSE)
         ) %>%
+        showGroup("Satellite") %>%
         # Add option for fullscreen
         leaflet.extras::addFullscreenControl(pseudoFullscreen = TRUE)
     )
@@ -47,7 +48,8 @@ function(input, output, session) {
   Domain_IDs <- reactive(domains$DomainID[domains$Domain %in% input$fieldsite_domain])
   Field_sites_point_filtered <- reactive(FieldSite_point %>% filter(siteType %in% input$fieldsite_type) %>%
                                            filter(domainCode %in% Domain_IDs()) %>%
-                                           filter(Habitat %in% input$fieldsite_habitat))
+                                           filter(Habitat %in% input$fieldsite_habitat) %>%
+                                           filter(stateCode %in% input$fieldsite_state))
   Field_sites_poly_filtered <- reactive(FieldSite_poly %>% filter(code %in% Field_sites_point_filtered()$siteCode))
   Domain_included <- reactive(domain_data %>% filter(DomainName %in% input$fieldsite_domain))
   Domain_unincluded <- reactive(domain_data %>% filter(!(DomainName %in% input$fieldsite_domain)))
@@ -218,7 +220,7 @@ function(input, output, session) {
                                     Subloc_tes_plots_base()$Type[i],
                                     "<br><b>Dimensions: </b>",
                                     Subloc_tes_plots_base()$Plot.Size[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_tes_plots_base()$Name[i]) %>%
           addRectangles(lng1 = geosphere::destPoint(p = c(Subloc_tes_plots_base()$Longitude[i], Subloc_tes_plots_base()$Latitude[i]), b = 225, d = 20*sqrt(2))[1],
                         lat1 = geosphere::destPoint(p = c(Subloc_tes_plots_base()$Longitude[i], Subloc_tes_plots_base()$Latitude[i]), b = 225, d = 20*sqrt(2))[2],
@@ -248,7 +250,7 @@ function(input, output, session) {
                         lat1 = geosphere::destPoint(p = c(Subloc_tes_plots_bird()$Longitude[i], Subloc_tes_plots_bird()$Latitude[i]), b = 225, d = 250*sqrt(2))[2],
                         lng2 = geosphere::destPoint(p = c(Subloc_tes_plots_bird()$Longitude[i], Subloc_tes_plots_bird()$Latitude[i]), b = 45, d = 250*sqrt(2))[1],
                         lat2 = geosphere::destPoint(p = c(Subloc_tes_plots_bird()$Longitude[i], Subloc_tes_plots_bird()$Latitude[i]), b = 45, d = 250*sqrt(2))[2],
-                        group = "Sublocations",
+                        group = "Sub Locations",
                         color = "#155AA8",
                         opacity = 1,
                         fillOpacity = 0,
@@ -281,7 +283,7 @@ function(input, output, session) {
                                     Subloc_tes_plots_mam()$Type[i],
                                     "<br><b>Dimensions: </b>",
                                     Subloc_tes_plots_mam()$Plot.Size[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_tes_plots_mam()$Name[i]) %>%
           addRectangles(lng1 = geosphere::destPoint(p = c(Subloc_tes_plots_mam()$Longitude[i], Subloc_tes_plots_mam()$Latitude[i]), b = 225, d = 45*sqrt(2))[1],
                         lat1 = geosphere::destPoint(p = c(Subloc_tes_plots_mam()$Longitude[i], Subloc_tes_plots_mam()$Latitude[i]), b = 225, d = 45*sqrt(2))[2],
@@ -315,7 +317,7 @@ function(input, output, session) {
                                     Subloc_tes_plots_mos()$Type[i],
                                     "<br><b>Dimensions: </b>",
                                     Subloc_tes_plots_mos()$Plot.Size[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_tes_plots_mos()$Name[i])
       }
     }
@@ -337,7 +339,7 @@ function(input, output, session) {
                                     Subloc_tes_plots_tick()$Type[i],
                                     "<br><b>Dimensions: </b>",
                                     Subloc_tes_plots_tick()$Plot.Size[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_tes_plots_tick()$Name[i]) %>%
           addRectangles(lng1 = geosphere::destPoint(p = c(Subloc_tes_plots_tick()$Longitude[i], Subloc_tes_plots_tick()$Latitude[i]), b = 225, d = 20*sqrt(2))[1],
                         lat1 = geosphere::destPoint(p = c(Subloc_tes_plots_tick()$Longitude[i], Subloc_tes_plots_tick()$Latitude[i]), b = 225, d = 20*sqrt(2))[2],
@@ -371,7 +373,7 @@ function(input, output, session) {
                                     Subloc_tes_plots_phe()$Type[i],
                                     "<br><b>Dimensions: </b>",
                                     Subloc_tes_plots_phe()$Plot.Size[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_tes_plots_phe()$Name[i]) %>%
           addRectangles(lng1 = geosphere::destPoint(p = c(Subloc_tes_plots_phe()$Longitude[i], Subloc_tes_plots_phe()$Latitude[i]), b = 225, d = 100*sqrt(2))[1],
                         lat1 = geosphere::destPoint(p = c(Subloc_tes_plots_phe()$Longitude[i], Subloc_tes_plots_phe()$Latitude[i]), b = 225, d = 100*sqrt(2))[2],
@@ -404,7 +406,7 @@ function(input, output, session) {
                                     Subloc_aqu_plots_well()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_well()$`General Type`[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_aqu_plots_well()$Name[i])
       }
     } else if (!input$sublocs_well | (nrow(Subloc_aqu_plots_well()) == 0)) {
@@ -423,7 +425,7 @@ function(input, output, session) {
                                     Subloc_aqu_plots_metstn()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_metstn()$`General Type`[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_aqu_plots_metstn()$Name[i])
       }
     } else if (!input$sublocs_metstn | (nrow(Subloc_aqu_plots_well()) == 0)) {
@@ -442,7 +444,7 @@ function(input, output, session) {
                                     Subloc_aqu_plots_sensor()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_sensor()$`General Type`[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_aqu_plots_sensor()$Name[i])
       }
     } else if (!input$sublocs_sensor | (nrow(Subloc_aqu_plots_sensor()) == 0)) {
@@ -461,7 +463,7 @@ function(input, output, session) {
                                     Subloc_aqu_plots_gauge()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_gauge()$`General Type`[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_aqu_plots_gauge()$Name[i])
       }
     } else if (!input$sublocs_gauge | (nrow(Subloc_aqu_plots_gauge()) == 0)) {
@@ -480,7 +482,7 @@ function(input, output, session) {
                                     Subloc_aqu_plots_reach()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_reach()$`General Type`[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_aqu_plots_reach()$Name[i])
       }
     } else if (!input$sublocs_reach | (nrow(Subloc_aqu_plots_sensor()) == 0)) {
@@ -499,7 +501,7 @@ function(input, output, session) {
                                     Subloc_aqu_plots_riparian()$Description[i],
                                     "<br><b>Type: </b>",
                                     Subloc_aqu_plots_riparian()$`General Type`[i]),
-                     group = "Sublocations",
+                     group = "Sub Locations",
                      layerId = Subloc_aqu_plots_riparian()$Name[i])
       }
     } else if (!input$sublocs_riparian | (nrow(Subloc_aqu_plots_sensor()) == 0)) {
@@ -560,7 +562,7 @@ function(input, output, session) {
   )
   observeEvent(eventExpr = input$addsublocs,
                handlerExpr = {
-                 leafletProxy('map') %>% showGroup(group = "Sublocations")
+                 leafletProxy('map') %>% showGroup(group = "Sub Locations")
                  updateTabsetPanel(session, inputId = "main", selected = "filter")
                  updateRadioButtons(session, inputId = "map_features", selected = "fieldsites")
                  choices <- input$fieldsite_sublocs
@@ -577,7 +579,7 @@ function(input, output, session) {
                                                  lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
                                                  zoom = 15.5)
                  }
-                 leafletProxy('map') %>% showGroup(group = "Sublocations")
+                 leafletProxy('map') %>% showGroup(group = "Sub Locations")
                  choices <- input$fieldsite_sublocs
                  updateSelectInput(session, inputId = "fieldsite_sublocs", selected = c(choices, input$NEONsite_zoom))
                  updateTabsetPanel(session, inputId = "main", selected = "data")
@@ -625,7 +627,7 @@ function(input, output, session) {
   NEONproductinfo_site <- reactive(req(filter(.data = NEONproducts_site(), productCode == NEONproductID_site())))
   # Display products: list
   output$NEONproductoptions_site <- renderDT(datatable(data.frame(unlist(NEONproductlist_site()[1]), unlist(NEONproductlist_site()[2])),
-                                                       colnames = c("Product Name", "Product Code"), rownames = FALSE, extensions = 'Scroller', class = 'cell-border stripe hover order-column',
+                                                       colnames = c("Product Name", "Product ID"), rownames = FALSE, extensions = 'Scroller', class = 'cell-border stripe hover order-column',
                                                        options = list(dom = 'tlfipr',
                                                                       lengthMenu = c(10,25,50),
                                                                       pageLength = 10,
@@ -705,6 +707,10 @@ function(input, output, session) {
                handlerExpr = {
                  updateTextInput(session, inputId = "dpID_AOP", value = input$NEONproductID_site)
                  updateSelectInput(session, inputId = "location_NEON_AOP", selected = input$NEONsite_site)
+                 if (length(input$NEONproducttable_site_cells_selected) > 0 & input$NEONproducttable_site_cells_selected[2] > 0) {
+                   month_date <- datesTable(dates = NEONproductinfo_site()$siteCodes[[1]]$availableMonths[NEONproductinfo_site()$siteCodes[[1]]$siteCode %in% input$NEONsite_site][[1]], process = "cell", cells = input$NEONproducttable_site_cells_selected)
+                   updateAirDateInput(session, inputId = "year_AOP", value = month_date)
+                 }
                  updateTabsetPanel(session, inputId = "data", selected = "download")
                  updateRadioButtons(session, inputId = "NEON_download_type", selected = "AOP")
                  updateCheckboxInput(session, inputId = "toggledownload_site", value = FALSE)
@@ -907,6 +913,10 @@ function(input, output, session) {
                handlerExpr = {
                  updateTextInput(session, inputId = "dpID_AOP", value = input$NEONproductID_product)
                  updateSelectInput(session, inputId = "location_NEON_AOP", selected = input$NEONsite_product)
+                 if (length(input$NEONproducttable_product_cells_selected) > 0 & input$NEONproducttable_product_cells_selected[2] > 0) {
+                   month_date <- datesTable(dates = NEONproductinfo_product()$siteCodes[[1]]$availableMonths[NEONproductinfo_product()$siteCodes[[1]]$siteCode %in% input$NEONsite_product][[1]], process = "cell", cells = input$NEONproducttable_product_cells_selected)
+                   updateAirDateInput(session, inputId = "year_AOP", value = month_date)
+                 }
                  updateTabsetPanel(session, inputId = "data", selected = "download")
                  updateRadioButtons(session, inputId = "NEON_download_type", selected = "AOP")
                  updateCheckboxInput(session, inputId = "toggledownload_product", value = FALSE)
@@ -1123,8 +1133,10 @@ function(input, output, session) {
                      total_size <- 0
                      for (i in c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")) {
                        data <- nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-", i))$data$files
-                       size <- as.numeric(data$size)
-                       total_size <- total_size + sum(size)
+                       if (class(data) != "try-error") {
+                         size <- as.numeric(data$size)
+                         total_size <- total_size + sum(size)
+                       }
                      }
                      if (total_size < 10^9 & total_size != 0) {
                        size_mb <- total_size * 10^-6
