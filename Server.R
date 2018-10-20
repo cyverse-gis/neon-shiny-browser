@@ -594,14 +594,14 @@ function(input, output, session) {
   NEONproducts_product <<- nneo_products() # Added this variable up here because one item in finding by "site" needed it
   NEONproducts_site <- reactive(NEONproducts_product[filter_site(site = input$NEONsite_site),])
   # list: getting data frame of availability based on site code
-  # Filter by keywords, type
+  # Filter by keywords, type, theme
   keyword_lists(list = FieldSite_abbs)
   output$ui_selectkeywords_site <- renderUI({
-    selectInput(inputId = "NEONproductkeywords_site", label = "Keywords", choices = get(x = input$NEONsite_site, envir = .NEON_keywords) ,multiple = TRUE)
+    selectInput(inputId = "NEONproductkeywords_site", label = "Keywords", choices = get(x = input$NEONsite_site, envir = .NEON_keywords), multiple = TRUE)
   })
-  NEONproducts_site_filter <- reactive(as.data.frame(cbind('Product Name' = NEONproducts_site()$productName, 'Product ID' = NEONproducts_site()$productCode, "keywords" = NEONproducts_site()$keywords, "producttype" = NEONproducts_site()$productScienceTeam))[order(NEONproducts_site()$productName),])
-  keyword_filters_site <- reactive(filter_keyword(column = NEONproducts_site_filter()$keywords, keywords = input$NEONproductkeywords_site))
-  NEONproductlist_site_filtered_keyword <- reactive(NEONproducts_site_filter()[keyword_filters_site(),])
+  NEONproducts_site_filter <- reactive(as.data.frame(cbind("Product Name" = NEONproducts_site()$productName, "Product ID" = NEONproducts_site()$productCode, "keywords" = NEONproducts_site()$keywords, "producttype" = NEONproducts_site()$productScienceTeam, "themes" = NEONproducts_site()$themes))[order(NEONproducts_site()$productName),])
+  keyword_filters_site <- reactive(filter_keyword(column = NEONproducts_site_filter()$keywords, keywords = input$NEONproductkeywords_site) & filter_keyword(column = NEONproducts_site_filter()$themes, keywords = input$selectproducttheme_site))
+  NEONproductlist_site_filtered <- reactive(NEONproducts_site_filter()[keyword_filters_site(),])
   datatype_filters_site <- reactive({
     if (is.null(input$selectproducttype_site)) {
       NEON_datatypes
@@ -609,8 +609,19 @@ function(input, output, session) {
       input$selectproducttype_site
     }
   })
-  NEONproductlist_site <- reactive(NEONproductlist_site_filtered_keyword()[(NEONproductlist_site_filtered_keyword()$producttype %in% datatype_filters_site()),])
-  
+  NEONproductlist_site <- reactive(NEONproductlist_site_filtered()[(NEONproductlist_site_filtered()$producttype %in% datatype_filters_site()),])
+  # Filters
+  observe({
+    if (input$showfilterinfo_site == TRUE) {
+      addTooltip(session, id = "NEONproductkeywords_site", title = HTML("Filter data products by keywords describing their contents. Each product can have more than one, so only products that have <u>all</u> of the keywords chosen will appear."), placement = "top")
+      addTooltip(session, id = "selectproducttype_site", title = HTML("Filter data products by their data collection method. Each product has one type, so the filter includes all products with the chosen types. Learn more about what each method means <a href='https://www.neonscience.org/data-collection' target='_blank'>here</a>."), trigger = "focus", placement = "top")
+      addTooltip(session, id = "selectproducttheme_site", title = HTML("Filter data products by their theme. Each product can have more than one, so only products that have <u>all</u> of the themes chosen will appear."))
+    } else {
+      removeTooltip(session, id = "NEONproductkeywords_site")
+      removeTooltip(session, id = "selectproducttype_site")
+      removeTooltip(session, id = "selectproducttheme_site")
+    }
+  })
   ## for dropdown
   output$dropdown_site <- renderPrint(paste0(FieldSite_point$siteName[FieldSite_point$siteCode %in% input$NEONsite_zoom], " ", FieldSite_point$`Habitat Specific`[FieldSite_point$siteCode %in% input$NEONsite_zoom]))
   output$dropdown_state <- renderPrint(FieldSite_point$stateName[FieldSite_point$siteCode %in% input$NEONsite_zoom])
@@ -723,6 +734,12 @@ function(input, output, session) {
                                                         no = NEONproductinfo_site()$productDescription)
     HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", desc, "</p>"))
     })
+  output$NEONproductabstract_site <- renderUI({
+    abstract <- ifelse(length(NEONproductinfo_site()$productAbstract) == 0,
+                       yes = "<br>",
+                       no = NEONproductinfo_site()$productAbstract)
+    HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", abstract, "</p>"))
+  })
   output$NEONproductdesign_site <- renderUI({
     design <- ifelse(length(NEONproductinfo_site()$productDesignDescription) == 0,
                                                           yes = "<br>",
@@ -734,6 +751,18 @@ function(input, output, session) {
                                                          yes = "<br>",
                                                          no = NEONproductinfo_site()$productRemarks)
     HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", notes, "</p>"))
+    })
+  # Download full table
+  output$fullinfo_site <- downloadHandler(
+    filename = function() {
+      paste0(input$NEONproductID_site, "_fullinfo.csv")
+    },
+    content = function(file) {
+      table <- NEONproductinfo_site()
+      for (i in 1:ncol(table)) {
+        table[i] <- as.character(table[i])
+      }
+      write.csv(x = table, file = file)
     })
   output$NEONproducttable_site <- renderDT({
     dates <- if (length(NEONproductinfo_site()$siteCodes) == 0) {
@@ -799,10 +828,10 @@ function(input, output, session) {
   keywords <- unique(keywords)
   keywords <- sort(keywords)
   output$ui_selectkeywords_product <- renderUI(selectInput(inputId = "NEONproductkeywords_product", label = "Keywords", choices = keywords, multiple = TRUE))
-  NEONproduct_products_filter <- NEONproducts_product[c("productName", "productCode", "keywords", "productScienceTeam")]
-  names(NEONproduct_products_filter) <- c('Product Name', 'Product ID', 'keywords', "producttype")
+  NEONproduct_products_filter <- NEONproducts_product[c("productName", "productCode", "keywords", "productScienceTeam", "themes")]
+  names(NEONproduct_products_filter) <- c('Product Name', 'Product ID', 'keywords', "producttype", "themes")
   NEONproduct_products_filter <- NEONproduct_products_filter[order(NEONproduct_products_filter$`Product Name`),]
-  keyword_filters_product <- reactive(filter_keyword(column = NEONproduct_products_filter$keywords, keywords = input$NEONproductkeywords_product))
+  keyword_filters_product <- reactive(filter_keyword(column = NEONproduct_products_filter$keywords, keywords = input$NEONproductkeywords_product) & filter_keyword(column = NEONproduct_products_filter$themes, keywords = input$selectproducttheme_product))
   datatype_filters_product <- reactive({
     if (is.null(input$selectproducttype_product)) {
       NEON_datatypes
@@ -811,6 +840,18 @@ function(input, output, session) {
     }
   })
   NEONproductlist_product <- reactive(NEONproduct_products_filter[keyword_filters_product(),] %>% filter(`producttype` %in% datatype_filters_product()))
+  # Filters
+  observe({
+    if (input$showfilterinfo_product == TRUE) {
+      addTooltip(session, id = "NEONproductkeywords_product", title = HTML("Filter data products by keywords describing their contents. Each product can have more than one, so only products that have <u>all</u> of the keywords chosen will appear."), placement = "top")
+      addTooltip(session, id = "selectproducttype_product", title = HTML("Filter data products by their data collection method. Each product has one type, so the filter includes all products with the chosen types. Learn more about what each method means <a href='https://www.neonscience.org/data-collection' target='_blank'>here</a>."), trigger = "focus", placement = "top")
+      addTooltip(session, id = "selectproducttheme_product", title = HTML("Filter data products by their theme. Each product can have more than one, so only products that have <u>all</u> of the themes chosen will appear."))
+    } else {
+      removeTooltip(session, id = "NEONproductkeywords_product")
+      removeTooltip(session, id = "selectproducttype_product")
+      removeTooltip(session, id = "selectproducttheme_product")
+    }
+  })
   # single: filtering one row of parent NEON products table through ID
   NEONproductID_product <- reactive(req(
     ifelse(gsub(pattern = " ", replacement = "", x = input$NEONproductID_product) == "",
@@ -929,6 +970,12 @@ function(input, output, session) {
                    no = NEONproductinfo_product()$productDescription)
     HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", desc, "</p>"))
     })
+  output$NEONproductabstract_product <- renderUI({
+    abstract <- ifelse(length(NEONproductinfo_product()$productAbstract) == 0,
+                       yes = "<br>",
+                       no = NEONproductinfo_product()$productAbstract)
+    HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", abstract, "</p>"))
+  })
   output$NEONproductdesign_product <- renderUI({
     design <- ifelse(length(NEONproductinfo_product()$productDesignDescription) == 0,
                      yes = "<br>",
@@ -941,6 +988,18 @@ function(input, output, session) {
                     no = NEONproductinfo_product()$productRemarks)
     HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", notes, "</p>"))
   })
+  # Download full table
+  output$fullinfo_product <- downloadHandler(
+    filename = function() {
+      paste0(input$NEONproductID_product, "_fullinfo.csv")
+    },
+    content = function(file) {
+      table <- NEONproductinfo_product()
+      for (i in 1:ncol(table)) {
+        table[i] <- as.character(table[i])
+      }
+      write.csv(x = table, file = file)
+    })
   output$ui_selectsite<- renderUI({
     sites <- if (length(NEONproductinfo_product()$siteCodes) == 0) {
       NA
