@@ -1,0 +1,15 @@
+## Welcome to the CyVerse NEON Browser!
+
+<center> <img src='https://static.wixstatic.com/media/276a43_2533596ce91044bea0f1298563122fce~mv2.png/v1/fill/w_516,h_112,al_c,q_80,usm_0.66_1.00_0.01/276a43_2533596ce91044bea0f1298563122fce~mv2.webp' height='50'>
+<img src='https://github.com/Danielslee51/NEON-Hosted-Browser/blob/master/Img/NEON_logo.png?raw=true' height='50' hspace='40'> </center>
+
+If this is your first time here, welcome to the CyVerse NEON Browser! This app provides an interface to the services of the National Ecological Observatory Network, an organization that provides open ecological data for ecosystems across the US. Created by the <a href='https://www.cyverse.org/' target='_blank'>CyVerse lab</a>, this app is meant to simplify the "NEON experience" and save time by bringing together its essential parts into one easy to access platform. While the <a href='https://www.neonscience.org/' target='_blank'>NEON website</a> will always be the ultimate destination for more information or complex requests, the CyVerse NEON Browser is a great place for both newcomers to learn about NEON and begin using its services, and for experienced users that just want a quick, simple way to download data.
+
+<center> <img src='https://github.com/Danielslee51/NEON-Hosted-Browser/blob/master/Img/demo_screen.png?raw=true' height='300'> </center>
+
+This help section will explain NEON's services, how they correspond to this app, and how to use the app's functionalities. Using this app should be relatively straight-foward to use once you know how, and this tutorial will explain its major parts and even some more subtle features that can save lots of time. Click on any of these to jump to a section.
+
+1. <a id='help_NEON' href='#' class='action-button'>Learn about NEON's services</a>
+2. <a id='help_map' href='#' class='action-button'>Learn how to use the interactive map</a>
+3. <a id='help_browse' href='#' class='action-button'>Learn how to find data products</a>
+4. <a id='help_download' href='#' class='action-button'>Learn how to download data products</a>

@@ -1,7 +1,7 @@
 fluidPage(theme = shinytheme('cerulean'),
           title = ("CyVerse NEON Browser"),
           useShinyjs(),
-          navbarPage(tags$b("CyVerse NEON Browser"),
+          navbarPage(tags$b("CyVerse NEON Browser"), id ="main",
                      ####Tab 1: Includes the map, and key with features like filtering data####
                      tabPanel("Interactive Map",
                               dropdown(right = TRUE, status = "primary", size = "sm", icon = icon("info-circle"), width = "38vw",
@@ -18,7 +18,7 @@ fluidPage(theme = shinytheme('cerulean'),
                               sidebarLayout(
                                 position = "right",
                                 sidebarPanel(width = 5,
-                                             tabsetPanel(id = "main",
+                                             tabsetPanel(id = "main data",
                                                #### — NEON ####
                                                tabPanel(tags$h5("Data Browser"), value = "data",
                                                         tabsetPanel(id = "data",
@@ -30,12 +30,25 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                     awesomeRadio(inputId = "NEONbrowsingstep_site", label = NULL, choices = list("Find Product" = "list", "Get Availability" = "single"), inline = TRUE, status = "info"),
                                                                                     conditionalPanel("input.NEONbrowsingstep_site == 'list'",
                                                                                                      selectInput(inputId = "NEONsite_site", label = "Select site:", choices = FieldSite_abbs),
-                                                                                                     dropdown(up = TRUE, label = "Filter data sets", status = "primary", size = "sm", width = '35vw',
-                                                                                                              checkboxInput(inputId = "showfilterinfo_site", label = "Show info about filters"),
-                                                                                                                      uiOutput(outputId = "ui_selectkeywords_site"),
-                                                                                                                      selectInput(inputId = "selectproducttype_site", label = "Data Team", choices = NEON_datatypes, multiple = TRUE),
-                                                                                                                      selectInput(inputId = "selectproducttheme_site", label = "Theme", choices = c("Atmosphere", "Biogeochemistry", "Ecohydrology", "Land Use, Land Cover, and Land Processes", "Organisms, Populations, and Communities"), multiple = TRUE)),
-                                                                                                     DTOutput(outputId = "NEONproductoptions_site")
+                                                                                                     div(style="display: inline-block; vertical-align:top; width: 150px;",tags$b("Filter products"),
+                                                                                                         dropdownButton(up = TRUE, status = "default", size = "sm", width = '35vw', icon = icon("caret-up"), inputId = "filter_site",
+                                                                                                                        checkboxInput(inputId = "showfilterinfo_site", label = "Show info about filters"),
+                                                                                                                        uiOutput(outputId = "ui_selectkeywords_site"),
+                                                                                                                        selectInput(inputId = "selectproducttype_site", label = "Data Team", choices = NEON_datatypes, multiple = TRUE),
+                                                                                                                        selectInput(inputId = "selectproducttheme_site", label = "Theme", choices = c("Atmosphere", "Biogeochemistry", "Ecohydrology", "Land Use, Land Cover, and Land Processes", "Organisms, Populations, and Communities"), multiple = TRUE)
+                                                                                                         )),
+                                                                                                     div(style="display: inline-block; vertical-align:top; width: 125px;", tags$b("Expand table"), actionBttn(inputId = "expandtable_site", label = NULL, style = "material-circle", icon = icon("expand"), color = "default", size = "sm")),
+                                                                                                     DTOutput(outputId = "NEONproductoptions_site"),
+                                                                                                     bsModal(id = "tableexpand_site", title = "Data Products", trigger = "expandtable_site", size = "large",
+                                                                                                             bsCollapse(
+                                                                                                               bsCollapsePanel(title = "Filter products", style = "primary",
+                                                                                                                               checkboxInput(inputId = "showfilterinfo_site2", label = "Show info about filters"),             
+                                                                                                                               uiOutput(outputId = "ui_selectkeywords_site2"),
+                                                                                                                               selectInput(inputId = "selectproducttype_site2", label = "Data Team", choices = NEON_datatypes, multiple = TRUE),
+                                                                                                                               selectInput(inputId = "selectproducttheme_site2", label = "Theme", choices = c("Atmosphere", "Biogeochemistry", "Ecohydrology", "Land Use, Land Cover, and Land Processes", "Organisms, Populations, and Communities"), multiple = TRUE)
+                                                                                                               )
+                                                                                                             ),
+                                                                                                             DTOutput(outputId = "NEONproductoptions_site2"))
                                                                                     ),
                                                                                     conditionalPanel("input.NEONbrowsingstep_site == 'single'",
                                                                                                      tags$b("Site:"),
@@ -79,12 +92,25 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                     includeMarkdown('Rmd/NEON_browsing_product.Rmd'),
                                                                                     awesomeRadio(inputId = "NEONbrowsingstep_product", label = NULL, choices = list("Find Product" = "list", "Get Availability" = "single"), inline = TRUE, status = "info"),
                                                                                     conditionalPanel("input.NEONbrowsingstep_product == 'list'",
-                                                                                                     dropdown(up = TRUE, label = "Filter data sets", status = "primary", size = "sm", width = '35vw',
-                                                                                                              checkboxInput(inputId = "showfilterinfo_product", label = "Show info about filters"),
-                                                                                                              uiOutput(outputId = "ui_selectkeywords_product"),
-                                                                                                              selectInput(inputId = "selectproducttype_product", label = "Data Team", choices = NEON_datatypes, multiple = TRUE),
-                                                                                                              selectInput(inputId = "selectproducttheme_product", label = "Theme", choices = c("Atmosphere", "Biogeochemistry", "Ecohydrology", "Land Use, Land Cover, and Land Processes", "Organisms, Populations, and Communities"), multiple = TRUE)),
-                                                                                                     DTOutput(outputId = "NEONproductoptions_product")
+                                                                                                     div(style="display: inline-block; vertical-align:top; width: 150px;",tags$b("Filter products"),
+                                                                                                         dropdownButton(up = TRUE, status = "default", size = "sm", width = '35vw', icon = icon("caret-up"), inputId = "filter_product",
+                                                                                                                        checkboxInput(inputId = "showfilterinfo_product", label = "Show info about filters"),
+                                                                                                                        uiOutput(outputId = "ui_selectkeywords_product"),
+                                                                                                                        selectInput(inputId = "selectproducttype_product", label = "Data Team", choices = NEON_datatypes, multiple = TRUE),
+                                                                                                                        selectInput(inputId = "selectproducttheme_product", label = "Theme", choices = c("Atmosphere", "Biogeochemistry", "Ecohydrology", "Land Use, Land Cover, and Land Processes", "Organisms, Populations, and Communities"), multiple = TRUE)
+                                                                                                         )),
+                                                                                                     div(style="display: inline-block; vertical-align:top; width: 125px;",tags$b("Expand table"), actionBttn(inputId = "expandtable_product", label = NULL, style = "material-circle", icon = icon("expand"), color = "default", size = "sm")),
+                                                                                                     DTOutput(outputId = "NEONproductoptions_product"),
+                                                                                                     bsModal(id = "tableexpand_product", title = "Data Products", trigger = "expandtable_product", size = "large",
+                                                                                                             bsCollapse(
+                                                                                                               bsCollapsePanel(title = "Filter products", style = "primary",
+                                                                                                                               checkboxInput(inputId = "showfilterinfo_product2", label = "Show info about filters"),
+                                                                                                                               uiOutput(outputId = "ui_selectkeywords_product2"),
+                                                                                                                               selectInput(inputId = "selectproducttype_product2", label = "Data Team", choices = NEON_datatypes, multiple = TRUE),
+                                                                                                                               selectInput(inputId = "selectproducttheme_product2", label = "Theme", choices = c("Atmosphere", "Biogeochemistry", "Ecohydrology", "Land Use, Land Cover, and Land Processes", "Organisms, Populations, and Communities"), multiple = TRUE)
+                                                                                                               )
+                                                                                                             ),
+                                                                                                             DTOutput(outputId = "NEONproductoptions_product2"))
                                                                                     ),
                                                                                     conditionalPanel("input.NEONbrowsingstep_product == 'single'",
                                                                                                      textInput(inputId = "NEONproductID_product", label = "Product ID:"),
@@ -253,7 +279,7 @@ fluidPage(theme = shinytheme('cerulean'),
                      ),
                      #### Tab 2: Description of NEON ####
                      tabPanel("About This Project",
-                              navlistPanel(well = FALSE, widths = c(2,10),
+                              navlistPanel(well = FALSE, widths = c(2,10), id = "about",
                                            tabPanel("Overview",
                                                     includeMarkdown('Rmd/Project_description.Rmd')),
                                            tabPanel("Credits",
@@ -261,7 +287,21 @@ fluidPage(theme = shinytheme('cerulean'),
                                            tabPanel("About NEON",
                                                     includeMarkdown('Rmd/NEON_about.Rmd'))
                               )),
-                     ####Tab 3: Includes outputs to help with testing or troubleshooting####
+                     ####Tab 3: Tutorial/Help####
+                     tabPanel("Help/Tutorials",
+                              navlistPanel(widths = c(3,9), id = "tutorial",
+                                           tabPanel("Introduction to the app",
+                                                    includeMarkdown("Rmd/Help_intro.Rmd")),
+                                           tabPanel("What is NEON?",
+                                                    includeMarkdown("Rmd/Help_NEON.Rmd")),
+                                           tabPanel("Using the interactive map",
+                                                    includeMarkdown("Rmd/Help_map.Rmd")),
+                                           tabPanel("Finding data products",
+                                                    includeMarkdown("Rmd/Help_browse.Rmd")),
+                                           tabPanel("Downloading data products",
+                                                    includeMarkdown("Rmd/Help_download.Rmd"))
+                              )),
+                     ####Tab 4: Includes outputs to help with testing or troubleshooting####
                      tabPanel("For me (troubleshooting)",
                               textOutput("text_me"),
                               textOutput("text_me_two"),
