@@ -1,6 +1,7 @@
 # NEON-Shiny-Browser
 
-A multifunctional R Shiny tool designed to make NEON data accessible, visible, and easy to interact with.
+A multifunctional R Shiny map tool deployed locally and designed to make NEON data accessible, visualized, and easy to interact with. This is a version of the [CyVerse NEON Browser](https://github.com/Danielslee51/CyVerse-NEON-Browser) meant to be deployed locally. The CyVerse NEON Browser is an equivalent app, except hosted by [CyVerse](https://cyverse.org); acessible to CyVerse users online, it can be found here: .
+
 
 ## Overview
 
