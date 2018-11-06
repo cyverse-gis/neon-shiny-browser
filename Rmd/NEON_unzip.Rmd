@@ -1,2 +1,4 @@
 ##### Unzip downloaded files
 The downloaded data comes zipped and in the form of many small files. They should be unzipped and joined to make a small number of large, accesible files. This step will unzip the files and combine them month-by-site to return a more organized and understandable result.
+<br><br>
+Select the output directory from the last step into the <a href='https://github.com/wleepang/shiny-directory-input' target='_blank'>widget</a> below. A folder from the 'General' option should start with **NEON\_\<site\>\_\<product ID\>**, while a folder from the 'Specific' option should be in the form **NEON\_\<site\>\_\<time range\>**.
