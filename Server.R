@@ -95,13 +95,13 @@ function(input, output, session) {
     proxy <- leafletProxy("map")
     proxy %>%
       clearGroup(group = "Domains") %>%
-      addPolygons(data = Domain_unincluded(),
+      addPolygons(data = Domain_unincluded()$geometry,
                   weight = 2,
                   fillOpacity = '0.18',
                   group = "Domains",
                   popup = paste0(Domain_unincluded()$DomainName),
                   color = "gray") %>%
-      addPolygons(data = Domain_included(),
+      addPolygons(data = Domain_included()$geometry,
                   weight = 2,
                   fillOpacity = '0.18',
                   group = "Domains",
@@ -1305,7 +1305,7 @@ function(input, output, session) {
                  } else {
                    file.rename(from = paste0("../NEON Downloads/", Folder_general()), to = Folder_path_general())
                    removeNotification(id = "download_general")
-                   sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Downloads' directory. Go to step 2 to stack the data.", type = 'success')
+                   sendSweetAlert(session, title = "Download Complete", text = "Check the 'NEON Downloads' directory. Go to the next step to stack the data.", type = 'success')
                  }
                })
   ####—— Download NEON data: specific ####
@@ -1327,7 +1327,7 @@ function(input, output, session) {
                      sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtilities package used to pull data. Read the error message: ", download), type = 'error')
                    } else {
                      removeNotification(id = "download_specific")
-                     sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Downloads' directory. Go to step 2 to stack to data.", type = 'success')
+                     sendSweetAlert(session, title = "Download Complete", text = "Check the 'NEON Downloads' directory. Go to the next step to stack the data.", type = 'success')
                    }
                  }
                })
@@ -1392,7 +1392,7 @@ function(input, output, session) {
                  } else {
                    file.rename(from = paste0("../NEON Downloads/", Product_ID_AOP()), to = Folder_path_AOP())
                    removeNotification("download_AOP")
-                   sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Download' directory. This data product doesn't need stacking; it is good to go!.", type = 'success')
+                   sendSweetAlert(session, title = "Download Complete", text = "Check the 'NEON Download' directory. This data product doesn't need stacking; it is good to go!", type = 'success')
                  }
                })
   

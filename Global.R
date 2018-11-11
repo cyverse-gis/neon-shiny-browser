@@ -113,6 +113,7 @@ domains <- as.data.frame(unique(domains))
 domains$Domain <- as.character(domains$Domain)
 # Retrieve geometry data using st_read()
 domain_data <- st_read('NEON-data/NEON_Domains.json')
+domain_data <- as.data.frame(domain_data)
 
 ####NEON Flight Boxes####
 ## Retrieve info for NEON flight boxes
