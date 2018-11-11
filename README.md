@@ -45,7 +45,7 @@ In addition to shiny itself, a few packages need to be downloaded: <br>
 * [`DT`](https://github.com/rstudio/DT) and [`dplyr`](https://github.com/tidyverse/dplyr): Help with data table manipulation.
 
  ```
-install.packages(c('leaflet','leaflet.extras','neonUtilities','nneo','shinythemes','shinyWidgets','shinyBS','shinyjs','sf','geosphere','jsonlite', 'dplyr', 'DT'))
+install.packages(c('shiny','leaflet','leaflet.extras','neonUtilities','nneo','shinythemes','shinyWidgets','shinyBS','shinyjs','sf','geosphere','jsonlite', 'dplyr', 'DT'))
 ```
 
 **Note: [Mac OS X](https://cran.r-project.org/bin/macosx/tools/) currently requires that `gfortran` and `clang` be installed in addition to the latest version of R (v3.5.1 "Feather Spray")** 
