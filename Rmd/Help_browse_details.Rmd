@@ -1,0 +1,26 @@
+<br>
+After you find an interesting data product, whether it is through browsing by site or product, the next step is viewing the important details. These details include:
+* The description of the product
+* The abstract/importance of the ecological characteristic described by the product
+* The design of how the product is captured
+* NEON's notes about the product
+* The available sites and dates that can be downloaded
+
+This information is all shown in the `View Details` tab. Information is all based off the Product ID assigned to each product, in the form of "DP#.#####.001": To view these details, type in (or preferably, copy and paste) the ID of a product into the corresponding text box. One useful shortcut to this occurs in the `Find Product` step. By clicking on a cell in the table in that step, the Product ID is automatically filled out, and the corresponding information appears. This is what it looks like:
+
+<center><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_details_1.png?raw=true' height='350'><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_details_2.png?raw=true' height='350'></center>
+
+There are a few things to note. At the top, there are obviously the ID and name of the product, and a `Toggle Download` checkbox, which will be addressed right after this. After that, pressing `View more info` will bring up more details about the product, producing the screen to the right. Then, there are the available sites (this screen comes after browsing by product— browsing by site would've chosen the site already in the previous step) and dates. The available dates will change by site and product, and only year-month combinations with ✅ can be downloaded. 
+
+The `Toggle Download` checkbox is the easiest way to move onto downloading a product. Clicking will either yield the options of `General` and `Specific` for normal, non-AOP products, or `AOP` for AOP products.
+
+<center><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_toggle_nonAOP.png?raw=true' height='200' hspace='10'><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_toggle_AOP.png?raw=true' height='200' hspace='10'></center>
+
+* Choosing `General` will bring you to the "General" download option (to be explained in the next section), automatically filling in the product ID and field site.
+* Choosing `Specific` will bring you to the "Specific" download option (to be explained in the next section), automatically filling in the product ID, field site, and possibly the year-month combination. Clicking on a cell in the `Available Dates` table and then choosing `Specific` will fill in the date.
+* Choosing `AOP` will bring you to the "AOP" download option (to be explained in the next section), automatically filling in the product ID, field site, and possibly the year. Clicking on a cell in the `Available Dates` table and then choosing `AOP` will fill in the year.
+
+To run a quick tutorial of browsing by product, click the button below: <br> 
+<button id="help_tutorial_browse_details" type="button" class="btn btn-default action-button">Run Tutorial</button>
+
+<hr>

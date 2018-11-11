@@ -1,0 +1,13 @@
+<br>
+An important helper tool is the map dropdown, located at the upper left corner of the screen and signified by the <img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Dropdownbutton.png?raw=true' height='23'> icon. Clicking it will yield a screen like this, with the option of one site, 3 text fields, and 3 buttons: <br>
+
+<center><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Dropdown_screen.png?raw=true' height='300'></center>
+
+This dropdown is useful in a few ways:
+* If you only know the name of a field site, the text fields and the `Zoom to Site` button give that site's basic information and location.
+* The dropdown is the easiest way to add sublocations to a site using the `Add Sublocations` button.
+* The `Toggle for Viewing and Download` is equivalent to pressing the two buttons above it, then choosing that site to find data products for. It is useful when you want to focus on one site for the entire map-browse-download process.
+
+To run a quick tutorial of the dropdown, click the button below: <br>
+<button id="help_tutorial_dropdown" type="button" class="btn btn-default action-button">Run Tutorial</button>
+<hr>

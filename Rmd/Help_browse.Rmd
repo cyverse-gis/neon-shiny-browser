@@ -1,0 +1,10 @@
+## Finding a Data Product
+
+The product catalog (tab with the same name on the app's right panel) allows you to browse through NEON's 180 data products and view the details of each product, such as its description, design, and availability site-wise and time-wise. This is the place to find data products needed for your project or research. There are two ways to browse products.
+
+1. Starting with site: This assumes that you already have one field site in mind with which you want to find products. In this mode, one site is selected, and only products available at that site are displayed.
+2. Starting with product: This lists all 180 data products for you to browse. Once you have chosen a data product, then you can find its site availability.
+
+Click on the tabs below to navigate through the various topics:
+
+<center><img src='https://pbs.twimg.com/media/DnogR7tW0AAuZ2t.jpg' height='400'></center>

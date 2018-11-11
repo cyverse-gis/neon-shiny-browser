@@ -1,0 +1,8 @@
+<br>
+Here are a few last tips to make using the map easier.
+* On the map itself, make sure to check out the upper left and right corners.
+* In the upper right corner is the spot to change map tiles and toggle map layers.
+* In the upper left corner are some useful tools. In addition to the zoom in/out buttons, there is a full-screen button and a measurement tool. Both can come in handy.
+
+<center><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_map_tips.png?raw=true' height='400'></center>
+<hr>

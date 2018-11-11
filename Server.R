@@ -2,14 +2,17 @@
 function(input, output, session) {
   # Initialization
   if (dir_created == TRUE) {
-    showNotification(ui = "'NEON Downloads' folder created in the directory containing this app. All downloads will go to this folder.", duration = 20, type = "message")
+    delay(ms = 5000, showNotification(ui = "'NEON Downloads' folder created outside the directory containing this app. All downloads will go to this folder.", duration = NULL, type = "message"))
   } else {
-    showNotification(ui = "Welcome back!", duration = 10, type = "message")
+    delay(ms = 5000, showNotification(ui = "Welcome back!", duration = 15, type = "message"))
   }
   delay(ms = 5000, expr = showNotification(ui = "First time here?", action = actionLink(inputId = "firsttime", label = "Yes"), duration = 15, type = "message", id = "first"))
-  observeEvent(input$firsttime, handlerExpr = {
-    updateNavbarPage(session, inputId = "main", selected = "Help/Tutorials")
-    removeNotification(id = "first", session)
+  observeEvent(input$firsttime, confirmSweetAlert(session, inputId = "firsttime_confirm", title = "Welcome to the CyVerse NEON Browser!", text = "This will bring you to the tutorial section and get you started with NEON and this app.", btn_labels = c("Cancel", "Confirm")))
+  observeEvent(input$firsttime_confirm, handlerExpr = {
+    if (input$firsttime_confirm == TRUE) {
+      updateNavbarPage(session, inputId = "main", selected = "Help/Tutorials")
+      removeNotification(id = "first", session)
+    }
   })
   
   ####INTERACTIVE MAP TAB####
@@ -46,7 +49,7 @@ function(input, output, session) {
         # Add option for fullscreen
         leaflet.extras::addFullscreenControl(pseudoFullscreen = TRUE)
     )
-    map %>% setView(lng = -98.5795, lat = 39.8283, zoom = 2.5)
+    map %>% setView(lng = -98.5795, lat = 39.8283, zoom = 2.5) %>% hideGroup("Flight Boxes")
   })
   #### — Filter Map Features ####
   #### —— Filtered Features ####
@@ -213,7 +216,7 @@ function(input, output, session) {
   #### ——— Terrestrial ####
   # Base
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_baseplot & nrow(Subloc_tes_plots_base()) != 0) {
       for (i in 1:nrow(Subloc_tes_plots_base())) {
         proxy %>%
@@ -248,7 +251,7 @@ function(input, output, session) {
   })
   # Bird
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_birdgrid & nrow(Subloc_tes_plots_bird()) != 0) {
       for (i in 1:nrow(Subloc_tes_plots_bird())) {
         proxy %>%
@@ -277,7 +280,7 @@ function(input, output, session) {
   })
   # Mammal
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_mammalgrid & nrow(Subloc_tes_plots_mam()) != 0) {
       for (i in 1:nrow(Subloc_tes_plots_mam())) {
         proxy %>%
@@ -312,7 +315,7 @@ function(input, output, session) {
   })
   # Mosquito
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_mosquitoplot & nrow(Subloc_tes_plots_mos()) != 0) {
       for (i in 1:nrow(Subloc_tes_plots_mos())) {
         proxy %>%
@@ -334,7 +337,7 @@ function(input, output, session) {
   })
   # Tick
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_tickplot & nrow(Subloc_tes_plots_tick()) != 0) {
       for (i in 1:nrow(Subloc_tes_plots_tick())) {
         proxy %>%
@@ -369,7 +372,7 @@ function(input, output, session) {
   })
   # Phenology
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_phenologyplot & nrow(Subloc_tes_plots_phe()) != 0) {
       for (i in 1:nrow(Subloc_tes_plots_phe())) {
         proxy %>%
@@ -405,7 +408,7 @@ function(input, output, session) {
   #### ——— Aquatic ####
   # Groundwater Well
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_well & nrow(Subloc_aqu_plots_well()) != 0) {
       for (i in 1:nrow(Subloc_aqu_plots_well())) {
         proxy %>%
@@ -424,7 +427,7 @@ function(input, output, session) {
   })
   # Met. Station
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_metstn & nrow(Subloc_aqu_plots_metstn()) != 0) {
       for (i in 1:nrow(Subloc_aqu_plots_metstn())) {
         proxy %>%
@@ -443,7 +446,7 @@ function(input, output, session) {
   })
   # Sensor Station
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_sensor & nrow(Subloc_aqu_plots_sensor()) != 0) {
       for (i in 1:nrow(Subloc_aqu_plots_sensor())) {
         proxy %>%
@@ -462,7 +465,7 @@ function(input, output, session) {
   })
   # Staff gauge/camera
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_gauge & nrow(Subloc_aqu_plots_gauge()) != 0) {
       for (i in 1:nrow(Subloc_aqu_plots_gauge())) {
         proxy %>%
@@ -481,7 +484,7 @@ function(input, output, session) {
   })
   # Sampling Reach Boundary
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_reach & nrow(Subloc_aqu_plots_reach()) != 0) {
       for (i in 1:nrow(Subloc_aqu_plots_reach())) {
         proxy %>%
@@ -500,7 +503,7 @@ function(input, output, session) {
   })
   # Riparian Assessment
   observe({
-    proxy <- leafletProxy('map')
+    proxy <- leafletProxy("map")
     if (input$sublocs_riparian & nrow(Subloc_aqu_plots_riparian()) != 0) {
       for (i in 1:nrow(Subloc_aqu_plots_riparian())) {
         proxy %>%
@@ -558,50 +561,50 @@ function(input, output, session) {
   #### NEON ####
   observeEvent(eventExpr = input$zoomtosite,
                handlerExpr = {
-                 if (input$NEONsite_zoom %in% FieldSite_Tes) {
-                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
-                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
+                 if (input$NEONsite_dropdown %in% FieldSite_Tes) {
+                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_dropdown],
+                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_dropdown],
                                                  zoom = 12)
-                 } else if (input$NEONsite_zoom %in% FieldSite_Aqu) {
-                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
-                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
+                 } else if (input$NEONsite_dropdown %in% FieldSite_Aqu) {
+                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_dropdown],
+                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_dropdown],
                                                  zoom = 15.5)
                  }
                }
   )
   observeEvent(eventExpr = input$addsublocs,
                handlerExpr = {
-                 leafletProxy('map') %>% showGroup(group = "Sub Locations")
+                 leafletProxy("map") %>% showGroup(group = "Sub Locations")
                  updateTabsetPanel(session, inputId = "main_data", selected = "filter")
                  updateRadioButtons(session, inputId = "map_features", selected = "fieldsites")
                  choices <- input$fieldsite_sublocs
-                 updateSelectInput(session, inputId = "fieldsite_sublocs", selected = c(choices, input$NEONsite_zoom))
+                 updateSelectInput(session, inputId = "fieldsite_sublocs", selected = c(choices, input$NEONsite_dropdown))
                })
   observeEvent(eventExpr = input$togglesite,
                handlerExpr = {
-                 if (input$NEONsite_zoom %in% FieldSite_Tes) {
-                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
-                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
+                 if (input$NEONsite_dropdown %in% FieldSite_Tes) {
+                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_dropdown],
+                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_dropdown],
                                                  zoom = 12)
-                 } else if (input$NEONsite_zoom %in% FieldSite_Aqu) {
-                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
-                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_zoom],
+                 } else if (input$NEONsite_dropdown %in% FieldSite_Aqu) {
+                   leafletProxy("map") %>% flyTo(lng = FieldSite_point$siteLongitude[FieldSite_point$siteCode %in% input$NEONsite_dropdown],
+                                                 lat = FieldSite_point$siteLatitude[FieldSite_point$siteCode %in% input$NEONsite_dropdown],
                                                  zoom = 15.5)
                  }
-                 leafletProxy('map') %>% showGroup(group = "Sub Locations")
+                 leafletProxy("map") %>% showGroup(group = "Sub Locations")
                  choices <- input$fieldsite_sublocs
-                 updateSelectInput(session, inputId = "fieldsite_sublocs", selected = c(choices, input$NEONsite_zoom))
+                 updateSelectInput(session, inputId = "fieldsite_sublocs", selected = c(choices, input$NEONsite_dropdown))
                  updateTabsetPanel(session, inputId = "main_data", selected = "data")
                  updateTabsetPanel(session, inputId = "data", selected = "find")
                  updateRadioButtons(session, inputId = "NEON_browsing_type", selected = "site")
                  updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "list")
-                 updateSelectInput(session, inputId = "NEONsite_site", selected = input$NEONsite_zoom)
+                 updateSelectInput(session, inputId = "NEONsite_site", selected = input$NEONsite_dropdown)
                })
   ####— NEON: Step 1- Find data ####
   ## for dropdown
-  output$dropdown_site <- renderPrint(paste0(FieldSite_point$siteName[FieldSite_point$siteCode %in% input$NEONsite_zoom], " ", FieldSite_point$`Habitat Specific`[FieldSite_point$siteCode %in% input$NEONsite_zoom]))
-  output$dropdown_state <- renderPrint(FieldSite_point$stateName[FieldSite_point$siteCode %in% input$NEONsite_zoom])
-  output$dataproduct_number <- renderPrint(nrow(NEONproducts_product[filter_site(site = input$NEONsite_zoom),]))
+  output$dropdown_site <- renderPrint(paste0(FieldSite_point$siteName[FieldSite_point$siteCode %in% input$NEONsite_dropdown], " ", FieldSite_point$`Habitat Specific`[FieldSite_point$siteCode %in% input$NEONsite_dropdown]))
+  output$dropdown_state <- renderPrint(FieldSite_point$stateName[FieldSite_point$siteCode %in% input$NEONsite_dropdown])
+  output$dataproduct_number <- renderPrint(nrow(NEONproducts_product[filter_site(site = input$NEONsite_dropdown),]))
   ####—— 1a: By Site####
   # Variables
   NEONproducts_product <<- nneo_products() # Added this variable up here because one item in finding by "site" needed it
@@ -645,7 +648,7 @@ function(input, output, session) {
                                                                       scrollY = '40vh'
                                                        ),
                                                        selection = list(mode = 'single', target = 'cell')))
-  observeEvent(eventExpr = input$NEONproductoptions_site_cells_selected, ignoreInit = TRUE,
+  observeEvent(eventExpr = input$NEONproductoptions_site_cells_selected,
                handlerExpr = {
                  if (length(input$NEONproductoptions_site_cells_selected) > 0) {
                    updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "single")
@@ -671,16 +674,34 @@ function(input, output, session) {
       updateSelectInput(session, inputId = "NEONproductkeywords_site", selected = NA)
     }
   })
+  observeEvent(input$NEONproductkeywords_site, updateSelectInput(session, inputId = "NEONproductkeywords_site2", selected = input$NEONproductkeywords_site))
+  observe({
+    if (length(input$NEONproductkeywords_site) == 0) {
+      updateSelectInput(session, inputId = "NEONproductkeywords_site2", selected = NA)
+    }
+  })
   observeEvent(input$selectproducttype_site2, updateSelectInput(session, inputId = "selectproducttype_site", selected = input$selectproducttype_site2))
   observe({
     if (length(input$selectproducttype_site2) == 0) {
       updateSelectInput(session, inputId = "selectproducttype_site", selected = NA)
     }
   })
+  observeEvent(input$selectproducttype_site, updateSelectInput(session, inputId = "selectproducttype_site2", selected = input$selectproducttype_site))
+  observe({
+    if (length(input$selectproducttype_site) == 0) {
+      updateSelectInput(session, inputId = "selectproducttype_site2", selected = NA)
+    }
+  })
   observeEvent(input$selectproducttheme_site2, updateSelectInput(session, inputId = "selectproducttheme_site", selected = input$selectproducttheme_site2))
   observe({
     if (length(input$selectproducttheme_site2) == 0) {
       updateSelectInput(session, inputId = "selectproducttheme_site", selected = NA)
+    }
+  })
+  observeEvent(input$selectproducttheme_site, updateSelectInput(session, inputId = "selectproducttheme_site2", selected = input$selectproducttheme_site))
+  observe({
+    if (length(input$selectproducttheme_site) == 0) {
+      updateSelectInput(session, inputId = "selectproducttheme_site2", selected = NA)
     }
   })
   observe({
@@ -710,7 +731,7 @@ function(input, output, session) {
       delay(ms = 2000, expr = toggleDropdownButton(inputId = "filter_site"))
     }
   })
-  # single: filtering column of products for one site through ID
+  # Single: filtering column of products for one site through ID
   NEONproductID_site <- reactive(req(
     if (gsub(pattern = " ", replacement = "", x = input$NEONproductID_site) == "") {
       "random string that will not match to anything"
@@ -723,7 +744,7 @@ function(input, output, session) {
   output$NEONproductsite_site <- renderUI({
     site <- input$NEONsite_site
     HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>",site, "</p>"))
-    })
+  })
   output$NEONproductname_site <- renderUI({
     if (length(NEONproductinfo_site()$productName) == 0) {
       HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", "<br>", "</p>"))
@@ -731,6 +752,7 @@ function(input, output, session) {
       HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'><a href='http://data.neonscience.org/data-product-view?dpCode=", NEONproductID_site(),"' target='_blank'>", NEONproductinfo_site()$productName, "</a></p>"))
     }
   })
+  
   # Buttons to toggle downloads
   observe({
     if (nrow(NEONproductinfo_product()) == 0) {
@@ -795,10 +817,10 @@ function(input, output, session) {
   
   output$NEONproductdesc_site <- renderUI({
     desc <- ifelse(length(NEONproductinfo_site()$productDescription) == 0,
-                                                        yes = "<br>",
-                                                        no = NEONproductinfo_site()$productDescription)
+                   yes = "<br>",
+                   no = NEONproductinfo_site()$productDescription)
     HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", desc, "</p>"))
-    })
+  })
   output$NEONproductabstract_site <- renderUI({
     abstract <- ifelse(length(NEONproductinfo_site()$productAbstract) == 0,
                        yes = "<br>",
@@ -807,16 +829,16 @@ function(input, output, session) {
   })
   output$NEONproductdesign_site <- renderUI({
     design <- ifelse(length(NEONproductinfo_site()$productDesignDescription) == 0,
-                                                          yes = "<br>",
-                                                          no = NEONproductinfo_site()$productDesignDescription)
+                     yes = "<br>",
+                     no = NEONproductinfo_site()$productDesignDescription)
     HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", design, "</p>"))
-    })
+  })
   output$NEONproductnotes_site <- renderUI({
     notes <- ifelse(length(NEONproductinfo_site()$productRemarks) == 0,
-                                                         yes = "<br>",
-                                                         no = NEONproductinfo_site()$productRemarks)
+                    yes = "<br>",
+                    no = NEONproductinfo_site()$productRemarks)
     HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", notes, "</p>"))
-    })
+  })
   # Download full table
   output$fullinfo_site <- downloadHandler(
     filename = function() {
@@ -892,7 +914,9 @@ function(input, output, session) {
   }
   keywords <- unique(keywords)
   keywords <- sort(keywords)
-  output$ui_selectkeywords_product <- renderUI(selectInput(inputId = "NEONproductkeywords_product", label = "Keywords", choices = keywords, multiple = TRUE))
+  output$ui_selectkeywords_product <- renderUI({
+    selectInput(inputId = "NEONproductkeywords_product", label = "Keywords", choices = keywords, multiple = TRUE)
+  })
   NEONproduct_products_filter <- NEONproducts_product[c("productName", "productCode", "keywords", "productScienceTeam", "themes")]
   names(NEONproduct_products_filter) <- c('Product Name', 'Product ID', 'keywords', "producttype", "themes")
   NEONproduct_products_filter <- NEONproduct_products_filter[order(NEONproduct_products_filter$`Product Name`),]
@@ -910,7 +934,7 @@ function(input, output, session) {
     if (input$showfilterinfo_product == TRUE) {
       addTooltip(session, id = "NEONproductkeywords_product", title = HTML("Filter data products by keywords describing their contents. Each product can have more than one, so only products that have <u>all</u> of the keywords chosen will appear."), trigger = "focus", placement = "top")
       addTooltip(session, id = "selectproducttype_product", title = HTML("Filter data products by their data collection method. Each product has one type, so the filter includes all products with the chosen types. Learn more about what each method means <a href='https://www.neonscience.org/data-collection' target='_blank'>here</a>."), trigger = "focus", placement = "top")
-      addTooltip(session, id = "selectproducttheme_product", title = HTML("Filter data products by their theme. Each product can have more than one, so only products that have <u>all</u> of the themes chosen will appear. Learn more about each theme <a href='https://www.neonscience.org/data/data-themes' target='_blank'>here</a>."), trigger = "focus", placement = "top")
+      addTooltip(session, id = "selectproducttheme_product", title = HTML("Filter data products by their theme. Each product can have more than one, so only products that have <u>all</u> of the themes chosen will appear. Learn more about each theme <a href='https://www.neonscience.org/data/data-themes' target='_blank'>here</a>"), trigger = "focus", placement = "top")
     } else {
       removeTooltip(session, id = "NEONproductkeywords_product")
       removeTooltip(session, id = "selectproducttype_product")
@@ -951,10 +975,22 @@ function(input, output, session) {
       updateSelectInput(session, inputId = "NEONproductkeywords_product", selected = NA)
     }
   })
+  observeEvent(input$NEONproductkeywords_product, updateSelectInput(session, inputId = "NEONproductkeywords_product2", selected = input$NEONproductkeywords_product))
+  observe({
+    if (length(input$NEONproductkeywords_product) == 0) {
+      updateSelectInput(session, inputId = "NEONproductkeywords_product2", selected = NA)
+    }
+  })
   observeEvent(input$selectproducttype_product2, updateSelectInput(session, inputId = "selectproducttype_product", selected = input$selectproducttype_product2))
   observe({
     if (length(input$selectproducttype_product2) == 0) {
       updateSelectInput(session, inputId = "selectproducttype_product", selected = NA)
+    }
+  })
+  observeEvent(input$selectproducttype_product, updateSelectInput(session, inputId = "selectproducttype_product2", selected = input$selectproducttype_product))
+  observe({
+    if (length(input$selectproducttype_product) == 0) {
+      updateSelectInput(session, inputId = "selectproducttype_product2", selected = NA)
     }
   })
   observeEvent(input$selectproducttheme_product2, updateSelectInput(session, inputId = "selectproducttheme_product", selected = input$selectproducttheme_product2))
@@ -963,11 +999,17 @@ function(input, output, session) {
       updateSelectInput(session, inputId = "selectproducttheme_product", selected = NA)
     }
   })
+  observeEvent(input$selectproducttheme_product, updateSelectInput(session, inputId = "selectproducttheme_product2", selected = input$selectproducttheme_product))
+  observe({
+    if (length(input$selectproducttheme_product) == 0) {
+      updateSelectInput(session, inputId = "selectproducttheme_product2", selected = NA)
+    }
+  })
   observe({
     if (input$showfilterinfo_product2 == TRUE) {
       addTooltip(session, id = "NEONproductkeywords_product2", title = HTML("Filter data products by keywords describing their contents. Each product can have more than one, so only products that have <u>all</u> of the keywords chosen will appear."), trigger = "focus", placement = "top")
       addTooltip(session, id = "selectproducttype_product2", title = HTML("Filter data products by their data collection method. Each product has one type, so the filter includes all products with the chosen types. Learn more about what each method means <a href='https://www.neonscience.org/data-collection' target='_blank'>here</a>."), trigger = "focus", placement = "top")
-      addTooltip(session, id = "selectproducttheme_product2", title = HTML("Filter data products by their theme. Each product can have more than one, so only products that have <u>all</u> of the themes chosen will appear. Learn more about each theme <a href='https://www.neonscience.org/data/data-themes' target='_blank'>here</a>"), trigger = "focus", placement = "top")
+      addTooltip(session, id = "selectproducttheme_product2", title = HTML("Filter data products by their theme. Each product can have more than one, so only products that have <u>all</u> of the themes chosen will appear. Learn more about each theme <a href='https://www.neonscience.org/data/data-themes' target='_blank'>here</a>."), trigger = "focus", placement = "top")
     } else {
       removeTooltip(session, id = "NEONproductkeywords_product2")
       removeTooltip(session, id = "selectproducttype_product2")
@@ -990,7 +1032,7 @@ function(input, output, session) {
       delay(ms = 2000, expr = toggleDropdownButton(inputId = "filter_product"))
     }
   })
-  # single: filtering one row of parent NEON products table through ID
+  # Single: filtering one row of parent NEON products table through ID
   NEONproductID_product <- reactive(req(
     ifelse(gsub(pattern = " ", replacement = "", x = input$NEONproductID_product) == "",
            yes = "random string that will not match to anything",
@@ -1091,7 +1133,7 @@ function(input, output, session) {
                    yes = "<br>",
                    no = NEONproductinfo_product()$productDescription)
     HTML(paste0("<p style='border:1px; border-radius:5px; border-style:solid; border-color:#CCCCCC; padding: 0.5em;'>", desc, "</p>"))
-    })
+  })
   output$NEONproductabstract_product <- renderUI({
     abstract <- ifelse(length(NEONproductinfo_product()$productAbstract) == 0,
                        yes = "<br>",
@@ -1224,6 +1266,7 @@ function(input, output, session) {
   Year_AOP <- reactive(req(strsplit(as.character(input$year_AOP), "-")[[1]][1]))
   Folder_path_general <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_general(), "_", Product_ID_middle())))
   Folder_path_specific <- reactive(req(paste0("../NEON Downloads/NEON_", Field_Site_specific(), "_", Date_specific())))
+  Folder_path_AOP <- reactive(req(paste0('../NEON Downloads/AOP_', Field_Site_AOP(), "_", Year_AOP())))
   ####—— Download NEON data: general####
   # Calculate Size
   observeEvent(eventExpr = input$get_general_size, ignoreInit = TRUE,
@@ -1254,32 +1297,38 @@ function(input, output, session) {
   # Download
   observeEvent(eventExpr = input$download_NEON_general,
                handlerExpr = {
-                 showNotification(ui = "Download in progess…", id = "download_general", type = "message")
+                 showNotification(ui = "Download in progess…", duration = NULL, id = "download_general", type = "message")
                  download <- try(zipsByProduct(dpID = Product_ID_general(), site = Field_Site_general(), package = Package_type_general(), check.size = FALSE, savepath = '../NEON Downloads/'), silent = TRUE)
                  if (class(download) == "try-error") {
                    removeNotification(id = "download_general")
-                   sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
+                   sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtilities package used to pull data. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
                  } else {
                    file.rename(from = paste0("../NEON Downloads/", Folder_general()), to = Folder_path_general())
                    removeNotification(id = "download_general")
-                   sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Downloads' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
+                   sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Downloads' directory. Go to step 2 to stack the data.", type = 'success')
                  }
                })
   ####—— Download NEON data: specific ####
   observeEvent(eventExpr = input$download_NEON_specific,
                handlerExpr = {
-                 showNotification(ui = "Download in progess…", id = "download_specific", type = "message")
-                 dir.create(path = Folder_path_specific())
-                 download <- try(getPackage(dpID = Product_ID_specific(), site_code = Field_Site_specific(), year_month = Date_specific(), package = Package_type_specific(), savepath = Folder_path_specific()), silent = TRUE)
-                 if (class(download) == "try-error") {
-                   if (length(dir(path = Folder_path_specific())) == 0) {
-                     unlink(x = Folder_path_specific(), recursive = TRUE)
-                   }
-                   removeNotification(id = "download_specific")
-                   sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error message: ", download), type = 'error')
+                 check <- try(checkDownload(dpID = Product_ID_specific(), site = Field_Site_specific(), year_month = Date_specific()), silent = TRUE)
+                 if (check != TRUE) {
+                   sendSweetAlert(session, title = "Download failed", text = check, type = 'error')
+                   enable(id = "download_NEON_specific")
                  } else {
-                   removeNotification(id = "download_specific")
-                   sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Downloads' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
+                   showNotification(ui = "Download in progess…", duration = NULL, id = "download_specific", type = "message")
+                   dir.create(path = Folder_path_specific())
+                   download <- try(getPackage(dpID = Product_ID_specific(), site_code = Field_Site_specific(), year_month = Date_specific(), package = Package_type_specific(), savepath = Folder_path_specific()), silent = TRUE)
+                   if (class(download) == "try-error") {
+                     if (length(dir(path = Folder_path_specific())) == 0) {
+                       unlink(x = Folder_path_specific(), recursive = TRUE)
+                     }
+                     removeNotification(id = "download_specific")
+                     sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtilities package used to pull data. Read the error message: ", download), type = 'error')
+                   } else {
+                     removeNotification(id = "download_specific")
+                     sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Downloads' directory. Go to step 2 to stack to data.", type = 'success')
+                   }
                  }
                })
   ####—— Download NEON data: AOP####
@@ -1313,7 +1362,7 @@ function(input, output, session) {
                    } else {
                      total_size <- 0
                      for (i in c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")) {
-                       data <- nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-", i))$data$files
+                       data <- try(nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-", i))$data$files, silent = TRUE)
                        if (class(data) != "try-error") {
                          size <- as.numeric(data$size)
                          total_size <- total_size + sum(size)
@@ -1335,22 +1384,21 @@ function(input, output, session) {
                })
   observeEvent(eventExpr = input$download_NEON_AOP,
                handlerExpr = {
-                 showNotification(ui = "Download in progess…", id = "download_AOP", type = "message")
-                 download <- try(byFileAOP(dpID = Product_ID_AOP(), site = Field_Site_AOP(), year = Year_AOP(), check.size = FALSE, savepath = '..'), silent = TRUE)
+                 showNotification(ui = "Download in progess…", duration = NULL, id = "download_AOP", type = "message")
+                 download <- try(byFileAOP(dpID = Product_ID_AOP(), site = Field_Site_AOP(), year = Year_AOP(), check.size = FALSE, savepath = '../NEON Downloads/'), silent = TRUE)
                  if (class(download) == "try-error") {
                    removeNotification("download_AOP")
-                   sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtlities package used to pull data. Read the error message: ", strsplit(download, ":")[[1]][2]), type = 'error')
+                   sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to the data package you tried to obtain or the neonUtilities package used to pull data. Read the error message: ", strsplit(download, ":")[[1]][2]), type = 'error')
                  } else {
+                   file.rename(from = paste0("../NEON Downloads/", Product_ID_AOP()), to = Folder_path_AOP())
                    removeNotification("download_AOP")
-                   sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Download' directory. Go to step 2 to unzip files and make them more accesible.", type = 'success')
+                   sendSweetAlert(session, title = "File downloaded", text = "Check the 'NEON Download' directory. This data product doesn't need stacking; it is good to go!.", type = 'success')
                  }
                })
   
   ####— NEON: Step 3- Unzip/Join Downloads####
   # Variables
   NEON_folder_path <- reactive(req(readDirectoryInput(session, 'NEON_unzip_folder')))
-  NEON_file_name <- reactive(req(input$NEON_unzip_file))
-  NEON_file_path <- reactive(req(paste0("../NEON Downloads/", NEON_file_name())))
   # Server function needed by directoryInput (https://github.com/wleepang/shiny-directory-input)
   observeEvent(ignoreNULL = TRUE,
                eventExpr = {input$NEON_unzip_folder},
@@ -1361,17 +1409,6 @@ function(input, output, session) {
                    # update the widget value
                    updateDirectoryInput(session, 'NEON_unzip_folder', value = path)}
                })
-  # Functions needed to make list of files reactive
-  has.new.files <- function() {
-    unique(list.files(path = '../NEON Downloads', pattern = ".zip"))
-  }
-  get.files <- function() {
-    list.files(path = '../NEON Downloads', pattern = ".zip")
-  }
-  NEON_unzip_files <- reactivePoll(intervalMillis = 10, session, checkFunc = has.new.files, valueFunc = get.files)
-  observeEvent(NEON_unzip_files(), ignoreInit = TRUE, ignoreNULL = TRUE, {
-    updateSelectInput(session, inputId = 'NEON_unzip_file', choices = NEON_unzip_files())
-  })
   # Unzip data: general/specific
   observeEvent(eventExpr = input$unzip_NEON_folder,
                handlerExpr = {
@@ -1383,19 +1420,6 @@ function(input, output, session) {
                  } else {
                    removeNotification("unzip_normal")
                    sendSweetAlert(session, title = "File unzipped", text = "The outer appearance of the folder should be the same. On the inside, there should be a new folder called 'stackedFiles' which contains the datasets.", type = "success")
-                 }
-               })
-  # Unzip data: manual
-  observeEvent(eventExpr = input$unzip_NEON_file,
-               handlerExpr = {
-                 showNotification(ui = "Unzip in progess…", id = "unzip_manual", type = "message")
-                 unzip <- try(stackByTable(filepath = NEON_file_path(), folder = FALSE))
-                 if (class(unzip) == "try-error") {
-                   removeNotification("unzip_manual")
-                   sendSweetAlert(session, title = "Unzip failed", text = paste0("Check that you are unzipping the .zip file that was manually downloaded. Read the error code message: ", strsplit(unzip, ":")[[1]][-1]), type = "error")
-                 } else {
-                   removeNotification("unzip_manual")
-                   sendSweetAlert(session, title = "File unzipped", text = paste0("There should now be a new folder titled '", strsplit(NEON_file_name(), ".zip")[[1]][1], "' with all of the datasets."), type = "success")
                  }
                })
   
@@ -1428,13 +1452,102 @@ function(input, output, session) {
   observeEvent(input$help_download2, handlerExpr = {
     updateNavlistPanel(session, inputId = "tutorial", selected = "Downloading data products")
   })
+  ####— Map tab####
+  observeEvent(input$help_tutorial_dropdown, handlerExpr = {
+    updateNavlistPanel(session, inputId = "main", selected = "Map Browser")
+    confirmSweetAlert(session, inputId = "alert_dropdown", title = "Dropdown Tutorial", text = "When you click continue, the map will zoom towards the Santa Rita Experimental Range (SRER) and the dropdown will open. Click on some map features and the dropdown buttons and see what happens.", btn_labels = c("Cancel", "Continue"))
+  })
+  observeEvent(input$alert_dropdown, handlerExpr = {
+    if (input$alert_dropdown == TRUE) {
+      leafletProxy("map") %>% flyTo(lng = -110.8355, lat = 31.91068, zoom = 10)
+      toggleDropdownButton(inputId = "map_dropdown")
+      updateSelectInput(session, inputId = "NEONsite_dropdown", selected = "SRER")
+    }
+  })
+  observeEvent(input$help_tutorial_map_manager, handlerExpr = {
+    updateNavlistPanel(session, inputId = "main", selected = "Map Browser")
+    confirmSweetAlert(session, inputId = "alert_map_manager", title = "Map Manager Tutorial", text = "When you click continue, the map will reset over the US and the map manager will appear. Play around with the various layers to see how the map is affected.", btn_labels = c("Cancel", "Continue"))
+  })
+  observeEvent(input$alert_map_manager, handlerExpr = {
+    if (input$alert_map_manager == TRUE) {
+      leafletProxy("map") %>% flyTo(lng = -98.5795, lat = 39.8283, zoom = 2.5)
+      updateTabsetPanel(session, inputId = "main_data", selected = "filter")
+      leafletProxy("map") %>% showGroup(legend$group)
+    }
+  })
+  observeEvent(input$tutorial_help, handlerExpr = {
+    if (input$tutorial_help == '<i class="fa fa-forward"></i>') {
+      updateTabsetPanel(session, inputId = "tutorial_help", selected = "layers")
+      updateNavlistPanel(session, inputId = "tutorial", selected = "Finding data products")
+    }
+  })
+  ####— Browse Tab####
+  observeEvent(input$help_tutorial_browse_site, handlerExpr = {
+    updateNavlistPanel(session, inputId = "main", selected = "Map Browser")
+    confirmSweetAlert(session, inputId = "alert_browse_site", title = "Browsing by Site Tutorial", text = "When you click continue, the product catalog will appear with the Santa Rita Experimental Range (SRER) selected and the filters open. Try filtering products, opening the table full screen, and then clicking cells in the table and see what happens.", btn_labels = c("Cancel", "Continue"))
+  })
+  observeEvent(input$alert_browse_site, handlerExpr = {
+    if (input$alert_browse_site == TRUE) {
+      updateTabsetPanel(session, inputId = "main_data", selected = "data")
+      updateTabsetPanel(session, inputId = "data", selected = "find")
+      updateAwesomeRadio(session, inputId = "NEON_browsing_type", selected = "site")
+      updateAwesomeRadio(session, inputId = "NEONbrowsingstep_site", selected = "list")
+      updateSelectInput(session, inputId = "NEONsite_site", selected = "SRER")
+      toggleDropdownButton(inputId = "filter_site")
+    }
+  })
+  observeEvent(input$help_tutorial_browse_product, handlerExpr = {
+    updateNavlistPanel(session, inputId = "main", selected = "Map Browser")
+    confirmSweetAlert(session, inputId = "alert_browse_product", title = "Browsing by Product Tutorial", text = "When you click continue, the product catalog will appear with all 180 products listed and the filters open. Try filtering products, opening the table full screen, and then clicking cells in the table and see what happens.", btn_labels = c("Cancel", "Continue"))
+  })
+  observeEvent(input$alert_browse_product, handlerExpr = {
+    if (input$alert_browse_product == TRUE) {
+      updateTabsetPanel(session, inputId = "main_data", selected = "data")
+      updateTabsetPanel(session, inputId = "data", selected = "find")
+      updateAwesomeRadio(session, inputId = "NEON_browsing_type", selected = "product")
+      updateAwesomeRadio(session, inputId = "NEONbrowsingstep_product", selected = "list")
+      toggleDropdownButton(inputId = "filter_product")
+    }
+  })
+  observeEvent(input$help_tutorial_browse_details, handlerExpr = {
+    updateNavlistPanel(session, inputId = "main", selected = "Map Browser")
+    confirmSweetAlert(session, inputId = "alert_browse_details", title = "Viewing Product Details Tutorial", text = "When you click continue, the product catalog will open with the product 'Elevation of groundwater' already selected. Look through the product details, the various availabilities, and experiment with some of the buttons.", btn_labels = c("Cancel", "Continue"))
+  })
+  observeEvent(input$alert_browse_details, handlerExpr = {
+    if (input$alert_browse_details == TRUE) {
+      updateTabsetPanel(session, inputId = "main_data", selected = "data")
+      updateTabsetPanel(session, inputId = "data", selected = "find")
+      updateAwesomeRadio(session, inputId = "NEON_browsing_type", selected = "product")
+      updateAwesomeRadio(session, inputId = "NEONbrowsingstep_product", selected = "single")
+      updateTextInput(session, inputId = "NEONproductID_product", value = "DP1.20100.001")
+    }
+  })
+  observeEvent(input$tutorial_browse, handlerExpr = {
+    if (input$tutorial_browse == '<i class="fa fa-forward"></i>') {
+      updateTabsetPanel(session, inputId = "tutorial_browse", selected = "site")
+      updateNavlistPanel(session, inputId = "tutorial", selected = "Downloading data products")
+    }
+  })
+  ####— Download Tab####
+  observeEvent(input$tutorial_download, handlerExpr = {
+    if (input$tutorial_download == '<i class="fa fa-forward"></i>') {
+      confirmSweetAlert(session, inputId = "alert_done", title = "Tutorial Finished", text = "You made it through the tutorial! Press 'continue' to go and try everything out. We look foward to hearing your reactions and feedback!", btn_labels = c("Cancel", "Continue"))
+    }
+  })
+  observeEvent(input$alert_done, handlerExpr = {
+    if (input$alert_done == TRUE) {
+      updateTabsetPanel(session, inputId = "tutorial_download", selected = "general")
+      updateNavlistPanel(session, inputId = "tutorial", selected = "Introduction to the app")
+      updateNavlistPanel(session, inputId = "main", selected = "Map Browser")
+    }
+  })
   
   ####FOR ME TAB####
   
   #Text for troublshooting
-  output$text_me <- renderText(length(NEONproductinfo_site()$productName) == 0)
+  #output$text_me <- renderText(as.character(input$map_marker_click))
   #Text for troublshooting 2
-  output$text_me_two <- renderText(input$NEONproducttable_product_cells_selected)
+  #output$text_me_two <- renderText("Sub Locations" %in% as.character(input$map_marker_click))
   #Table for troubleshooting
   #output$table_me <- shiny::renderDataTable()
 }

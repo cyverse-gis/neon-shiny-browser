@@ -9,12 +9,12 @@ school, and he is the main developer and maintainer of this app.</figcaption>
 <figure>
 <img src='https://avatars1.githubusercontent.com/u/11527041?s=460&v=4' width='250'>
 <figcaption><a href='https://github.com/tyson-swetnam' target='_blank'>Tyson Swetnam</a> is a science analyst and spatial data specialist <br>
-at CyVerse. He led this project, guiding its developement and <br>
+at CyVerse. He led this project, guiding its development and <br>
 fostering communication with the nice folks at NEON.</figcaption>
 </figure>
 
 ### Acknowledgements
-Primarily, a big thanks goes to NEON for their cooperation and help throughout development. Their staff helped a lot to make the app refined and geared towards NEON data users. 
-\*Finish at end of developement\*
+Primarily, a big thanks goes to NEON for their cooperation and help throughout development. Their staff helped a lot to make the app refined and geared towards NEON data users. This includes Christine Laney and Claire Lunch, who gave us detailed reviews, helpful information, and were willing to collaborate with us to make this final product.
 
-Additionally, the Rstudio platform and community were instrumental to the app's creation.
+Additionally, the Rstudio platform and community were instrumental to the app's creation. Like I mentioned before, the app would not be possible without the hundreds of thousands of lines of code that supports R, Rstudio, R Shiny, and all the packages that we used.
+<hr>

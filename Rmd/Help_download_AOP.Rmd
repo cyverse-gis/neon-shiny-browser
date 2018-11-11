@@ -1,0 +1,8 @@
+<br>
+This method is specifically designed for AOP flight products. This requires an AOP Product ID, site, and year, and checking download size beforehand is highly suggested. Unlike the size calculator for the `General` method, the estimations here are fairly accurate.
+
+The downloads will appear in a new folder of the form **AOP\_\<site\>\_\<year\>**, located in the **NEON Downloads** folder. This data comes straight from the <a href='http://data.neonscience.org/data-api' target='_blank'>NEON API</a>, and the download will be **very large and very time consuming**.
+
+<center><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_download_AOP.png?raw=true' height='400'></center>
+
+<hr>

@@ -1,1 +1,1 @@
-Select the **.zip** file that was downloaded from the NEON [data portal](http://data.neonscience.org/static/browse.html). If you cannot find your **.zip** file, check that it is in the directory containing **NEON Shiny Browser**.
+Select the **.zip** file that was downloaded from the NEON <a href='http://data.neonscience.org/static/browse.html' target='_blank'>data portal</a>. If you cannot find your **.zip** file, check that it is in the directory containing **NEON Shiny Browser**.

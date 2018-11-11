@@ -1,0 +1,13 @@
+<br>
+The "Map Manager" tab, the rightmost tab on the right panel, controls the map display. Here, map layers can be filtered and sublocations can also be added. It gives control over all 4 map layers:
+
+<center><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_map_manager.png?raw=true' height='500'></center>
+
+* Field Sites: can be filtered by type (Core vs. Relocatable), habitat (Terrestrial vs. Aquatic), and state. This is useful for viewing sites with a certain characteristic (studies on rivers would filter for Aquatic sites) or sites in a certain state (researchers in Arizona).
+* Domains: Domains, which are all plotted at launch, can be unincluded. Unincluding a domain will also remove all field sites in that domain, including their boundaries and flight boxes.
+* Flight boxes: Currently, these can be filtered by year— 2016 or 2017. Note that 2018 AOP products are available for download, but not on the map.
+* Sub Locations: Sub locations can be added from this section. Additionally, the map key feature offers explanations and toggling of all 12 sub locations.
+
+To run a quick tutorial of the Map Manager tab, click the button below: <br>
+<button id="help_tutorial_map_manager" type="button" class="btn btn-default action-button">Run Tutorial</button>
+<hr>

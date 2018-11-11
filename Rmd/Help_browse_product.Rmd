@@ -1,0 +1,12 @@
+<br>
+Another to find data is just to browse the full list of data products. Once you choose a data product, its available sites will then appear. Browsing by product looks like this:
+
+<center><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_browser_product.png?raw=true' height='500'></center>
+
+Note the turquoise radio buttons labeled `Find Product` and `View Details` and the two buttons labeled `Filter products` and `Expand table`. Everything from "Browsing by Site" remains the same: this is the still the first step out of two, and the table can still be filtered and viewed in full screen.
+
+Additionally, the previous shortcut, involving clicking on a cell and the product information automatically appearing, is still useful.
+
+To run a quick tutorial of browsing by product, click the button below: <br> 
+<button id="help_tutorial_browse_product" type="button" class="btn btn-default action-button">Run Tutorial</button>
+<hr>
