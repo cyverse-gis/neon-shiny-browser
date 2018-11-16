@@ -1,6 +1,6 @@
 # NEON-Shiny-Browser
 
-A multifunctional R Shiny map tool deployed locally and designed to make NEON data accessible, visualized, and easy to interact with. This is a version of the [CyVerse NEON Browser](https://github.com/Danielslee51/CyVerse-NEON-Browser) meant to be deployed locally. The CyVerse NEON Browser is an equivalent app, except hosted by [CyVerse](https://cyverse.org); acessible to CyVerse users online, it can be found here: .
+A multifunctional R Shiny map tool deployed locally and designed to make NEON data accessible, visualized, and easy to interact with. This is a version of the [CyVerse NEON Browser](https://github.com/Danielslee51/CyVerse-NEON-Browser) meant to be deployed locally. The CyVerse NEON Browser is an equivalent app, except hosted by [CyVerse](https://cyverse.org); acessible to users online, it can be found on the CyVerse [Discovery Environment](https://www.cyverse.org/discovery-environment).
 
 
 ## Overview
@@ -11,11 +11,12 @@ The NEON Shiny Browser is an interactive tool to browse, pull, and manipulate da
 
 First, this app displays relevant features of NEON and their research on a map. Users can view and filter map features such as NEON [sites](https://www.neonscience.org/field-sites), NEON domains, [AOP](https://www.neonscience.org/data-collection/airborne-remote-sensing) flightpaths, and [TOS](https://www.neonscience.org/data-collection/terrestrial-organismal-sampling) locations.
 
-<**image/gif**>
+<p align="center"><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Map.gif?raw=true' width='650'></p>
 
 Additionally, this app provides an easy, in-app alternative to NEON's [data portal](http://data.neonscience.org/browse-data). Users can view data products and their availabilities, download them in various formats, and then stack those downloads to make them more organized and accessible.
 
-<img src = "Img/data_browse.gif" width = "420"/> <img src = "Img/data_download:unzip.gif" width = "420" align = "right"/>
+<p align="center"><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Browse.gif?raw=true' width='650'></p>
+<p align="center"><img src='https://github.com/Danielslee51/NEON-Shiny-Browser/blob/master/Img/Download_Local.gif?raw=true' width='650'></p>
 
 ### NEON
 
@@ -38,14 +39,14 @@ Download the latest version of [R](https://cran.r-project.org/) and [RStudio](ht
 
 In addition to shiny itself, a few packages need to be downloaded: <br>
 * [`leaflet`](https://github.com/rstudio/leaflet) and [`leaflet.extras`](https://github.com/bhaskarvk/leaflet.extras): These are responsible for the map and its features.
-* [`neonUtilities`](https://github.com/NEONScience/NEON-utilities/tree/master/neonUtilities) and [`nneo`](https://github.com/ropensci/nneo): Used to pull datasets from NEON.
+* [`neonUtilities`](https://github.com/NEONScience/NEON-utilities/tree/master/neonUtilities): Used to download and stack NEON data.
 * [`shinythemes`](https://github.com/rstudio/shinythemes), [`shinyWidgets`](https://github.com/dreamRs/shinyWidgets), [`shinyBS`](https://github.com/ebailey78/shinyBS), and [`shinyjs`](https://github.com/daattali/shinyjs): Adds themes, "pimped-up" widgets, boostrap, and JavaScript functions to the app.
 * [`sf`](https://github.com/r-spatial/sf) and [`geosphere`](https://github.com/cran/geosphere): Deal with geometries and coordinates necesary for the interactive map.
 * [`jsonlite`](https://github.com/cran/jsonlite): Deals with JSON structures.
 * [`DT`](https://github.com/rstudio/DT) and [`dplyr`](https://github.com/tidyverse/dplyr): Help with data table manipulation.
 
  ```
-install.packages(c('shiny','leaflet','leaflet.extras','neonUtilities','nneo','shinythemes','shinyWidgets','shinyBS','shinyjs','sf','geosphere','jsonlite', 'dplyr', 'DT'))
+install.packages(c('shiny','leaflet','leaflet.extras','neonUtilities','shinythemes','shinyWidgets','shinyBS','shinyjs','sf','geosphere','jsonlite', 'dplyr', 'DT'))
 ```
 
 **Note: [Mac OS X](https://cran.r-project.org/bin/macosx/tools/) currently requires that `gfortran` and `clang` be installed in addition to the latest version of R (v3.5.1 "Feather Spray")** 
