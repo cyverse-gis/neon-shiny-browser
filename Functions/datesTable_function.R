@@ -1,10 +1,11 @@
-datesTable <- function(dates, process, cells) {
+datesTable <- function(dates, process, selected, target) {
   years <- NULL
   for (date in dates) {
     years <- c(years, strsplit(date, "-")[[1]][1])
   }
   years <- unique(years)
   years <- years[order(years)]
+  # For creating data table with date availabilities
   if (process == "table") {
     date_tables <- character(12)
     for (year in years) {
@@ -73,9 +74,26 @@ datesTable <- function(dates, process, cells) {
       date_tables <- cbind(date_tables, year_table)
     }
     return(date_tables[-1])
-  } else if (process == "cell") {
-    year <- years[cells[2]]
-    month <- cells[1]
-    return(paste(year, month, "15", sep = "-"))
+    
+  } else if (process == "regular") {
+    if (target == "cell") {
+      year <- years[selected[2]]
+      month <- selected[1]
+      if (month %in% 1:9) {
+        month <- paste0("0", month)
+      }
+      return(paste(year, month, sep = "-")) 
+    } else if (target == "row") {
+      month <- selected
+      if (month %in% 1:9) {
+        month <- paste0("0", month)
+      }
+      return(dates[grepl(pattern = paste0("-", month), x = dates)])
+    } else if (target == "column") {
+      year <- years[selected]
+      return(dates[grepl(pattern = paste0(year), x = dates)])
+    }
+  } else if (process == "AOP") {
+    return(years[selected])
   }
 }

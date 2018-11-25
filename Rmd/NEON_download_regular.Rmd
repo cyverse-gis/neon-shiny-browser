@@ -1,0 +1,5 @@
+##### Obtain a regular, non-AOP data product
+
+A Product ID and Field Site from the Product Catalog or the NEON <a href='http://data.neonscience.org/static/browse.html' target='_blank'>data portal</a> are required. Select dates to download by clicking on the table.
+
+These downloads will come unzipped and stacked, meaning that they will be already opened into folders and organized based on measurement variables.

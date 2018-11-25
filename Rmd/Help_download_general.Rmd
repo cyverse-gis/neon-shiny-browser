@@ -1,8 +1,0 @@
-<br>
-The general method of download takes all availabilities for a product and downloads them. This means that every year-month available for a site will be included in the data. A Product ID and Field site are required; additionally, there is the option between the "basic" and "expanded" package, and the choice to estimate the download size. The basic package includes the "data product, summary statistics, expanded uncertainty, and final quality flag", while the expanded also includes "quality metrics for all of the quality assessment and quality control analysis". Note that the size estimate is only an order of magnitude approximation, and the actual size will vary, sometimes by a lot.
-
-The downloads will appear in a new folder of the form **NEON\_\<site\>\_\<product ID\>**, located in the **NEON Downloads** folder. This data comes straight from the <a href='http://data.neonscience.org/data-api' target='_blank'>NEON API</a>.
-
-<center><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_download_general.png?raw=true' height='400'></center>
-
-<hr>

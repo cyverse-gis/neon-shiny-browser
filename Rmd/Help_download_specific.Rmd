@@ -1,8 +1,0 @@
-<br>
-The specific method downloads one year-month combination for a product and site. The Product ID, site, and date are required, and there is also the ability to choose between a "basic" vs "expanded package". The basic package includes the "data product, summary statistics, expanded uncertainty, and final quality flag", while the expanded also includes "quality metrics for all of the quality assessment and quality control analysis".
-
-The downloads will appear in a new folder of the form **NEON\_\<site\>\_\<time range\>**, located in the **NEON Downloads** folder. This data comes straight from the <a href='http://data.neonscience.org/data-api' target='_blank'>NEON API</a>.
-
-<center><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_download_specific.png?raw=true' height='400'></center>
-
-<hr>

@@ -1,4 +1,4 @@
-getProductSize <- function (dpID, site = "all", package = "basic") 
+getProductSize <- function (dpID, site, package, dates) 
 {
   messages <- NA
   if (regexpr("DP[1-4]{1}.[0-9]{5}.001", dpID) != 1) {
@@ -14,16 +14,18 @@ getProductSize <- function (dpID, site = "all", package = "basic")
     return(0)
   }
   month.urls <- unlist(avail$data$siteCodes$availableDataUrls)
-  if (site != "all") {
-    month.urls <- month.urls[grep(site, month.urls)]
+  month.urls <- month.urls[grep(site, month.urls)]
+  month_boolean <- logical(length(month.urls))
+  for (i in 1:length(dates)) {
+    bool <- grepl(pattern = dates[i], x = month.urls)
+    month_boolean <- month_boolean | bool
   }
-  else {
-    month.urls <- month.urls
-  }
+  month.urls <- month.urls[month_boolean]
   if (length(month.urls) == 0) {
     return(0)
   }
   zip.urls <- c(NA, NA, NA)
+  incProgress(amount = 0.1)
   for (i in 1:length(month.urls)) {
     tmp <- httr::GET(month.urls[i])
     tmp.files <- jsonlite::fromJSON(httr::content(tmp, as = "text"), 
@@ -63,6 +65,7 @@ getProductSize <- function (dpID, site = "all", package = "basic")
     }
     zip.urls <- rbind(zip.urls, cbind(tmp.files$data$files$name[which.zip], 
                                       tmp.files$data$files$url[which.zip], tmp.files$data$files$size[which.zip]))
+    incProgress(amount = 1/length(month.urls))
   }
   zip.urls <- data.frame(zip.urls, row.names = NULL)
   colnames(zip.urls) <- c("name", "URL", "size")

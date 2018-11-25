@@ -1,0 +1,19 @@
+<br>
+
+<center><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_download_regular.png?raw=true' height='425'></center>
+
+The regular method downloads normal, non-AOP data products. A Product ID and Field site are required; once those are provided, a table will appear with all of the available dates marked by "✅". This table is used to select dates to download, and it can be done in 3 ways:
+
+1. <b>Cell</b>: Selecting individual cells
+
+    i) Start End: This takes the first and last dates chosen (2 minimum) and captures everything in between. For example, clicking on "2018-02" and "2018-08" would download for every month between February and August 2018.
+    
+    ii) All: This selects whichever dates are chosen, however many that may be. For example, clicking on "2018-02" and "2018-08" would download for stricly those two months.
+2. <b>Row</b>: Here, rows on the table are selected, and every date in the row is downloaded. For example, selecting the third and fourth rows would download every March and April that is available.
+3. <b>Column</b>: Here, columns are selected, in essence downloading over years. For example, selecting the row labeled "2018" would download for every date available in 2018.
+
+Once dates are chosen, there is the option between the "basic" and "expanded" package, and the choice to estimate the download size. The basic package includes the "data product, summary statistics, expanded uncertainty, and final quality flag", while the expanded also includes "quality metrics for all of the quality assessment and quality control analysis". Note that the size estimate is only an order of magnitude approximation, and the actual size will vary, often by a lot.
+
+The downloads will appear in a new folder of the form **NEON\_\<site\>\_\<product ID\>**, located in the **NEON Downloads** folder. This data comes straight from the <a href='http://data.neonscience.org/data-api' target='_blank'>NEON API</a>.
+
+<hr>

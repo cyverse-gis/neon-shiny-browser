@@ -1,10 +1,10 @@
 <br>
-One big advantage of the CyVerse NEON Browser is that all data products can be stacked: what this means is that all data can be unzipped, joined, and grouped by relevant characteristics. Stacking isn't mandatory, but encouraged. This is the difference, shown on the download of <a href='http://data.neonscience.org/data-product-view?dpCode=DP1.00003.001' target='_blank'>Triple aspirated air temperature</a> at the Santa Rita Experimental Range.
+One big advantage of the CyVerse NEON Browser is that all data products come stacked: what this means is that all data is unzipped, joined, and grouped by relevant characteristics before it ever reaches your computer. This is the difference, shown on the download of <a href='http://data.neonscience.org/data-product-view?dpCode=DP1.00003.001' target='_blank'>Triple aspirated air temperature</a> at the Santa Rita Experimental Range.
 
 <center><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_notstacked_data.png?raw=true' height='250' hspace='10'><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_stacked_data.png?raw=true' height='250' hspace='10'></center>
 
 On the left side (or top) is data that isn't stacked; there is one zip file for each year-month of the data, and one of the files has been unzipped in the picture to show what the resulting folder would look like. On the right side (or bottom) is data already stacked; the different CSVs of each year-month have been joined together, resulting in only three data files total.
 
-Stacking can occur for almost every data product. Except for <a href='http://data.neonscience.org/data-product-view?dpCode=DP4.00200.001' target='_blank'>eddy covariance</a> (<a href='https://www.hdfgroup.org/' target='_blank'>HDF5</a>) and AOP data, everything can be stacked. AOP data has its own structure, which is preserved in their downloads. Learn how to stack downloads in the next step.
+Stacking occurs for every data product that can be stacked. Except for <a href='http://data.neonscience.org/data-product-view?dpCode=DP4.00200.001' target='_blank'>eddy covariance</a> (<a href='https://www.hdfgroup.org/' target='_blank'>HDF5</a>) and AOP data, everything is stacked. AOP data has its own structure, which is preserved in their downloads.
 
 <hr>
