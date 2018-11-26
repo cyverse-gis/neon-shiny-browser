@@ -1,5 +1,5 @@
 <br>
-One big advantage of the CyVerse NEON Browser is that all data products come stacked: what this means is that all data is unzipped, joined, and grouped by relevant characteristics before it ever reaches your computer. This is the difference, shown on the download of <a href='http://data.neonscience.org/data-product-view?dpCode=DP1.00003.001' target='_blank'>Triple aspirated air temperature</a> at the Santa Rita Experimental Range.
+One big advantage of the NEON Shiny Browser is that all data products come stacked: what this means is that all data is unzipped, joined, and grouped by relevant characteristics before it ever reaches your computer. This is the difference, shown on the download of <a href='http://data.neonscience.org/data-product-view?dpCode=DP1.00003.001' target='_blank'>Triple aspirated air temperature</a> at the Santa Rita Experimental Range.
 
 <center><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_notstacked_data.png?raw=true' height='250' hspace='10'><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_stacked_data.png?raw=true' height='250' hspace='10'></center>
 
