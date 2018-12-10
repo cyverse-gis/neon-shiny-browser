@@ -1,6 +1,6 @@
 # NEON-Shiny-Browser
 
-A multifunctional R Shiny map tool deployed locally and designed to make NEON data accessible, visualized, and easy to interact with. This is a version of the [CyVerse NEON Browser](https://github.com/Danielslee51/CyVerse-NEON-Browser) meant to be deployed locally. The CyVerse NEON Browser is an equivalent app, except hosted by [CyVerse](https://cyverse.org); acessible to users online, it can be found on the CyVerse [Discovery Environment](https://www.cyverse.org/discovery-environment).
+A multifunctional R Shiny map tool deployed locally and designed to make NEON data accessible, visualized, and easy to interact with. This is a version of the [CyVerse NEON Browser](https://github.com/cyverse-gis/CyVerse-NEON-Browser) meant to be deployed locally. The CyVerse NEON Browser is an equivalent app, except hosted by [CyVerse](https://cyverse.org); acessible to users online, it can be found on the CyVerse [Discovery Environment](https://www.cyverse.org/discovery-environment).
 
 
 ## Overview
@@ -11,13 +11,13 @@ The NEON Shiny Browser is an interactive tool to browse, pull, and manipulate da
 
 First, this app displays relevant features of NEON and their research on a map. Users can view and filter map features such as NEON [sites](https://www.neonscience.org/field-sites), NEON domains, [AOP](https://www.neonscience.org/data-collection/airborne-remote-sensing) flightpaths, and [TOS](https://www.neonscience.org/data-collection/terrestrial-organismal-sampling) locations.
 
-<p align="center"><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Map.gif?raw=true' width='750'></p>
+<p align="center"><img src='https://github.com/cyverse-gis/CyVerse-NEON-Browser/blob/master/Img/Map.gif?raw=true' width='750'></p>
 
 
 Additionally, this app provides an easy, in-app alternative to NEON's [data portal](http://data.neonscience.org/browse-data). Users can browse data products, view their details (e.g. description, abstract, availability), and easily download them to their computer.
 
-<p align="center"><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Browse.gif?raw=true' width='750'></p>
-<p align="center"><img src='https://github.com/Danielslee51/NEON-Shiny-Browser/blob/master/Img/Download_Local.gif?raw=true' width='750'></p>
+<p align="center"><img src='https://github.com/cyverse-gis/CyVerse-NEON-Browser/blob/master/Img/Browse.gif?raw=true' width='750'></p>
+<p align="center"><img src='https://github.com/cyverse-gis/NEON-Shiny-Browser/blob/master/Img/Download_Local.gif?raw=true' width='750'></p>
 
 ### Goal
 
@@ -33,7 +33,7 @@ To install, change the working directory on your shell to the desired directory,
 
 ```
 cd ~/Desktop
-git clone https://github.com/Danielslee51/NEON-Shiny-Browser
+git clone https://github.com/cyverse-gis/NEON-Shiny-Browser
 ```
 
 Open an instance of RStudio and navigate to the `/NEON-Shiny-Browser` folder. Click and run `server.R`.
@@ -57,6 +57,6 @@ install.packages(c('shiny','leaflet','leaflet.extras','neonUtilities','shinythem
 **Note: [Mac OS X](https://cran.r-project.org/bin/macosx/tools/) currently requires that `gfortran` and `clang` be installed in addition to the latest version of R (v3.5.1 "Feather Spray")** 
 
 ## FEEDBACK
-This is a message from the main developer of this app, [Daniel Lee](https://github.com/Danielslee51). I am an intern at [CyVerse](http://www.cyverse.org/). I don't personally know much about NEON data, sensors, or AOP tiles. Due to this, when displaying NEON data I put relevant attributes to the best of my ability, but sometimes I do not know what is actually useful to a scientist. For example, on the popups for the NEON field sites I included their site types and habitats, but maybe what really matters is the elevation (I have no clue). If anyone notices anything like this on any feature, please email me at dantheman6100@gmail.com.
+This is a message from the main developer of this app, [Daniel Lee](https://github.com/Danielslee51). I am an intern at [CyVerse](http://www.cyverse.org/). If anyone notices anything they see is wrong or want changed and improved, please create an Issue here. You can also contact my advisor, [Tyson L. Swetnam](https://github.com/tyson-swetnam).
 
 And of course, any other feedback or suggestions would be nice. I'd love to hear reactions from anyone who would potentially use the app in the future, as ultimately the app is here to help scientists who want to use it.
