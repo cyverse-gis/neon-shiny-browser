@@ -1,6 +1,6 @@
 ## NEON Shiny Browser
 
-<center><img src='https://github.com/Danielslee51/NEON-Hosted-Browser/blob/master/Img/Earth.jpg?raw=true' width='600' class='center'></center>
+<center><img src='https://github.com/cyverse-gis/NEON-Shiny-Browser/blob/master/Img/Earth.jpg?raw=true' width='600' class='center'></center>
 
 The NEON Shiny Browser is a multifunctional R Shiny tool designed to make NEON data accessible, visible, and easy to interact with. Commissioned by the <a href='https://www.cyverse.org/' target='_blank'>CyVerse</a> initiative, this application attempts to highlight the best of <a href='https://www.neonscience.org/' target='_blank'>NEON</a> and improve its user experience. By combining the <a href='https://shiny.rstudio.com/' target='_blank'>R Shiny</a> platform, community resources, and NEON's services, this project brings together the essential parts of NEON into one multifaceted tool.
 
@@ -16,7 +16,7 @@ As an academic organization that promotes data-driven discovery and provides pub
 
 This application pulls heavily from existing resources developed across the NEON and data science communities. As Tyson Swetnam (the leader of this project) stated, it took an "epic amount of labor" from NEON to collect their data and create their Data API, and just as much work from the RShiny community to provide hundreds of thousands of lines of pre-written code. For example, this application rests on the R language and the R Shiny framework, and uses a multitude of packages to aid the maps, layouts, and downloads found inside. Specifically, the interactive map is created by <a href='https://leafletjs.com/' target='_blank'>leaflet</a> (<a href='https://rstudio.github.io/leaflet/' target='_blank'>for R</a>), with its contents and geometries coming from NEON's API and spatial resources. The Data Browser combines <a href='https://github.com/ropensci/nneo' target='_blank'>nneo</a>, a community package, and <a href='https://github.com/NEONScience/NEON-utilities' target='_blank'>NEON Utilities</a>, a tool developed by NEON itself, to bring the product catalog and download options. By connecting all of these aspects into one platform, users who may not be familiar with data science can reap all of the advantages that it offers in terms of accessing NEON data.
 
-Find out the specific packages used <a href='https://github.com/Danielslee51/NEON-Shiny-Browser#package-requirements' target='_blank'>here</a>.
+Find out the specific packages used <a href='https://github.com/cyverse-gis/NEON-Shiny-Browser#package-requirements' target='_blank'>here</a>.
 
 ### Goal
 
@@ -26,5 +26,5 @@ This app provides many useful features to anyone ranging from a student research
 
 ### Feedback
 
-Any feedback on anything is welcome. Feel free to check out the <a href='https://github.com/Danielslee51/NEON-Shiny-Browser' target='_blank'>Github</a> or submit issues <a href='https://github.com/Danielslee51/NEON-Shiny-Browser/issues' target='_blank'>here</a>, or email the author, Daniel Lee, at dantheman6100@gmail.com.
+Any feedback on anything is welcome. Feel free to check out the <a href='https://github.com/cyverse-gis/NEON-Shiny-Browser' target='_blank'>Github</a> or submit issues <a href='https://github.com/cyverse-gis/NEON-Shiny-Browser/issues' target='_blank'>here</a>, or email the authors, Daniel Lee, at dantheman6100 at gmail.com or Tyson Swetnam, at `tswetnam at cyverse.org`.
 <hr>

@@ -1,3 +1,4 @@
+<br>
 ## Downloading a Data Product
 
 The last step is to download the product you have found. This all occurs under the `Product Download` tab, immediately after the `Product Catalog`. These downloads are based on a Product ID, and there are three different modes for download:
@@ -6,3 +7,4 @@ The last step is to download the product you have found. This all occurs under t
 2. AOP— This mode is meant for AOP flight products. This requires a Product ID and a Field Site, and years can be selected from a table will appear for every Product ID-site combination with the available years. By nature of AOP data, this will take a very long time.
 
 Every download will go to a folder called `NEON Downloads`, which will be located outside of the directory containing this app (if the folder with this app is in the desktop, so is `NEON Downloads`). This section will explain both modes of download. Click on the tabs below to navigate through the various topics:
+<hr>

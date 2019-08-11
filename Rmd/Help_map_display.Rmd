@@ -1,7 +1,7 @@
 <br>
 The "Map Manager" tab, the rightmost tab on the right panel, controls the map display. Here, map layers can be filtered and sublocations can also be added. It gives control over all 4 map layers:
 
-<center><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_map_manager.png?raw=true' height='500'></center>
+<center><img src='https://github.com/cyverse-gis/NEON-Shiny-Browser/blob/master/Img/Help_map_manager.png?raw=true' height='500'></center>
 
 * Field Sites: can be filtered by type (Core vs. Relocatable), habitat (Terrestrial vs. Aquatic), and state. This is useful for viewing sites with a certain characteristic (studies on rivers would filter for Aquatic sites) or sites in a certain state (researchers in Arizona).
 * Domains: Domains, which are all plotted at launch, can be unincluded. Unincluding a domain will also remove all field sites in that domain, including their boundaries and flight boxes.

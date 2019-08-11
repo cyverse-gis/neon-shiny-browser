@@ -8,4 +8,4 @@ The interactive map, located on the left side of the app, is the way to explore 
 
 Plotted on these tiles are the various NEON elements. Learn how to take advantage of the map and use it to explore NEON field sites through this guide. Click on the tabs below to navigate through the various topics:
 
-<center><img src='https://github.com/Danielslee51/NEON-Hosted-Browser/blob/master/Img/Help_map.png?raw=true' height='400'></center>
+<center><img src='https://github.com/cyverse-gis/NEON-Shiny-Browser/blob/master/Img/Help_map.png?raw=true' height='400'></center>
