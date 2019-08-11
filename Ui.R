@@ -1,10 +1,10 @@
 fluidPage(theme = shinytheme('cerulean'),
-          title = ("NEON Shiny Browser"),
+          title = ("NEON Data Browser"),
           useShinyjs(),
-          navbarPage(tags$b("NEON Shiny Browser"), id ="main",
+          navbarPage(tags$b("NEON Data Browser"), id ="main",
                      ####Tab 1: Includes the map, and key with features like filtering data####
                      tabPanel("Map Browser",
-                              dropdownButton(circle = FALSE, right = TRUE, status = "primary", size = "sm", icon = icon("info-circle"), width = "38vw", inputId = "map_dropdown",
+                              dropdownButton(tooltip = "Find an individual NEON Site and Zoom to its location", label = "Quick Finder", circle = FALSE, right = FALSE, status = "primary", size = "xs", icon = icon("info-circle"), width = "38vw", inputId = "map_dropdown",
                                              selectInput(inputId = "NEONsite_dropdown", label = "Site info:", choices = FieldSite_abbs),
                                              tags$b("Name and type:"),
                                              verbatimTextOutput(outputId = "dropdown_site", placeholder = TRUE),
@@ -16,11 +16,11 @@ fluidPage(theme = shinytheme('cerulean'),
                                              actionButton(inputId = "zoomtosite", label = "Zoom to Site"),
                                              actionButton(inputId = "togglesite", label = "Toggle for Viewing and Download")),
                               sidebarLayout(
-                                position = "right",
+                                position = "left",
                                 sidebarPanel(width = 5,
                                              tabsetPanel(id = "main_data",
                                                #### — NEON ####
-                                               tabPanel(tags$h5("Data Browser"), value = "data",
+                                               tabPanel(tags$h5("Browser"), value = "data",
                                                         tabsetPanel(id = "data",
                                                           #### —— STEP 1: Find Data####
                                                           tabPanel("Product Catalog", value = "find",

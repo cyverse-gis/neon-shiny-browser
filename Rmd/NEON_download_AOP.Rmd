@@ -3,3 +3,5 @@
 Download Airborne Observation Platform (AOP) data, which can be found in the Product Catalog by filtering for AOP. A product ID from the Catalog or the NEON <a href='http://data.neonscience.org/static/browse.html' target='_blank'>data portal</a> is required. Due to the nature of remote sensing data, this make take a very long time— make sure to check download size beforehand.
 
 The downloads will appear in a new folder of the form **AOP\_\<site\>\_\<year\>**, located in the **NEON Downloads** folder. These items do not need to be stacked.
+
+<hr>

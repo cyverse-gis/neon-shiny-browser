@@ -25,8 +25,8 @@ for (func in list.files('Functions/nneo/')) {
   source(paste0("Functions/nneo/", func))
 }
 
-if (!dir.exists("../NEON Downloads")) {
-  dir.create("../NEON Downloads")
+if (!dir.exists("../NEON_Downloads")) {
+  dir.create("../NEON_Downloads")
   dir_created <- TRUE
 } else {
   dir_created <- FALSE
