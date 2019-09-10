@@ -85,7 +85,7 @@ nneo_wrangle<-function(site_code="CPER",time_start="2017-06-20",time_end=NULL,
     if(is.null(time_start)){time_start<-time_end}
     if(is.null(time_end)){time_end<-time_start}
     #grab site metadata:
-    site_code_info<-nneo::nneo_site(site_code)
+    site_code_info<-nneo_site(site_code)
     #get data product code(s) if valid:
     dp_index<-grep(tolower(gsub("\\(", "",data_var)),gsub("\\(", "",
                         tolower(site_code_info$dataProducts$dataProductTitle)))
@@ -101,7 +101,7 @@ nneo_wrangle<-function(site_code="CPER",time_start="2017-06-20",time_end=NULL,
     if(length(unique(year_month))==1){year_month<-unique(year_month)}
     #use nneo_data to get available file(s) via user input:
     var_data<-unlist(lapply(year_month, function(y) lapply(product_code,
-                     function(x) nneo::nneo_data(product_code = x,
+                     function(x) nneo_data(product_code = x,
                                            site_code = site_code,
                                            year_month = y,
                                            package=package))),recursive = FALSE)

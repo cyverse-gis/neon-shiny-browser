@@ -31,7 +31,7 @@ if (!dir.exists("../NEON Downloads")) {
 } else {
   dir_created <- FALSE
 }
-if (sum(as.data.frame(installed.packages())$Package %in% 'geosphere') < 1) {
+if (!('geosphere' %in% as.data.frame(installed.packages())$Package)) {
   print("Please install the package 'geosphere'. Run this line: 'install.packages('geosphere')'")
   stop(call. = TRUE)
 }

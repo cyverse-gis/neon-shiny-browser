@@ -49,9 +49,10 @@ In addition to shiny itself, a few packages need to be downloaded: <br>
 * [`sf`](https://github.com/r-spatial/sf) and [`geosphere`](https://github.com/cran/geosphere): Deal with geometries and coordinates necesary for the interactive map.
 * [`jsonlite`](https://github.com/cran/jsonlite): Deals with JSON structures.
 * [`DT`](https://github.com/rstudio/DT) and [`dplyr`](https://github.com/tidyverse/dplyr): Help with data table manipulation.
+* [`crul`](https://cran.r-project.org/web/packages/crul/index.html): Used for making HTTP requests.
 
- ```
-install.packages(c('shiny','leaflet','leaflet.extras','neonUtilities','shinythemes','shinyWidgets','shinyBS','shinyjs','sf','geosphere','jsonlite', 'dplyr', 'DT'))
+```
+install.packages(c('shiny','leaflet','leaflet.extras','neonUtilities','shinythemes','shinyWidgets','shinyBS','shinyjs','sf','geosphere','jsonlite', 'dplyr', 'DT', 'crul'))
 ```
 
 **Note: [Mac OS X](https://cran.r-project.org/bin/macosx/tools/) currently requires that `gfortran` and `clang` be installed in addition to the latest version of R (v3.5.1 "Feather Spray")** 

@@ -53,7 +53,7 @@ nneo_ua <- function() {
   versions <- c(
     paste0("r-curl/", utils::packageVersion("curl")),
     paste0("crul/", utils::packageVersion("crul")),
-    sprintf("rOpenSci(nneo/%s)", utils::packageVersion("nneo"))
+    sprintf("rOpenSci(nneo/%s)", "0.1.0")
   )
   paste0(versions, collapse = " ")
 }
