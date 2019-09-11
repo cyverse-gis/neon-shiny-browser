@@ -2,7 +2,7 @@
 function(input, output, session) {
   # Initialization
   if (dir_created == TRUE) {
-    delay(ms = 5000, showNotification(ui = "'NEON Downloads' folder created outside the directory containing this app. All downloads will go to this folder.", duration = NULL, type = "message"))
+    delay(ms = 5000, showNotification(ui = "'~/NEON_Downloads' folder created outside the directory containing this app. All downloads will go to the 'NEON_Downloads' folder.", duration = NULL, type = "message"))
   } else {
     delay(ms = 5000, showNotification(ui = "Welcome back!", duration = 15, type = "message"))
   }
@@ -76,7 +76,6 @@ function(input, output, session) {
                                           filter(Site %in% input$fieldsite_sublocs))
   Subloc_tes_plots_phe <- reactive(FieldSite_plots_tes %>% filter(Type %in% "Tower Phenology Plot") %>%
                                      filter(Site %in% input$fieldsite_sublocs))
-  
   Subloc_aqu_plots_well <- reactive(FieldSite_locations_aqu %>% filter(`General Type` %in% "Groundwater Well") %>%
                                       filter(Site %in% input$fieldsite_sublocs))
   Subloc_aqu_plots_metstn <- reactive(FieldSite_locations_aqu %>% filter(`General Type` %in% "Met. Station") %>%
@@ -1252,44 +1251,44 @@ function(input, output, session) {
                  else {
                    disable(id = "download_NEON_regular")
                    folder <- unique_folderpath(pathname = Folder_path_regular())
-                   dir.create(paste0("../NEON Downloads/", folder))
+                   dir.create(paste0("../NEON_Downloads/", folder))
                    withProgress(message = "Downloading files", value = 0, expr = {
                      dates_left <- length(download_dates())
                      for (date in download_dates()) {
                        incProgress(amount = 0, detail = paste0("Downloading ", date))
-                       try(getPackage(dpID = Product_ID_regular(), site_code = Field_Site_regular(), year_month = date, package = Package_type_regular(), savepath = paste0("../NEON Downloads/", folder)))
+                       try(getPackage(dpID = Product_ID_regular(), site_code = Field_Site_regular(), year_month = date, package = Package_type_regular(), savepath = paste0("../NEON_Downloads/", folder)))
                        incProgress(amount = 1/dates_left)
                      }
                    })
-                   if (length(list.files(paste0("../NEON Downloads/", folder))) == 0) {
+                   if (length(list.files(paste0("../NEON_Downloads/", folder))) == 0) {
                      sendSweetAlert(session, title = "No Files", text = "There were no files downloaded. Please select available dates.", type = "error")
-                     unlink(paste0("../NEON Downloads/", folder), recursive = T)
+                     unlink(paste0("../NEON_Downloads/", folder), recursive = T)
                      enable(id = "download_NEON_regular")
                    } else {
                      if (Product_ID_regular() == "DP4.00200.001") {
                        withProgress(message = "Transferring as zip", value = 0, expr = {
-                         setwd(paste0("../NEON Downloads/", folder))
+                         setwd(paste0("../NEON_Downloads/", folder))
                          unzipEddy(site = Field_Site_regular(), path = folder)
                        })
-                       size <- sum(file.info(list.files(paste0("../NEON Downloads/", folder), all.files = TRUE, recursive = TRUE, full.names = T))$size)
-                       write_downloadSummary(method = "Regular", dpID = Product_ID_regular(), dpName = NEONproducts_product$productName[NEONproducts_product$productCode == Product_ID_regular()], site = Field_Site_regular(), dates = download_dates(), package = Package_type_regular(), size = utils:::format.object_size(x = size, units = "auto"), path = paste0("NEON Downloads/", folder))
-                       sendSweetAlert(session, title = "Download Complete", text = paste0("Check the 'NEON Downloads' directory for a folder titled ", folder, "."), type = 'success')
+                       size <- sum(file.info(list.files(paste0("../NEON_Downloads/", folder), all.files = TRUE, recursive = TRUE, full.names = T))$size)
+                       write_downloadSummary(method = "Regular", dpID = Product_ID_regular(), dpName = NEONproducts_product$productName[NEONproducts_product$productCode == Product_ID_regular()], site = Field_Site_regular(), dates = download_dates(), package = Package_type_regular(), size = utils:::format.object_size(x = size, units = "auto"), path = paste0("NEON_Downloads/", folder))
+                       sendSweetAlert(session, title = "Download Complete", text = paste0("Check the '~/NEON_Downloads' directory for a folder titled ", folder, "."), type = 'success')
                        enable(id = "download_NEON_regular")
                      } else {
                        withProgress(message = "Stacking files", value = 0, expr = {
-                         stack <- try(stackByTable(filepath = paste0("../NEON Downloads/", folder), folder = T))
+                         stack <- try(stackByTable(filepath = paste0("../NEON_Downloads/", folder), folder = T))
                        })
                        if (class(stack) == "try-error") {
                          sendSweetAlert(session, title = "Stack failed", text = "Something went wrong in the stacking process. Please submit an issue on Github.", type = "error")
                          enable(id = "download_NEON_regular")
                        } else {
-                         for (file in list.files(paste0("../NEON Downloads/", folder, "/stackedFiles/"))) {
-                           file.rename(from = paste0("../NEON Downloads/", folder, "/stackedFiles/", file), to = paste0("../NEON Downloads/", folder, "/", file))
+                         for (file in list.files(paste0("../NEON_Downloads/", folder, "/stackedFiles/"))) {
+                           file.rename(from = paste0("../NEON_Downloads/", folder, "/stackedFiles/", file), to = paste0("../NEON_Downloads/", folder, "/", file))
                          }
-                         unlink(x = paste0("../NEON Downloads/", folder, "/stackedFiles/"), recursive = T)
-                         size <- sum(file.info(list.files(paste0("../NEON Downloads/", folder), all.files = TRUE, recursive = TRUE, full.names = T))$size)
-                         write_downloadSummary(method = "Regular", dpID = Product_ID_regular(), dpName = NEONproducts_product$productName[NEONproducts_product$productCode == Product_ID_regular()], site = Field_Site_regular(), dates = download_dates(), package = Package_type_regular(), size = utils:::format.object_size(x = size, units = "auto"), path = paste0("NEON Downloads/", folder))
-                         sendSweetAlert(session, title = "Download Complete", text = paste0("Check the 'NEON Downloads' directory for a folder titled ", folder, "."), type = 'success')
+                         unlink(x = paste0("../NEON_Downloads/", folder, "/stackedFiles/"), recursive = T)
+                         size <- sum(file.info(list.files(paste0("../NEON_Downloads/", folder), all.files = TRUE, recursive = TRUE, full.names = T))$size)
+                         write_downloadSummary(method = "Regular", dpID = Product_ID_regular(), dpName = NEONproducts_product$productName[NEONproducts_product$productCode == Product_ID_regular()], site = Field_Site_regular(), dates = download_dates(), package = Package_type_regular(), size = utils:::format.object_size(x = size, units = "auto"), path = paste0("NEON_Downloads/", folder))
+                         sendSweetAlert(session, title = "Download Complete", text = paste0("Check the 'NEON_Downloads' directory for a folder titled ", folder, "."), type = 'success')
                          enable(id = "download_NEON_regular")
                        }
                      }
@@ -1401,16 +1400,16 @@ function(input, output, session) {
                    disable(id = "download_NEON_AOP")
                    folder <- unique_folderpath(pathname = Folder_path_AOP())
                    withProgress(message = "Downloading files", value = 0, max = 1.1, expr = {
-                     download <- try(byFileAOP(dpID = Product_ID_AOP(), site = Field_Site_AOP(), year = Year_AOP(), check.size = FALSE, savepath = "../NEON Downloads/"))
+                     download <- try(byFileAOP(dpID = Product_ID_AOP(), site = Field_Site_AOP(), year = Year_AOP(), check.size = FALSE, savepath = "../NEON_Downloads/"))
                    })
                    if (class(download) == "try-error") {
                      sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to a faulty request or a problem with the product itself. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')
                      enable(id = "download_NEON_AOP")
-                     unlink(paste0("../NEON Downloads/", Product_ID_AOP()), recursive = TRUE)
+                     unlink(paste0("../NEON_Downloads/", Product_ID_AOP()), recursive = TRUE)
                    } else {
-                     file.rename(from = paste0("../NEON Downloads/", Product_ID_AOP()), to = paste0("../NEON Downloads/", folder))
-                     size <- sum(file.info(list.files(paste0("../NEON Downloads/", folder), all.files = TRUE, recursive = TRUE, full.names = T))$size) 
-                     write_downloadSummary(method = "AOP", dpID = Product_ID_AOP(), dpName = NEONproducts_product$productName[NEONproducts_product$productCode == Product_ID_AOP()], site = Field_Site_AOP(), dates = Year_AOP(), package = "NA", size = utils:::format.object_size(size, units = "auto"), path = paste0("NEON Downloads/", folder))
+                     file.rename(from = paste0("../NEON_Downloads/", Product_ID_AOP()), to = paste0("../NEON_Downloads/", folder))
+                     size <- sum(file.info(list.files(paste0("../NEON_Downloads/", folder), all.files = TRUE, recursive = TRUE, full.names = T))$size) 
+                     write_downloadSummary(method = "AOP", dpID = Product_ID_AOP(), dpName = NEONproducts_product$productName[NEONproducts_product$productCode == Product_ID_AOP()], site = Field_Site_AOP(), dates = Year_AOP(), package = "NA", size = utils:::format.object_size(size, units = "auto"), path = paste0("NEON_Downloads/", folder))
                      enable(id = "download_NEON_AOP")
                      sendSweetAlert(session, title = "Download Complete", text = paste0("Check the 'NEON Download' directory for a folder titled ", folder, "."), type = 'success')
                    }

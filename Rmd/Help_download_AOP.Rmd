@@ -1,6 +1,6 @@
 <br>
 
-<center><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_download_AOP.png?raw=true' height='425'></center>
+<center><img src='https://github.com/cyverse-gis/NEON-Shiny-Browser/blob/master/Img/Help_download_AOP.png?raw=true' height='425'></center>
 
 This method is specifically designed for AOP flight products. A Product ID and Field site are required; once those are provided, a table will appear with all of the available years marked by "✅". This table is used to select a year to download, and it is done simply by clicking on a column.
 

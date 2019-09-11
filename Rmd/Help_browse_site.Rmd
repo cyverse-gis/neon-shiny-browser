@@ -1,7 +1,7 @@
 <br>
 The first way to find data products involves selecting a field site and browsing the available products that site has to offer. Changing sites will change the table below it; the number and types of products available will also change, as these differ by site. Browsing by site looks like this:
 
-<center><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_browser_site.png?raw=true' height='500'></center>
+<center><img src='https://github.com/cyverse-gis/NEON-Shiny-Browser/blob/master/Img/Help_browser_site.png?raw=true' height='500'></center>
 
 Note the turquoise radio buttons labeled `Find Product` and `View Details`. This is actually the first step of data browsing: after finding a data product by its name, the next step will be to read about the product's description, design, and availability to download.
 

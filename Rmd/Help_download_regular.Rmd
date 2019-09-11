@@ -1,6 +1,6 @@
 <br>
 
-<center><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Help_download_regular.png?raw=true' height='425'></center>
+<center><img src='https://github.com/cyverse-gis/NEON-Shiny-Browser/blob/master/Img/Help_download_regular.png?raw=true' height='425'></center>
 
 The regular method downloads normal, non-AOP data products. A Product ID and Field site are required; once those are provided, a table will appear with all of the available dates marked by "✅". This table is used to select dates to download, and it can be done in 3 ways:
 

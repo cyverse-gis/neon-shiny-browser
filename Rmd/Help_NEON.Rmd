@@ -18,5 +18,5 @@ The next important step involves finding a data product. From the almost 180 dat
 
 The last, obvious step involves downloading data for use. The NEON Shiny Browser provides a platform to download this data using a "product ID" associated with each product, along with the desired field site and the time period of the data. Each download will include data in its appropriate structure (CSVs being the most common), and these downloads come directly from the NEON API to your computer. Learn more about data downloads <a id='help_download2' href='#' class='action-button'>here</a>.
 
-<center><img src='https://github.com/Danielslee51/NEON-Hosted-Browser/blob/master/Img/Example_download.png?raw=true' height='300'></center>
+<center><img src='https://github.com/cyverse-gis/NEON-Shiny-Browser/blob/master/Img/Example_download.png?raw=true' height='300'></center>
 <hr>

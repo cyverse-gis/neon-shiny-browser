@@ -1,11 +1,11 @@
 # Welcome to the NEON Shiny Browser!
 <br>
 <center> <img src='https://silvrback.s3.amazonaws.com/uploads/c3b34e9c-5131-4ca0-88fc-f5503a422c68/cyverse_cmyk-01.37809aadf1f2.png' height='50'>
-<img src='https://github.com/Danielslee51/NEON-Hosted-Browser/blob/master/Img/NEON_logo.png?raw=true' height='50' hspace='40'> </center>
+<img src='https://github.com/cyverse-gis/NEON-Shiny-Browser/blob/master/Img/NEON_logo.png?raw=true' height='50' hspace='40'> </center>
 
 If this is your first time here, welcome to the NEON Shiny Browser! This app provides an interface to the services of the National Ecological Observatory Network, an organization that provides open ecological data for ecosystems across the US. Created by the <a href='https://www.cyverse.org/' target='_blank'>CyVerse lab</a>, this app is meant to simplify the "NEON experience" and save time by bringing together its essential parts into one easy to access platform. While the <a href='https://www.neonscience.org/' target='_blank'>NEON website</a> will always be the ultimate destination for more information or complex requests, the NEON Shiny Browser is a great place for both newcomers to learn about NEON and begin using its services, and for experienced users that just want a quick, simple way to download data.
 
-<center> <img src='https://github.com/Danielslee51/NEON-Hosted-Browser/blob/master/Img/demo_screen.png?raw=true' height='300'> </center>
+<center> <img src='https://github.com/cyverse-gis/NEON-Shiny-Browser/blob/master/Img/demo_screen.png?raw=true' height='300'> </center>
 
 This help section will explain NEON's services, how they correspond to this app, and how to use the app's functionalities. Using this app should be relatively straight-forward to use once you know how, and this tutorial will explain its major parts and even some more subtle features that can save lots of time. Click on any of these to jump to a section.
 

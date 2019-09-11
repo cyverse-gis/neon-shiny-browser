@@ -1,3 +1,0 @@
-##### Choose site, then find availability of data products
-
-Alternatively, browse NEON's <a href='http://data.neonscience.org/static/browse.html' target='_blank'>data portal</a>.

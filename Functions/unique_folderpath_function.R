@@ -1,12 +1,12 @@
 unique_folderpath <- function(pathname, zip = F) {
   if (zip == F) {
-    if (!file.exists(paste0("../NEON Downloads/", pathname))) {
+    if (!file.exists(paste0("../NEON_Downloads/", pathname))) {
       return(pathname)
     }
     i <- 2
     repeat {
       path = paste0(pathname, "(", i, ")")
-      if (!file.exists(paste0("../NEON Downloads/", path))) {
+      if (!file.exists(paste0("../NEON_Downloads/", path))) {
         return(path)
       }
       i=i+1

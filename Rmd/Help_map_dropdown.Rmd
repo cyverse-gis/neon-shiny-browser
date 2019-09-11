@@ -1,7 +1,7 @@
 <br>
-An important helper tool is the map dropdown, located at the upper left corner of the screen and signified by the <img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Dropdownbutton.png?raw=true' height='23'> icon. Clicking it will yield a screen like this, with the option of one site, 3 text fields, and 3 buttons: <br>
+An important helper tool is the map dropdown, located at the upper left corner of the screen and signified by the <img src='https://github.com/cyverse-gis/NEON-Shiny-Browser/blob/master/Img/Dropdownbutton.png?raw=true' height='23'> icon. Clicking it will yield a screen like this, with the option of one site, 3 text fields, and 3 buttons: <br>
 
-<center><img src='https://github.com/Danielslee51/CyVerse-NEON-Browser/blob/master/Img/Dropdown_screen.png?raw=true' height='300'></center>
+<center><img src='https://github.com/cyverse-gis/NEON-Shiny-Browser/blob/master/Img/Dropdown_screen.png?raw=true' height='300'></center>
 
 This dropdown is useful in a few ways:
 * If you only know the name of a field site, the text fields and the `Zoom to Site` button give that site's basic information and location.
