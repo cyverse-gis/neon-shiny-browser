@@ -65,6 +65,42 @@ install.packages(c('shiny','leaflet','leaflet.extras','neonUtilities','shinythem
 
 **Note: [Mac OS X](https://cran.r-project.org/bin/macosx/tools/) currently requires that `gfortran` and `clang` be installed in addition to the latest version of R (v3.5.1 "Feather Spray")** 
 
+## Docker
+
+Run Docker locally or on a Virtual Machine
+
+### Build Container locally
+
+
+To build the Docker container locally:
+
+```
+git clone https://github.com/cyverse-gis/NEON-Shiny-Browser
+
+cd NEON-Shiny-Browser
+
+sudo docker build -t your-container-name:tag .
+```
+
+### Pull Container from Docker Hub
+
+To run the Shiny-Server, you must first `pull` the container from the Docker Hub
+
+```
+docker pull cyversevice/shiny-geospatial:neon-shiny-browser
+```
+
+### Run locally
+
+```
+docker run -it --rm -p 3838:3838 -e REDIRECT_URL=http://localhost:3838 -v /home/<your-username-here>/Downloads:/home/root/NEON_Downloads cyversevice/shiny-geospatial:neon-shiny-browser
+```
+
+The app will open in your browser at `http://localhost:3838`
+
+You also need to mount a local volume to the container in order to save the downloaded data when the container expires.
+
+
 ## FEEDBACK
 This is a message from the main developer of this app, [Daniel Lee](https://github.com/Danielslee51). I am an intern at [CyVerse](http://www.cyverse.org/). If anyone notices anything they see is wrong or want changed and improved, please create an Issue here. You can also contact my advisor, [Tyson L. Swetnam](https://github.com/tyson-swetnam).
 
