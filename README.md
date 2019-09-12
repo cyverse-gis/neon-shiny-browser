@@ -4,8 +4,9 @@
 
 # NEON-Shiny-Browser
 
-A multifunctional R Shiny map tool deployed locally and designed to make NEON data accessible, visualized, and easy to interact with. This is a version of the [CyVerse NEON Browser](https://github.com/cyverse-gis/CyVerse-NEON-Browser) meant to be deployed locally. The CyVerse NEON Browser is an equivalent app, except hosted by [CyVerse](https://cyverse.org); acessible to users online, it can be found on the CyVerse [Discovery Environment](https://www.cyverse.org/discovery-environment).
+A multifunctional R Shiny map and data API download tool. Designed to make NEON API data accessible in RStuduio. This version is meant to be deployed locally, on your own computer or virtual machine. The [CyVerse NEON Browser](https://github.com/cyverse-gis/CyVerse-NEON-Browser) can be used in the CyVerse [Discover Environment](https://de.cyverse.org) to download NEON data to your CyVerse Data Store. 
 
+The app can be run in RStudio or RStudio-Server (online). 
 
 ## Overview
 
@@ -31,18 +32,26 @@ The goal of this app is to simplify the NEON experience and introduce NEON's ser
 
 The National Ecological Observatory Network <a href="https://www.neonscience.org/"><img src = "Img/NEON.png" width=30/></a> is a "continental-scale ecological observation facility" that provides open data on our ecosystems. The envisioned 30-year project collects environmental data like precipitation, soil temperature, humidity, and pressure across 81 field sites (47 terrestrial and 34 aquatic) to measure the patterns and changes in our environment. With over 180 data products describing the characteristics of a diverse range of ecosystems, their data will be crucial to future studies of biology and climate change over time.
 
-## Install and Run
+## Installation
 
-To install, change the working directory on your shell to the desired directory, and clone from git:
+To install the tool, change your working directory, and clone from git:
 
 ```
-cd ~/Desktop
+cd
 git clone https://github.com/cyverse-gis/NEON-Shiny-Browser
 ```
 
-Open an instance of RStudio and navigate to the `/NEON-Shiny-Browser` folder. Click and run `server.R`.
+Open Rstudio or RStudio-Server in your browser. 
 
-## Package Requirements
+```
+setwd('~/NEON-Shiny-Browser')
+library(shiny)
+runApp()
+```
+
+**Note: Allow pop-ups in your Browser for the app to open**
+
+## Requirements
 
 Download the latest version of [R](https://cran.r-project.org/) and [RStudio](https://www.rstudio.com/) for your local or virtual machine.
 
@@ -59,14 +68,13 @@ In addition to shiny itself, a few packages need to be downloaded: <br>
 install.packages(c('shiny','leaflet','leaflet.extras','neonUtilities','shinythemes','shinyWidgets','shinyBS','shinyjs','sf','geosphere','jsonlite', 'dplyr', 'DT', 'crul'))
 ```
 
-**Note: [Mac OS X](https://cran.r-project.org/bin/macosx/tools/) currently requires that `gfortran` and `clang` be installed in addition to the latest version of R (v3.5.1 "Feather Spray")** 
+**Note: [Mac OS X](https://cran.r-project.org/bin/macosx/tools/) currently requires that `gfortran` and `clang` be installed in addition to the latest version of R (> v3.5.1 "Feather Spray")** 
 
 ## Docker
 
 Run Docker locally or on a Virtual Machine
 
 ### Build Container locally
-
 
 To build the Docker container locally:
 
