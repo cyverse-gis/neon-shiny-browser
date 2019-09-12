@@ -7,7 +7,7 @@ RUN cd /srv/shiny-server && git clone https://github.com/cyverse-gis/NEON-Shiny-
 # change permission of the shiny folder where the app resides
 RUN chmod -R 777 /srv/shiny-server
 
-WORKDIR /srv/shiny-server/NEON-Shiny-Browser
+WORKDIR /srv/shiny-server/NEON-Shiny-Browser/
 
 # Start the server
 CMD ["/usr/bin/shiny-server.sh"]
