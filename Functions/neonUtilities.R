@@ -1,3 +1,5 @@
+# stackByTable function with support for progress bars. This is no longer used as it stopped working once
+# new versions of neonUtilities came out
 stackByTable <- function (filepath, savepath = filepath, folder = FALSE, saveUnzippedFiles = FALSE, 
           dpID = NA) 
 {

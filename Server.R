@@ -7,7 +7,7 @@ function(input, output, session) {
     delay(ms = 5000, showNotification(ui = "Welcome back!", duration = 15, type = "message"))
   }
   delay(ms = 5000, expr = showNotification(ui = "First time here?", action = actionLink(inputId = "firsttime", label = "Yes"), duration = 15, type = "message", id = "first"))
-  observeEvent(input$firsttime, confirmSweetAlert(session, inputId = "firsttime_confirm", title = "Welcome to the CyVerse NEON Browser!", text = "This will bring you to the tutorial section and get you started with NEON and this app.", btn_labels = c("Cancel", "Confirm")))
+  observeEvent(input$firsttime, confirmSweetAlert(session, inputId = "firsttime_confirm", title = "Welcome to the NEON Data Browser!", text = "This will bring you to the tutorial section and get you started with NEON and this app.", btn_labels = c("Cancel", "Confirm")))
   observeEvent(input$firsttime_confirm, handlerExpr = {
     if (input$firsttime_confirm == TRUE) {
       updateNavbarPage(session, inputId = "main", selected = "Help/Tutorials")
@@ -1276,7 +1276,8 @@ function(input, output, session) {
                        enable(id = "download_NEON_regular")
                      } else {
                        withProgress(message = "Stacking files", value = 0, expr = {
-                         stack <- try(stackByTable(filepath = paste0("../NEON_Downloads/", folder), folder = T))
+                         stack <- try(neonUtilities::stackByTable(filepath = paste0("../NEON_Downloads/", folder), folder = T))
+                         setProgress(1)
                        })
                        if (class(stack) == "try-error") {
                          sendSweetAlert(session, title = "Stack failed", text = "Something went wrong in the stacking process. Please submit an issue on Github.", type = "error")

@@ -11,7 +11,7 @@ write_downloadSummary <- function(method, dpID, dpName, site, dates, package, si
   six <- paste0("Package: ", package)
   seven <- paste0("Download Size: ", strsplit(size, "\t")[[1]][1])
   eight <- paste0("Date and Time: ", Sys.time(), " ", Sys.timezone())
-  nine <- "The NEON Shiny Browser is a multifunctional R Shiny map tool deployed locally and designed to make NEON data accessible, visualized, and easy to interact with. Check it out at https://github.com/Danielslee51/NEON-Shiny-Browser."
+  nine <- "The NEON Shiny Browser is a multifunctional R Shiny map tool deployed locally and designed to make NEON data accessible, visualized, and easy to interact with. Check it out at https://github.com/cyverse-gis/NEON-Shiny-Browser."
   message <- c(one, "", two, three, four, five, six, seven, eight, "", nine)
   writeLines(message, paste0("../", path,"/downloadSummary"))
 }
