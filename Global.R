@@ -1,3 +1,5 @@
+# Download all packages if they haven't been already
+source("Install.R")
 library(shiny)
 library(DT)
 library(shinythemes)
@@ -10,6 +12,7 @@ library(sf)
 library(dplyr)
 library(jsonlite)
 library(neonUtilities)
+# Source the custom functions needed for the app
 source('Functions/flight_function.R')
 source('Functions/filter_keyword_function.R')
 source('Functions/filter_site_function.R')
@@ -21,6 +24,7 @@ source('Functions/checkDownload_function.R')
 source('Functions/unique_folderpath_function.R')
 source('Functions/write_downloadSummary_function.R')
 source("Functions/neonUtilities.R")
+# Source functions from the deprecated nneo package
 for (func in list.files('Functions/nneo/')) {
   source(paste0("Functions/nneo/", func))
 }
