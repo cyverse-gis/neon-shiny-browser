@@ -98,11 +98,10 @@ If you're running on are remote server, you can change `localhost` to your IP ad
 To build the Docker container locally:
 
 ```
-git clone https://github.com/cyverse-gis/NEON-Shiny-Browser
-
-cd NEON-Shiny-Browser
-
-sudo docker build -t shiny-neon-browser:3.6.3
+cd
+git clone https://github.com/cyverse-gis/neon-shiny-browser
+cd neon-shiny-browser
+sudo docker build -t shiny-neon-browser:3.6.3 .
 ```
 
 ## Requirements
