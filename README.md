@@ -105,7 +105,7 @@ sudo docker build -t shiny-neon-browser:3.6.3
 
 ## Linux
 
-We suggest using our CyVerse or Rocker Project Geospatial images in Docker, but if you want to attempt a local installation in linux, you can install the following:
+We suggest using our [CyVerse](https://hub.docker.com/r/cyversevice/rstudio-geospatial] docker image or the original [Rocker Project Geospatial](https://hub.docker.com/r/rocker/geospatial) image, but if you want to attempt a local installation in linux, you can install the following:
 
 ```
 sudo apt-get update 
@@ -166,7 +166,7 @@ install2.r --error \
  
 ## R Packages
 
-Download the latest version of [R](https://cran.r-project.org/) and [RStudio](https://www.rstudio.com/) for your local or virtual machine.
+Download the latest version of [R](https://cran.r-project.org/) and [RStudio](https://www.rstudio.com/).
 
 In addition to shiny itself, a few packages need to be downloaded: <br>
 * [`leaflet`](https://github.com/rstudio/leaflet) and [`leaflet.extras`](https://github.com/bhaskarvk/leaflet.extras): These are responsible for the map and its features.
@@ -177,9 +177,7 @@ In addition to shiny itself, a few packages need to be downloaded: <br>
 * [`DT`](https://github.com/rstudio/DT) and [`dplyr`](https://github.com/tidyverse/dplyr): Help with data table manipulation.
 * [`crul`](https://cran.r-project.org/web/packages/crul/index.html): Used for making HTTP requests.
 
-```
-install.packages(c('shiny','leaflet','leaflet.extras','neonUtilities','shinythemes','shinyWidgets','shinyBS','shinyjs','sf','geosphere','jsonlite', 'dplyr', 'DT', 'crul'))
-```
+Install in R console: ```install.packages(c('shiny','leaflet','leaflet.extras','neonUtilities','shinythemes','shinyWidgets','shinyBS','shinyjs','sf','geosphere','jsonlite', 'dplyr', 'DT', 'crul'))```
 
 **Note: [Mac OS X](https://cran.r-project.org/bin/macosx/tools/) currently requires that `gfortran` and `clang` be installed in addition to the latest version of R (> v3.5.1 "Feather Spray")** 
 
