@@ -1,0 +1,19 @@
+jobs:
+  build0:
+    docker:
+      - image: cyversevice/shiny-neon-browser:latest
+    steps:
+      - checkout
+      - run: R --version
+  build9:
+    docker:
+      - image: cyversevice/shiny-neon-browser:3.6.3
+    steps:
+      - checkout
+      - run: R --version
+workflows:
+  version: 2
+  build0_to_build1:
+    jobs:
+      - build0
+      - build1
