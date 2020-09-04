@@ -22,7 +22,6 @@ First, this app displays relevant features of NEON and their research on a map. 
 Additionally, this app provides an easy, in-app alternative to NEON's [data portal](http://data.neonscience.org/browse-data). Users can browse data products, view their details (e.g. description, abstract, availability), and easily download them to their computer.
 
 <p align="center"><img src='https://github.com/cyverse-gis/neon-shiny-browser/blob/master/Img/Browse.gif?raw=true' width='750'></p>
-<p align="center"><img src='https://github.com/cyverse-gis/neon-shiny-browser/blob/master/Img/Download_Local.gif?raw=true' width='750'></p>
 
 ### Goal
 
