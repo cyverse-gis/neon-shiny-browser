@@ -148,11 +148,8 @@ install.packages(c("RColorBrewer","RandomFields","RNetCDF","classInt","deldir","
 BiocManager::install('rhdf5', update=FALSE, ask=FALSE)   
  ```
  
-## Shiny Packages
+In addition to Shiny, a few packages need to be downloaded:
 
-Download the latest version of [R](https://cran.r-project.org/) and [RStudio](https://www.rstudio.com/).
-
-In addition to shiny itself, a few packages need to be downloaded: <br>
 * [`leaflet`](https://github.com/rstudio/leaflet) and [`leaflet.extras`](https://github.com/bhaskarvk/leaflet.extras): These are responsible for the map and its features.
 * [`neonUtilities`](https://github.com/NEONScience/NEON-utilities/tree/master/neonUtilities): Used to download and stack NEON data.
 * [`shinythemes`](https://github.com/rstudio/shinythemes), [`shinyWidgets`](https://github.com/dreamRs/shinyWidgets), [`shinyBS`](https://github.com/ebailey78/shinyBS), and [`shinyjs`](https://github.com/daattali/shinyjs): Adds themes, "pimped-up" widgets, boostrap, and JavaScript functions to the app.
@@ -160,8 +157,6 @@ In addition to shiny itself, a few packages need to be downloaded: <br>
 * [`jsonlite`](https://github.com/cran/jsonlite): Deals with JSON structures.
 * [`DT`](https://github.com/rstudio/DT) and [`dplyr`](https://github.com/tidyverse/dplyr): Help with data table manipulation.
 * [`crul`](https://cran.r-project.org/web/packages/crul/index.html): Used for making HTTP requests.
-
-Install in R console: ```install.packages(c('shiny','leaflet','leaflet.extras','neonUtilities','shinythemes','shinyWidgets','shinyBS','shinyjs','sf','geosphere','jsonlite', 'dplyr', 'DT', 'crul'))```
 
 **Note: [Mac OS X](https://cran.r-project.org/bin/macosx/tools/) currently requires that `gfortran` and `clang` be installed in addition to the latest version of R (> v3.5.1 "Feather Spray")** 
 
