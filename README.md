@@ -139,33 +139,9 @@ sudo apt-get install -y --no-install-recommends \
     tk-dev \
     unixodbc-dev
  
-install2.r --error \
-    RColorBrewer \
-    RandomFields \
-    RNetCDF \
-    classInt \
-    deldir \
-    gstat \
-    hdf5r \
-    lidR \
-    mapdata \
-    maptools \
-    mapview \
-    ncdf4 \
-    proj4 \
-    raster \
-    rgdal \
-    rgeos \
-    rlas \
-    sf \
-    sp \
-    spacetime \
-    spatstat \
-    spdep \
-    geoR \
-    geosphere \
-    ## from bioconductor
-    && R -e "BiocManager::install('rhdf5', update=FALSE, ask=FALSE)"   
+R -e install.packages(c("RColorBrewer", "RandomFields", "RNetCDF", "classInt", "deldir", "gstat", "hdf5r", "lidR", "mapdata", "maptools", "mapview", "ncdf4", "proj4", "raster", "rgdal", "rgeos", "rlas", "sf", "sp", "spacetime", "spatstat", "spdep", "geoR", "geosphere"))
+
+R -e "BiocManager::install('rhdf5', update=FALSE, ask=FALSE)"    
  ```
  
 ## R Packages
