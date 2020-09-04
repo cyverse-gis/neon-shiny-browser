@@ -5,7 +5,16 @@ jobs:
       - image: cyversevice/shiny-neon-browser:3.6.3
     steps:
       - run:
-          name: Check4R
+          name: Hello World
           command: |
-            echo 'Check if R is installed'
-            R --version
+            echo 'Hello World!'
+            echo 'This is the delivery pipeline'
+  check:
+    docker:
+      - image: cyversevice/shiny-neon-browser:3.6.3
+    steps:
+      - checkout
+      - run:
+          name: R ver
+          command: |
+            R --version 
