@@ -109,7 +109,7 @@ sudo docker build -t shiny-neon-browser:3.6.3
 
 ## Linux
 
-We suggest using our [CyVerse](https://hub.docker.com/r/cyversevice/rstudio-geospatial] docker image or the original [Rocker Project Geospatial](https://hub.docker.com/r/rocker/geospatial) image, but if you want to attempt a local installation in linux, you can install the following:
+While we suggest using our [CyVerse](https://hub.docker.com/r/cyversevice/rstudio-geospatial) docker image or the original [Rocker Project Geospatial](https://hub.docker.com/r/rocker/geospatial) image, if you want to attempt a local installation of the geospatial apckages in linux, you can install the following (example for Debian or Ubuntu):
 
 ```
 sudo apt-get update 
