@@ -34,24 +34,137 @@ The National Ecological Observatory Network <a href="https://www.neonscience.org
 
 ## Installation
 
-To install the tool, change your working directory, and clone from git:
+To install the tool, clone from this git repository:
 
 ```
 cd
 git clone https://github.com/cyverse-gis/NEON-Shiny-Browser
 ```
 
-Open Rstudio or RStudio-Server in your browser. 
+### Run App in RStudio or RStudio-Server 
+
+You can start the app directly from the folder by running Shiny:
 
 ```
-setwd('~/NEON-Shiny-Browser')
+setwd('~/neon-shiny-browser')
 library(shiny)
 runApp()
 ```
+The app should install any missing dependencies in R. You may have to install additional system dependencies, see [RStudio Geospatial]( ) for examples 
 
-**Note: Allow pop-ups in your Browser for the app to open**
+**Important:** You must allow pop-ups in your Browser for the app to open
+
+### Run App as a background process (preferred method)
+
+Running a Shiny App in your R console will lock the console and prevent you from doing other work in RStudio while the app is running. You can run this app as a background process using the RSTudio "Jobs" tab
+
+Create an `background.R` script or use the one in this repo. Start a new Job running the script. After the app downloads its dependencies and starts, you'll see that it is running and listening on a randomly assigned local port: ```Listening on http://127.0.0.1:4199```
+In this example, the app is on port `4199`
+In the R Console, type:```rstudioapi::viewer("http://localhost:4199")```
+The App will open in the lower right corner of RStudio in the Viewer pane.
+
+You can pop-out the viewer and it will open as its own browser tab.
+
+## Run with Docker
+
+Run Docker locally or on a Virtual Machine
+
+### Pull Container from Docker Hub
+
+To run the Shiny-Server, you must first `pull` the container from the Docker Hub
+
+```
+docker pull cyversevice/shiny-neon-browser:3.6.3
+```
+Create a directory called `NEON_Downloads`, suggest in your user's home directory e.g. `mkdir ~/NEON_Downloads`
+
+Run the container image: 
+```
+docker run -it --rm -p 3838:3838 -e REDIRECT_URL=http://localhost:3838 -v ${HOME}/NEON_Downloads:/srv/shiny-server/NEON_Downloads cyversevice/shiny-neon-browser:3.6.3
+```
+
+The app will open in your browser at `http://localhost:3838`
+
+**Important:** The data are not downloaded to your computer if you do not mount a volume `-v` into the Docker container when it is run
+
+If you're running on are remote server, you can change `localhost` to your IP address or DNS. 
+
+### Build Container yourself
+
+To build the Docker container locally:
+
+```
+git clone https://github.com/cyverse-gis/NEON-Shiny-Browser
+
+cd NEON-Shiny-Browser
+
+sudo docker build -t shiny-neon-browser:3.6.3
+```
 
 ## Requirements
+
+## Linux
+
+We suggest using our CyVerse or Rocker Project Geospatial images in Docker, but if you want to attempt a local installation in linux, you can install the following:
+
+```
+sudo apt-get update 
+sudo apt-get install -y --no-install-recommends \
+    lbzip2 \
+    libfftw3-dev \
+    libgdal-dev \
+    libgeos-dev \
+    libgsl0-dev \
+    libgl1-mesa-dev \
+    libglu1-mesa-dev \
+    libhdf4-alt-dev \
+    libhdf5-dev \
+    libjq-dev \
+    liblwgeom-dev \
+    libpq-dev \
+    libproj-dev \
+    libprotobuf-dev \
+    libnetcdf-dev \
+    libsqlite3-dev \
+    libssl-dev \
+    libudunits2-dev \
+    netcdf-bin \
+    postgis \
+    protobuf-compiler \
+    sqlite3 \
+    tk-dev \
+    unixodbc-dev
+ 
+install2.r --error \
+    RColorBrewer \
+    RandomFields \
+    RNetCDF \
+    classInt \
+    deldir \
+    gstat \
+    hdf5r \
+    lidR \
+    mapdata \
+    maptools \
+    mapview \
+    ncdf4 \
+    proj4 \
+    raster \
+    rgdal \
+    rgeos \
+    rlas \
+    sf \
+    sp \
+    spacetime \
+    spatstat \
+    spdep \
+    geoR \
+    geosphere \
+    ## from bioconductor
+    && R -e "BiocManager::install('rhdf5', update=FALSE, ask=FALSE)"   
+ ```
+ 
+## R Packages
 
 Download the latest version of [R](https://cran.r-project.org/) and [RStudio](https://www.rstudio.com/) for your local or virtual machine.
 
@@ -69,41 +182,6 @@ install.packages(c('shiny','leaflet','leaflet.extras','neonUtilities','shinythem
 ```
 
 **Note: [Mac OS X](https://cran.r-project.org/bin/macosx/tools/) currently requires that `gfortran` and `clang` be installed in addition to the latest version of R (> v3.5.1 "Feather Spray")** 
-
-## Docker
-
-Run Docker locally or on a Virtual Machine
-
-### Build Container locally
-
-To build the Docker container locally:
-
-```
-git clone https://github.com/cyverse-gis/NEON-Shiny-Browser
-
-cd NEON-Shiny-Browser
-
-sudo docker build -t your-container-name:tag .
-```
-
-### Pull Container from Docker Hub
-
-To run the Shiny-Server, you must first `pull` the container from the Docker Hub
-
-```
-docker pull cyversevice/shiny-geospatial:neon-shiny-browser
-```
-
-### Run locally
-
-```
-docker run -it --rm -p 3838:3838 -e REDIRECT_URL=http://localhost:3838 -v /home/<your-username-here>/Downloads:/home/root/NEON_Downloads cyversevice/shiny-geospatial:neon-shiny-browser
-```
-
-The app will open in your browser at `http://localhost:3838`
-
-You also need to mount a local volume to the container in order to save the downloaded data when the container expires.
-
 
 ## FEEDBACK
 This is a message from the main developer of this app, [Daniel Lee](https://github.com/Danielslee51). I am an intern at [CyVerse](http://www.cyverse.org/). If anyone notices anything they see is wrong or want changed and improved, please create an Issue here. You can also contact my advisor, [Tyson L. Swetnam](https://github.com/tyson-swetnam).
