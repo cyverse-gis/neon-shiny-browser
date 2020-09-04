@@ -138,13 +138,17 @@ sudo apt-get install -y --no-install-recommends \
     sqlite3 \
     tk-dev \
     unixodbc-dev
- 
-R -e install.packages(c("RColorBrewer", "RandomFields", "RNetCDF", "classInt", "deldir", "gstat", "hdf5r", "lidR", "mapdata", "maptools", "mapview", "ncdf4", "proj4", "raster", "rgdal", "rgeos", "rlas", "sf", "sp", "spacetime", "spatstat", "spdep", "geoR", "geosphere"))
+# start R
+R
+```
+In R terminal:
+```
+install.packages(c("RColorBrewer","RandomFields","RNetCDF","classInt","deldir","gstat","hdf5r","lidR","mapdata","maptools","mapview","ncdf4","proj4","raster","rgdal","rgeos","rlas","sf","sp","spacetime","spatstat","spdep","geoR","geosphere","shiny","leaflet","leaflet.extras","neonUtilities","shinythemes","shinyWidgets","shinyBS","shinyjs","sf","jsonlite", "dplyr", "DT", "crul"))
 
-R -e "BiocManager::install('rhdf5', update=FALSE, ask=FALSE)"    
+BiocManager::install('rhdf5', update=FALSE, ask=FALSE)   
  ```
  
-## R Packages
+## Shiny Packages
 
 Download the latest version of [R](https://cran.r-project.org/) and [RStudio](https://www.rstudio.com/).
 
