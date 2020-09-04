@@ -36,20 +36,25 @@ The National Ecological Observatory Network <a href="https://www.neonscience.org
 To install the tool, clone from this git repository:
 
 ```
-cd
-git clone https://github.com/cyverse-gis/NEON-Shiny-Browser
+$ cd
+$ git clone https://github.com/cyverse-gis/neon-shiny-browser
+$ cd ~/neon-shiny-browser
+$ R
+> setwd('~/neon-shiny-browser')
+> library(shiny)
+> runApp()
 ```
 
 ### Run App in RStudio or RStudio-Server 
 
-You can start the app directly from the folder by running Shiny:
+Start RStudio or RStudio server, and in the Console:
 
 ```
 setwd('~/neon-shiny-browser')
 library(shiny)
 runApp()
 ```
-The app should install any missing dependencies in R. You may have to install additional system dependencies, see [RStudio Geospatial]( ) for examples 
+The app should install any missing dependencies in R. You may have to install additional system dependencies, see [RStudio Geospatial](https://hub.docker.com/r/rocker/geospatial). Example linux install is described below.
 
 **Important:** You must allow pop-ups in your Browser for the app to open
 
