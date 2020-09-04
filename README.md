@@ -54,7 +54,7 @@ setwd('~/neon-shiny-browser')
 library(shiny)
 runApp()
 ```
-The app should install any missing dependencies in R. You may have to install additional system dependencies, see [RStudio Geospatial](https://hub.docker.com/r/rocker/geospatial). Example linux install is described below.
+The app should install any missing dependencies in R. You may have to install additional system dependencies, see [RStudio Geospatial](https://hub.docker.com/r/rocker/geospatial). Example linux install is [described below](README.md#linux).
 
 **Important:** You must allow pop-ups in your Browser for the app to open
 
