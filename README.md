@@ -55,7 +55,7 @@ The app should install any missing dependencies in R. You may have to install ad
 
 ### Run App as a background process (preferred method)
 
-Running a Shiny App in your R console will lock the console and prevent you from doing other work in RStudio while the app is running. You can run this app as a background process using the RSTudio "Jobs" tab
+Running a Shiny App in your R console will lock the console and prevent you from doing other work in RStudio while the app is running. You can run this app as a background process using the RStudio "Jobs" tab
 
 Create an `background.R` script or use the one in this repo. Start a new Job running the script. After the app downloads its dependencies and starts, you'll see that it is running and listening on a randomly assigned local port: ```Listening on http://127.0.0.1:4199```
 In this example, the app is on port `4199`
