@@ -11,7 +11,10 @@ WORKDIR /srv/shiny-server/NEON-Shiny-Browser/
 
 # Add shiny user to docker group to allow writing back onto host
 
-RUN groupadd docker && usermod -aG docker shiny
+RUN usermod -u 1000 shiny
+
+RUN groupadd --gid 10013 iplant-everyone
+RUN usermod -aG 10013 shiny
 
 # Start the server
 CMD ["/usr/bin/shiny-server.sh"]
