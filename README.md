@@ -45,6 +45,15 @@ $ R
 > runApp()
 ```
 
+### Run App in Discovery Environment
+
+This is preferred method for app usage. 
+
+1. Go to [Cyverse Discovery Environment](https://de.cyverse.org/) and log in
+2. Create new geospatial environment by searching for "RStudio Geospatial 3.6.3", select result of that name in App tab, leaving all options as defaults, and hitting "Launch Analysis"
+3. Open this up in Analyses tab with "Go to analysis" button
+4. Run app using installation instructions above; additionally run in background using "Run App as a background process" instructions below
+
 ### Run App in RStudio or RStudio-Server 
 
 Start RStudio or RStudio server, and in the Console:
