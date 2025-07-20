@@ -66,14 +66,15 @@ load_neon_spatial_data <- function(force_update = FALSE, check_updates = TRUE) {
   tryCatch({
     message("Loading flight boundaries...")
     flight_boundaries_new <<- load_flight_boundaries()
-    if (!is.null(flight_boundaries_new)) {
+    if (!is.null(flight_boundaries_new) && (is.data.frame(flight_boundaries_new) || inherits(flight_boundaries_new, "sf"))) {
       message(sprintf("✓ Flight boundaries loaded: %d features", nrow(flight_boundaries_new)))
       
       # Create backward compatibility with existing flight_data structure
       create_legacy_flight_data()
     } else {
       # Fallback to old system if new system fails
-      message("New flight boundaries failed, using legacy system...")
+      message("WARNING: New flight boundaries failed or returned NULL, using legacy system...")
+      flight_boundaries_new <<- NULL  # Ensure it's explicitly NULL
       load_legacy_flight_data()
     }
   }, error = function(e) {
@@ -98,7 +99,15 @@ load_neon_spatial_data <- function(force_update = FALSE, check_updates = TRUE) {
 
 #' Create legacy flight_data structure for backward compatibility
 create_legacy_flight_data <- function() {
-  if (is.null(flight_boundaries_new)) return()
+  if (is.null(flight_boundaries_new)) {
+    message("WARNING: flight_boundaries_new is NULL, cannot create legacy flight data")
+    return()
+  }
+  
+  if (!is.data.frame(flight_boundaries_new) && !inherits(flight_boundaries_new, "sf")) {
+    message("WARNING: flight_boundaries_new is not a valid data structure, cannot create legacy flight data")
+    return()
+  }
   
   tryCatch({
     # Process new flight data to match old structure

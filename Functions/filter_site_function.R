@@ -8,10 +8,23 @@ filter_site <- function(site) {
     return(logical(0))  # Return empty logical vector
   }
   
-  message(sprintf("DEBUG: filter_site processing %d products", nrow(NEONproducts_product)))
+  n_products <- nrow(NEONproducts_product)
+  message(sprintf("DEBUG: filter_site processing %d products", n_products))
+  
+  # Additional safety check for the loop
+  if (is.null(n_products) || n_products <= 0) {
+    message("DEBUG: n_products is NULL or <= 0, returning empty logical")
+    return(logical(0))
+  }
   
   boolean_list <- NULL
-  for (i in 1:nrow(NEONproducts_product)) {
+  for (i in seq_len(n_products)) {
+    # Add bounds checking to prevent runaway loops
+    if (i > 1000) {
+      message(sprintf("WARNING: filter_site loop exceeded 1000 iterations, breaking at i=%d", i))
+      break
+    }
+    
     tryCatch({
       # Safe access to siteCodes with validation
       if (i <= length(NEONproducts_product$siteCodes) && 
