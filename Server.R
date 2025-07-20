@@ -91,8 +91,16 @@ function(input, output, session) {
   Field_sites_poly_filtered <- reactive(FieldSite_poly %>% filter(code %in% Field_sites_point_filtered()$siteCode))
   Domain_included <- reactive(domain_data %>% filter(DomainName %in% input$fieldsite_domain))
   Domain_unincluded <- reactive(domain_data %>% filter(!(DomainName %in% input$fieldsite_domain)))
-  Flight_data_filtered <- reactive(flight_data %>% filter(SiteAbb %in% Field_sites_point_filtered()$siteCode) %>%
-                                     filter(Year %in% input$flightpath_year))
+  Flight_data_filtered <- reactive({
+    # Defensive check to ensure flight_data is a data frame, not a function
+    if (!exists("flight_data") || is.function(flight_data) || is.null(flight_data)) {
+      message("Warning: flight_data is not available as a data frame, returning empty data frame")
+      return(data.frame(SiteAbb = character(0), Year = character(0)))
+    }
+    
+    flight_data %>% filter(SiteAbb %in% Field_sites_point_filtered()$siteCode) %>%
+      filter(Year %in% input$flightpath_year)
+  })
  
   Subloc_tes_plots_base <- reactive(FieldSite_plots_tes %>% filter(Type %in% "Distributed Base Plot") %>%
                                       filter(Site %in% input$fieldsite_sublocs))

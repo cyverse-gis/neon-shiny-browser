@@ -7,11 +7,13 @@ Error in as.character: cannot coerce type 'closure' to vector of type 'character
 ```
 
 ## Root Causes
-The error had multiple contributing factors:
+The error was caused by a critical **naming conflict**:
 
-1. **Missing null-coalescing operator**: The `%||%` operator was not available in all execution contexts where it was being used
-2. **Reactive context issue**: The Server.R was trying to access reactive inputs during app initialization in an `observe()` block, causing timing issues
-3. **Geometry handling**: Improper handling of sf geometry objects in the flight data conversion
+1. **Function-Variable Naming Conflict (PRIMARY CAUSE)**: `flight_data` was defined as both a function (`Functions/flight_function.R`) and used as a global variable. When Server.R tried to use `flight_data` as a data frame in reactive expressions, it was actually accessing the function, causing the coercion error.
+
+2. **Missing null-coalescing operator**: The `%||%` operator was not available in all execution contexts where it was being used
+3. **Reactive context issue**: The Server.R was trying to access reactive inputs during app initialization in an `observe()` block, causing timing issues  
+4. **Unsafe list access**: Direct access to nested list columns without proper validation
 
 ## Solution
 Fixed by adding the null-coalescing operator definition directly to `load_spatial_data.R`:
@@ -45,7 +47,14 @@ Fixed by adding the null-coalescing operator definition directly to `load_spatia
 - Added comprehensive error handling with `tryCatch()`
 - Prevents reactive context access during app initialization
 
-### 5. Fixed Unsafe List Column Access
+### 5. Fixed Function-Variable Naming Conflict (CRITICAL FIX)
+**Files**: `Functions/flight_function.R`, `Functions/load_spatial_data.R`, `Server.R`, `Global.R`
+- Renamed `flight_data()` function to `process_flight_data()` to avoid naming conflict
+- Added defensive checks in Server.R to verify `flight_data` is a data frame before use
+- Added explicit variable initialization in Global.R to prevent function conflicts
+- Added debugging to verify proper data structure after spatial loading
+
+### 6. Fixed Unsafe List Column Access
 **File**: `Server.R`
 - Added `safe_siteCodes_access()` helper function for safe nested list access
 - Fixed all instances of `$siteCodes[[1]]$...` patterns with proper validation

@@ -143,9 +143,23 @@ CR_table <- data.frame("Abb" = c("C", "R", "A"),"Actual" = c("Core", "Relocatabl
 # Load modern spatial data with automatic caching and updates
 source('Functions/load_spatial_data.R')
 
+# Initialize flight_data as NULL to avoid function/variable conflicts
+flight_data <- NULL
+
 # Initialize spatial data - will check for updates and cache locally
 # Set check_updates = FALSE if you want to skip update checking on every app start
 load_neon_spatial_data(force_update = FALSE, check_updates = TRUE)
+
+# Debug: Check what flight_data contains after spatial data loading
+if (exists("flight_data")) {
+  if (is.function(flight_data)) {
+    message("ERROR: flight_data is still a function after spatial loading!")
+  } else if (is.data.frame(flight_data)) {
+    message(sprintf("✓ flight_data is a data frame with %d rows", nrow(flight_data)))
+  } else {
+    message(sprintf("WARNING: flight_data is of type: %s", class(flight_data)))
+  }
+}
 
 #### Miscellaneous Variables ####
 

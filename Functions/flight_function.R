@@ -1,4 +1,4 @@
-flight_data <- function(flightlist_info, flightlist_geo, year, name) {
+process_flight_data <- function(flightlist_info, flightlist_geo, year, name) {
   # flight info
   flight_info <- data.frame()
   for (file in flightlist_info) {

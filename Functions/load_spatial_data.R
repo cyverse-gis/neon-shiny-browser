@@ -154,13 +154,13 @@ load_legacy_flight_data <- function() {
       if (file.exists("Functions/flight_function.R")) {
         source("Functions/flight_function.R")
         
-        flight_data(flightlist_info = flight_filenames_all_2016, 
+        process_flight_data(flightlist_info = flight_filenames_all_2016, 
                    flightlist_geo = flight_filenames_2016, 
                    year = "2016", name = "flight_data_2016")
         
         flight_filenames_all_2017 <- Sys.glob('NEON-data/Flightdata/Flight_boundaries_2017/D*')
         flight_filenames_2017 <- Sys.glob('NEON-data/Flightdata/Flight_boundaries_2017/D*.geojson')
-        flight_data(flightlist_info = flight_filenames_all_2017, 
+        process_flight_data(flightlist_info = flight_filenames_all_2017, 
                    flightlist_geo = flight_filenames_2017, 
                    year = "2017", name = "flight_data_2017")
         
