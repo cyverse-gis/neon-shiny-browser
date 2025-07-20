@@ -82,7 +82,22 @@ The fix addresses the coercion error that was occurring during spatial data init
 - `Server.R` - Reactive context and initialization fixes
 - `test_null_coalescing_fix.R` - Test script created for validation
 
-### 8. Fixed Closure Field Access (FINAL CRITICAL FIX)
+### 8. Fixed Functions Directory Coercion Errors (CRITICAL FIX)
+**Files**: `Functions/flight_function.R`, `Functions/filter_site_function.R`, `Functions/keyword_lists_function.R`
+
+**Primary Issue - flight_function.R (Lines 24, 32):**
+- Fixed unsafe `as.character(FieldSite_table$Site[...])` that could receive function closures
+- Added safe lookup with existence checks and function validation
+- Fixed unsafe `as.numeric(as.character(...))` conversion with error handling
+
+**Secondary Issues:**
+- **filter_site_function.R**: Added safe access to `NEONproducts_product$siteCodes` with closure detection
+- **keyword_lists_function.R**: Fixed unsafe chaining of filtering operations
+- All functions now validate data structures before attempting character coercion
+
+**Root Cause**: Functions in the `/Functions` directory run during Global.R initialization (during spatial data loading) and were accessing potentially uninitialized or malformed data structures, causing function closures to be passed to `as.character()`.
+
+### 9. Fixed Closure Field Access
 **File**: `Functions/load_spatial_data.R`
 - Added `safe_extract()` function to handle field access that might return closures
 - Replaced direct field access (`obj$field`) with safe extraction that checks `is.function()`

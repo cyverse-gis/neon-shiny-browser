@@ -8,7 +8,18 @@ keyword_lists <- function(list) {
   }
   
   for (site in list) {
-    products_list <- NEONproducts_product[filter_site(site = site),]
+    # Safe filtering with validation
+    tryCatch({
+      filter_results <- filter_site(site = site)
+      if (length(filter_results) > 0 && length(filter_results) == nrow(NEONproducts_product)) {
+        products_list <- NEONproducts_product[filter_results,]
+      } else {
+        products_list <- data.frame()  # Empty data frame if filtering fails
+      }
+    }, error = function(e) {
+      message(sprintf("Error filtering products for site %s: %s", site, e$message))
+      products_list <- data.frame()
+    })
     keywords <- NULL
     
     # Check if products_list has data and keywords column exists

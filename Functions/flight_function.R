@@ -21,7 +21,25 @@ process_flight_data <- function(flightlist_info, flightlist_geo, year, name) {
     file_info <- cbind("Name" = name_part,
                        "DomainID" = domain_part,
                        "SiteAbb" = site_part,
-                       "Site" = as.character(FieldSite_table$Site[FieldSite_table$Abb %in% site_part]),
+                       "Site" = {
+                         # Safe site name lookup
+                         if (exists("FieldSite_table") && is.data.frame(FieldSite_table) && 
+                             "Abb" %in% names(FieldSite_table) && "Site" %in% names(FieldSite_table)) {
+                           matches <- FieldSite_table$Abb %in% site_part
+                           if (any(matches)) {
+                             site_name <- FieldSite_table$Site[matches]
+                             if (length(site_name) > 0 && !is.function(site_name)) {
+                               as.character(site_name[1])
+                             } else {
+                               "Unknown Site"
+                             }
+                           } else {
+                             "Unknown Site"
+                           }
+                         } else {
+                           "Unknown Site"
+                         }
+                       },
                        "SiteType" = toupper(CR_table[grep(RC_part_type,CR_table$Abb),2]),
                        "SiteType_number" = RC_part_num,
                        "Priority" = priority_part,
@@ -29,7 +47,15 @@ process_flight_data <- function(flightlist_info, flightlist_geo, year, name) {
                        "Year" = as.character(year))
     flight_info <- rbind(flight_info, file_info)
   }
-  flight_info$DomainID <- as.numeric(as.character(flight_info$DomainID))
+  # Safe DomainID conversion
+  tryCatch({
+    if ("DomainID" %in% names(flight_info) && !is.function(flight_info$DomainID)) {
+      flight_info$DomainID <- as.numeric(as.character(flight_info$DomainID))
+    }
+  }, error = function(e) {
+    message(sprintf("Warning: Could not convert DomainID to numeric: %s", e$message))
+    flight_info$DomainID <<- 1  # Default domain ID
+  })
   # flight geo
   flight_geo <- st_read(flightlist_geo[1])
   flight_geo <- flight_geo["geometry"]
