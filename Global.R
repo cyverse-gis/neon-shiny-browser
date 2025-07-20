@@ -1,61 +1,77 @@
-# Download all packages if they haven't been already
-# Skip installation in Docker environment where packages are pre-installed
-if (Sys.getenv("DOCKER_ENV") != "true") {
-  # Try to install packages, but don't fail if some don't install
-  tryCatch(source("Install.R"), error = function(e) {
-    message("Some packages failed to install, continuing with available packages...")
-  })
-}
+# Load only the packages that are actually available
+# Core packages (required)
+library(shiny)
+library(DT)
+library(jsonlite)
+library(dplyr)
 
-# Load core packages with error handling
-load_package <- function(pkg_name, required = TRUE) {
+# Optional packages with error handling
+optional_packages <- c("shinythemes", "shinyWidgets", "shinyBS", "shinyjs", 
+                      "leaflet", "leaflet.extras", "sf", "neonUtilities", "geosphere")
+
+for (pkg in optional_packages) {
   tryCatch({
-    library(pkg_name, character.only = TRUE)
-    return(TRUE)
+    library(pkg, character.only = TRUE)
+    assign(paste0(pkg, "_available"), TRUE, envir = .GlobalEnv)
   }, error = function(e) {
-    if (required) {
-      message(sprintf("Required package '%s' not available, some features may not work", pkg_name))
-    } else {
-      message(sprintf("Optional package '%s' not available", pkg_name))
-    }
-    return(FALSE)
+    message(sprintf("Optional package '%s' not available, some features may be limited", pkg))
+    assign(paste0(pkg, "_available"), FALSE, envir = .GlobalEnv)
   })
 }
-
-# Core required packages
-load_package("shiny", TRUE)
-load_package("DT", TRUE) 
-load_package("shinythemes", TRUE)
-load_package("shinyWidgets", TRUE)
-load_package("shinyBS", TRUE)
-load_package("shinyjs", TRUE)
-load_package("jsonlite", TRUE)
-load_package("dplyr", TRUE)
-
-# Optional packages
-neonUtilities_available <- load_package("neonUtilities", FALSE)
-leaflet_available <- load_package("leaflet", FALSE)
-leaflet_extras_available <- load_package("leaflet.extras", FALSE)
-sf_available <- load_package("sf", FALSE)
 # Source the custom functions needed for the app
 source('Functions/flight_function.R')
 source('Functions/filter_keyword_function.R')
 source('Functions/filter_site_function.R')
 source('Functions/keyword_lists_function.R')
-source('Functions/getProductSize_function.R')
-source('Functions/unzipEddy_function.R')
-source('Functions/datesTable_function.R')
-source('Functions/checkDownload_function.R')
-source('Functions/unique_folderpath_function.R')
-source('Functions/write_downloadSummary_function.R')
-source("Functions/neonUtilities.R")
-# Source neonUtilities replacement functions (replaces deprecated nneo)
-source('Functions/neonUtilities_replacements.R')
 
-# Create aliases for backward compatibility with existing code
-nneo_products <- nneo_products_replacement
-nneo_data <- nneo_data_replacement  
-nneo_site <- nneo_site_replacement
+# Source functions that require additional packages only if available
+tryCatch(source('Functions/getProductSize_function.R'), error = function(e) {
+  message("getProductSize_function.R not loaded (missing dependencies)")
+})
+tryCatch(source('Functions/unzipEddy_function.R'), error = function(e) {
+  message("unzipEddy_function.R not loaded (missing dependencies)")
+})
+tryCatch(source('Functions/datesTable_function.R'), error = function(e) {
+  message("datesTable_function.R not loaded (missing dependencies)")
+})
+tryCatch(source('Functions/checkDownload_function.R'), error = function(e) {
+  message("checkDownload_function.R not loaded (missing dependencies)")
+})
+tryCatch(source('Functions/unique_folderpath_function.R'), error = function(e) {
+  message("unique_folderpath_function.R not loaded (missing dependencies)")
+})
+tryCatch(source('Functions/write_downloadSummary_function.R'), error = function(e) {
+  message("write_downloadSummary_function.R not loaded (missing dependencies)")
+})
+
+# Source neonUtilities functions only if neonUtilities is available
+if (exists("neonUtilities_available") && neonUtilities_available) {
+  tryCatch({
+    source("Functions/neonUtilities.R")
+    source('Functions/neonUtilities_replacements.R')
+  }, error = function(e) {
+    message("neonUtilities functions not loaded (missing dependencies)")
+  })
+} else {
+  message("neonUtilities package not available, skipping related functions")
+}
+
+# Create aliases for backward compatibility with existing code (if functions exist)
+if (exists("nneo_products_replacement")) {
+  nneo_products <- nneo_products_replacement
+} else {
+  nneo_products <- function(...) stop("neonUtilities not available")
+}
+if (exists("nneo_data_replacement")) {
+  nneo_data <- nneo_data_replacement
+} else {
+  nneo_data <- function(...) stop("neonUtilities not available")
+}
+if (exists("nneo_site_replacement")) {
+  nneo_site <- nneo_site_replacement
+} else {
+  nneo_site <- function(...) stop("neonUtilities not available")
+}
 
 if (!dir.exists("../NEON_Downloads")) {
   dir.create("../NEON_Downloads")
@@ -245,6 +261,9 @@ if (is.function(NEON_datatypes)) {
 message(sprintf("  - domains$Domain: %s with length %d", class(domains$Domain)[1], if(exists("domains") && "Domain" %in% names(domains)) length(domains$Domain) else 0))
 if (exists("domains") && "Domain" %in% names(domains) && is.function(domains$Domain)) {
   message("  ERROR: domains$Domain is a function! This will cause UI coercion error!")
+  # Fix the domains$Domain if it's a function
+  domains$Domain <<- as.character(domains$Domain)
+  message("  Fixed: converted domains$Domain to character")
 }
 baseplot_text <- "30/site: Distributed Base Plots support a variety of plant productivity, plant diversity, soil, biogeochemistry, microbe and beetle sampling. Distributed Base Plots are 40m x 40m."
 birdgrid_text <- "5-15/site: Bird Grids consist of 9 sampling points within a 500m x 500m square. Each point is 250m apart. Where possible, Bird Grids are colocated with Distributed Base Plots by placing the Bird Grid center in close proximity to the center of the Base Plot. At smaller sites, a single point count is done at the south-west corner of the Distributed Base Plot."
