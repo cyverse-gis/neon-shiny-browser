@@ -24,10 +24,13 @@ source('Functions/checkDownload_function.R')
 source('Functions/unique_folderpath_function.R')
 source('Functions/write_downloadSummary_function.R')
 source("Functions/neonUtilities.R")
-# Source functions from the deprecated nneo package
-for (func in list.files('Functions/nneo/')) {
-  source(paste0("Functions/nneo/", func))
-}
+# Source neonUtilities replacement functions (replaces deprecated nneo)
+source('Functions/neonUtilities_replacements.R')
+
+# Create aliases for backward compatibility with existing code
+nneo_products <- nneo_products_replacement
+nneo_data <- nneo_data_replacement  
+nneo_site <- nneo_site_replacement
 
 if (!dir.exists("../NEON_Downloads")) {
   dir.create("../NEON_Downloads")
@@ -48,7 +51,7 @@ if (!('geosphere' %in% as.data.frame(installed.packages())$Package)) {
 ###NEON Field Sites####
 
 ## Retrieve point data for NEON Field Sites in JSON format
-FieldSite_point_JSON <- fromJSON('http://data.neonscience.org/api/v0/sites')
+FieldSite_point_JSON <- fromJSON('https://data.neonscience.org/api/v0/sites')
 FieldSite_point <- FieldSite_point_JSON$data
 FieldSite_point$domainCode <- as.numeric(gsub(pattern = "D", replacement = "", x = FieldSite_point$domainCode))
 FieldSite_extra <- read.csv('NEON-data/Fieldsites_extrainfo.csv', colClasses = "character")

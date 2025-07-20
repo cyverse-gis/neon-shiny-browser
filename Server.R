@@ -606,7 +606,7 @@ function(input, output, session) {
   output$dataproduct_number <- renderPrint(nrow(NEONproducts_product[filter_site(site = input$NEONsite_dropdown),]))
   ####—— 1a: By Site####
   # Variables
-  NEONproducts_product <<- nneo_products() # Added this variable up here because one item in finding by "site" needed it
+  NEONproducts_product <<- nneo_products(token = input$neon_api_token) # Added this variable up here because one item in finding by "site" needed it
   NEONproducts_site <- reactive(NEONproducts_product[filter_site(site = input$NEONsite_site),])
   # list: getting data frame of availability based on site code
   # Filter by keywords, type, theme
@@ -1256,7 +1256,7 @@ function(input, output, session) {
                      dates_left <- length(download_dates())
                      for (date in download_dates()) {
                        incProgress(amount = 0, detail = paste0("Downloading ", date))
-                       try(getPackage(dpID = Product_ID_regular(), site_code = Field_Site_regular(), year_month = date, package = Package_type_regular(), savepath = paste0("../NEON_Downloads/", folder)))
+                       try(getPackage(dpID = Product_ID_regular(), site_code = Field_Site_regular(), year_month = date, package = Package_type_regular(), savepath = paste0("../NEON_Downloads/", folder), token = input$neon_api_token))
                        incProgress(amount = 1/dates_left)
                      }
                    })
@@ -1362,14 +1362,14 @@ function(input, output, session) {
                  } else if (length(Year_AOP()) == 0) {
                    sendSweetAlert(session, title = "Calculation failed", text = "Please choose a year.", type = 'error')
                  } else {
-                   data_test <- try(nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-01")))
+                   data_test <- try(nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-01"), token = input$neon_api_token))
                    if (class(data_test) == "try-error") {
                      sendSweetAlert(session, title = "Calculation failed", text = paste0("The product/site/year-month combination that you tried to calculate size for was invalid. Read the error message: ", strsplit(data_test, ":")[[1]][2]), type = 'error')
                    } else {
                      total_size <- 0
                      withProgress(message = "Calculation in progress", value = 0, expr = {
                        for (i in c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")) {
-                         data <- try(nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-", i))$data$files)
+                         data <- try(nneo_data(product_code = Product_ID_AOP(), site_code = Field_Site_AOP(), year_month = paste0(Year_AOP(), "-", i), token = input$neon_api_token)$data$files)
                          incProgress(amount = 1/12)
                          if (class(data) != "try-error") {
                            size <- as.numeric(data$size)
@@ -1401,7 +1401,7 @@ function(input, output, session) {
                    disable(id = "download_NEON_AOP")
                    folder <- unique_folderpath(pathname = Folder_path_AOP())
                    withProgress(message = "Downloading files", value = 0, max = 1.1, expr = {
-                     download <- try(byFileAOP(dpID = Product_ID_AOP(), site = Field_Site_AOP(), year = Year_AOP(), check.size = FALSE, savepath = "../NEON_Downloads/"))
+                     download <- try(byFileAOP(dpID = Product_ID_AOP(), site = Field_Site_AOP(), year = Year_AOP(), check.size = FALSE, savepath = "../NEON_Downloads/", token = input$neon_api_token))
                    })
                    if (class(download) == "try-error") {
                      sendSweetAlert(session, title = "Download failed", text = paste0("This could be due to a faulty request or a problem with the product itself. Read the error code message: ", strsplit(download, ":")[[1]][-1]), type = 'error')

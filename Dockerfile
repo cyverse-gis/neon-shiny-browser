@@ -1,8 +1,17 @@
-FROM cyversevice/shiny-geospatial:3.6.3
+FROM rocker/shiny-verse:4.4
 
-RUN R -e "install.packages(c('shiny','leaflet','leaflet.extras','neonUtilities','shinythemes','shinyWidgets','shinyBS','shinyjs','sf','geosphere','jsonlite', 'dplyr', 'DT', 'crul'))"
+# Install system dependencies for spatial packages
+RUN apt-get update && apt-get install -y \
+    libgdal-dev \
+    libgeos-dev \
+    libproj-dev \
+    libudunits2-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN cd /srv/shiny-server && git clone https://github.com/cyverse-gis/NEON-Shiny-Browser
+# Install R packages
+RUN R -e "install.packages(c('shiny','leaflet','leaflet.extras','neonUtilities','shinythemes','shinyWidgets','shinyBS','shinyjs','sf','geosphere','jsonlite', 'dplyr', 'DT', 'crul', 'httr'), repos='https://cloud.r-project.org/')"
+
+RUN cd /srv/shiny-server && git clone -b v1.2 https://github.com/cyverse-gis/NEON-Shiny-Browser
 
 # change permission of the shiny folder where the app resides
 RUN chmod -R 777 /srv/shiny-server

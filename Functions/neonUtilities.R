@@ -237,7 +237,7 @@ byFileAOP <- function (dpID, site = "SJER", year = "2017", check.size = TRUE,
     stop(paste(dpID, "is not a properly formatted data product ID. The correct format is DP#.#####.001", 
                sep = " "))
   }
-  productUrl <- paste0("http://data.neonscience.org/api/v0/products/", 
+  productUrl <- paste0("https://data.neonscience.org/api/v0/products/", 
                        dpID)
   req <- httr::GET(productUrl)
   avail <- jsonlite::fromJSON(httr::content(req, as = "text"), 
