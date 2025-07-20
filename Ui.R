@@ -245,6 +245,11 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                      options = list(`actions-box` = TRUE, `live-search` = TRUE, title = "Select Domains to include:", `selected-text-format`= "static"))),
                                                         conditionalPanel("input.map_features == 'flightpath'",
                                                                          selectInput(inputId = "flightpath_year", label = "Year", choices = c(2016, 2017), selected = c(2016, 2017), multiple = TRUE))
+                                               ),
+                                               #### — SPATIAL DATA MANAGEMENT ####
+                                               tabPanel(title = tags$h5("Spatial Data"), value = "spatial_data",
+                                                        source('Functions/spatial_data_ui.R', local = TRUE),
+                                                        spatial_data_management_UI()
                                                )
                                              )
                                 ),

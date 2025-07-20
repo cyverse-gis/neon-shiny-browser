@@ -1607,6 +1607,10 @@ function(input, output, session) {
     }
   })
   
+  ####— SPATIAL DATA MANAGEMENT ####
+  source('Functions/spatial_data_ui.R', local = TRUE)
+  spatial_data_management_server(input, output, session)
+  
   ####FOR ME TAB####
   
   #Text for troublshooting

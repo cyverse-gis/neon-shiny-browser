@@ -233,6 +233,8 @@ source("Install.R")
 ### New Features
 
 - **API Token Input**: Optional password field in download sections for faster access
+- **Automated Spatial Data Management**: Automatically downloads and caches latest NEON spatial datasets (field boundaries, TOS plots, domains, flight boundaries, watersheds)
+- **Spatial Data UI**: New "Spatial Data" tab for managing cached spatial datasets with update controls
 - **Better Error Handling**: More informative error messages and network resilience
 - **Comprehensive Test Suite**: 600+ lines of automated tests for reliability
 - **Modern Dependencies**: Updated all packages to current versions

@@ -140,14 +140,12 @@ FieldSite_table <- bind_rows(FieldSite_table, as.data.frame(cbind(Abb = FieldSit
 FieldSite_table <- FieldSite_table[c(-29, -31, -37, -44, -45, -47, -50, -53, -60, -67, -70, -71, -74, -75, -83, -84, -92, -100),]
 CR_table <- data.frame("Abb" = c("C", "R", "A"),"Actual" = c("Core", "Relocatable", "Aquatic"),
                        stringsAsFactors = FALSE)
-# filesnames needed for loops
-flight_filenames_all_2016 <- Sys.glob('NEON-data/Flightdata/Flight_boundaries_2016/D*')
-flight_filenames_2016 <- Sys.glob('NEON-data/Flightdata/Flight_boundaries_2016/D*.geojson')
-flight_data(flightlist_info = flight_filenames_all_2016, flightlist_geo = flight_filenames_2016, year = "2016", name = "flight_data_2016")
-flight_filenames_all_2017 <- Sys.glob('NEON-data/Flightdata/Flight_boundaries_2017/D*')
-flight_filenames_2017 <- Sys.glob('NEON-data/Flightdata/Flight_boundaries_2017/D*.geojson')
-flight_data(flightlist_info = flight_filenames_all_2017, flightlist_geo = flight_filenames_2017, year = "2017", name = "flight_data_2017")
-flight_data <- rbind(flight_data_2016, flight_data_2017)
+# Load modern spatial data with automatic caching and updates
+source('Functions/load_spatial_data.R')
+
+# Initialize spatial data - will check for updates and cache locally
+# Set check_updates = FALSE if you want to skip update checking on every app start
+load_neon_spatial_data(force_update = FALSE, check_updates = TRUE)
 
 #### Miscellaneous Variables ####
 
