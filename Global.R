@@ -1,20 +1,42 @@
 # Download all packages if they haven't been already
 # Skip installation in Docker environment where packages are pre-installed
 if (Sys.getenv("DOCKER_ENV") != "true") {
-  source("Install.R")
+  # Try to install packages, but don't fail if some don't install
+  tryCatch(source("Install.R"), error = function(e) {
+    message("Some packages failed to install, continuing with available packages...")
+  })
 }
-library(shiny)
-library(DT)
-library(shinythemes)
-library(shinyWidgets)
-library(shinyBS)
-library(shinyjs)
-library(leaflet)
-library(leaflet.extras)
-library(sf)
-library(dplyr)
-library(jsonlite)
-library(neonUtilities)
+
+# Load core packages with error handling
+load_package <- function(pkg_name, required = TRUE) {
+  tryCatch({
+    library(pkg_name, character.only = TRUE)
+    return(TRUE)
+  }, error = function(e) {
+    if (required) {
+      message(sprintf("Required package '%s' not available, some features may not work", pkg_name))
+    } else {
+      message(sprintf("Optional package '%s' not available", pkg_name))
+    }
+    return(FALSE)
+  })
+}
+
+# Core required packages
+load_package("shiny", TRUE)
+load_package("DT", TRUE) 
+load_package("shinythemes", TRUE)
+load_package("shinyWidgets", TRUE)
+load_package("shinyBS", TRUE)
+load_package("shinyjs", TRUE)
+load_package("jsonlite", TRUE)
+load_package("dplyr", TRUE)
+
+# Optional packages
+neonUtilities_available <- load_package("neonUtilities", FALSE)
+leaflet_available <- load_package("leaflet", FALSE)
+leaflet_extras_available <- load_package("leaflet.extras", FALSE)
+sf_available <- load_package("sf", FALSE)
 # Source the custom functions needed for the app
 source('Functions/flight_function.R')
 source('Functions/filter_keyword_function.R')
@@ -85,44 +107,66 @@ FieldSite_Tes <- FieldSite_point$siteCode[FieldSite_point$Habitat %in% "Terrestr
 FieldSite_Aqu <- FieldSite_point$siteCode[FieldSite_point$Habitat %in% "Aquatic"]
 
 ## Retrieve polygon data for NEON Field Sites
-#Fieldsite_poly_JSON <- fromJSON('http://guest:guest@128.196.38.73:9200/sites/_search?size=500')
-# Unhashtag when index is down:
-Fieldsite_poly_JSON <- fromJSON('NEON-data/Fieldsites.json')
-FieldSite_poly <- cbind(Fieldsite_poly_JSON$hits$hits[-5], Fieldsite_poly_JSON$hits$hits$`_source`[-4], Fieldsite_poly_JSON$hits$hits$`_source`$boundary)
-names(FieldSite_poly)[9] <- "geo_type"
-FieldSite_poly <- FieldSite_poly %>% filter(type %in% "NEON")
-for (i in 1:nrow(FieldSite_poly)) {
-  FieldSite_poly$code[i] <- strsplit(FieldSite_poly$code[i], "-")[[1]][2]
-  FieldSite_poly$siteType[i] <- strsplit(FieldSite_poly$name[i], ", ")[[1]][2]
-  FieldSite_poly$name[i] <- strsplit(FieldSite_poly$name[i], ", ")[[1]][1]
-  FieldSite_poly$domainName[i] <- strsplit(FieldSite_poly$details[[i]][1], ":")[[1]][2]
-  FieldSite_poly$domainCode[i] <- strsplit(FieldSite_poly$details[[i]][2], ":")[[1]][2]
-  FieldSite_poly$domainCode[i] <- strsplit(FieldSite_poly$domainCode[i], "D")[[1]][2]  
-  FieldSite_poly$stateCode[i] <- strsplit(FieldSite_poly$details[[i]][5], ":")[[1]][2]
-  FieldSite_poly$stateName[i] <- strsplit(FieldSite_poly$details[[i]][6], ":")[[1]][2]
+tryCatch({
+  # Try to get updated data from API first
+  message("Attempting to fetch field site polygons from NEON API...")
+  Fieldsite_poly_JSON <- fromJSON('http://guest:guest@128.196.38.73:9200/sites/_search?size=500', timeout = 10)
+  message("✓ Successfully fetched from API")
+}, error = function(e) {
+  # Fallback to local JSON file
+  message("API unavailable, using local Fieldsites.json...")
+  Fieldsite_poly_JSON <<- fromJSON('NEON-data/Fieldsites.json')
+  message(sprintf("Loaded %d of %d total field site records from local file", 
+                  length(Fieldsite_poly_JSON$hits$hits), 
+                  Fieldsite_poly_JSON$hits$total))
+})
+
+# Check if we have valid data
+if (length(Fieldsite_poly_JSON$hits$hits) == 0) {
+  message("Warning: No field site polygon data available")
+  FieldSite_poly <- data.frame()
+} else {
+  # Process the available data
+  FieldSite_poly <- cbind(Fieldsite_poly_JSON$hits$hits[-5], 
+                         Fieldsite_poly_JSON$hits$hits$`_source`[-4], 
+                         Fieldsite_poly_JSON$hits$hits$`_source`$boundary)
+  names(FieldSite_poly)[9] <- "geo_type"
+  FieldSite_poly <- FieldSite_poly %>% filter(type %in% "NEON")
+  
+  for (i in 1:nrow(FieldSite_poly)) {
+    FieldSite_poly$code[i] <- strsplit(FieldSite_poly$code[i], "-")[[1]][2]
+    FieldSite_poly$siteType[i] <- strsplit(FieldSite_poly$name[i], ", ")[[1]][2]
+    FieldSite_poly$name[i] <- strsplit(FieldSite_poly$name[i], ", ")[[1]][1]
+    FieldSite_poly$domainName[i] <- strsplit(FieldSite_poly$details[[i]][1], ":")[[1]][2]
+    FieldSite_poly$domainCode[i] <- strsplit(FieldSite_poly$details[[i]][2], ":")[[1]][2]
+    FieldSite_poly$domainCode[i] <- strsplit(FieldSite_poly$domainCode[i], "D")[[1]][2]  
+    FieldSite_poly$stateCode[i] <- strsplit(FieldSite_poly$details[[i]][5], ":")[[1]][2]
+    FieldSite_poly$stateName[i] <- strsplit(FieldSite_poly$details[[i]][6], ":")[[1]][2]
+  }
+  FieldSite_poly$domainCode <- as.numeric(FieldSite_poly$domainCode)
+  
+  message(sprintf("✓ Processed %d field site polygons", nrow(FieldSite_poly)))
 }
-FieldSite_poly$domainCode <- as.numeric(FieldSite_poly$domainCode)
 
 ## Retrive Fieldsite Locations
 FieldSite_locations_tes <- read.csv("NEON-data/Fieldsites_locations_tes", stringsAsFactors = FALSE)
 FieldSite_plots_tes <- read.csv("NEON-data/Fieldsites_plots_tes", stringsAsFactors = FALSE)[-1]
 FieldSite_locations_aqu <- read.csv("NEON-data/Fieldsites_locations_aqu", stringsAsFactors = FALSE)
-aqu_location_filter <- startsWith(FieldSite_locations_aqu$Name, "WELL") | startsWith(FieldSite_locations_aqu$Name, "METSTN") | grepl("S.LOC", FieldSite_locations_aqu$Name) |startsWith(FieldSite_locations_aqu$Name, "INLET") | startsWith(FieldSite_locations_aqu$Name, "OUTLET") | startsWith(FieldSite_locations_aqu$Name, "BUOY") | startsWith(FieldSite_locations_aqu$Name, "SGAUGE") |
-endsWith(FieldSite_locations_aqu$Name, "reach.bottom") | endsWith(FieldSite_locations_aqu$Name, "reach.top") | grepl("riparian[.]point", FieldSite_locations_aqu$Name) | grepl("riparian[.]transect", FieldSite_locations_aqu$Name)
-FieldSite_locations_aqu <- FieldSite_locations_aqu[aqu_location_filter,]
+
+# The new aquatic locations file has a simplified structure with just main sites
+# Add General Type based on the simplified Type field
 for (i in 1:nrow(FieldSite_locations_aqu)) {
-  FieldSite_locations_aqu$`General Type`[i] <- if (startsWith(FieldSite_locations_aqu$Type[i], "GROUND")) {
-    "Groundwater Well"
-  } else if (startsWith(FieldSite_locations_aqu$Type[i], "MET")) {
-    "Met. Station"
-  } else if (grepl( "_LOC", FieldSite_locations_aqu$Type[i]) | grepl("BUOY", FieldSite_locations_aqu$Type[i])) {
-    "Sensor Station"
-  } else if (startsWith(FieldSite_locations_aqu$Type[i], "STAFF")) {
-    "Staff gauge/camera"
-  } else if (grepl("reach", FieldSite_locations_aqu$Type[i])) {
-    "Sampling Reach Boundary"
-  } else if (grepl("riparian", FieldSite_locations_aqu$Type[i])) {
-    "Riparian Assessment"
+  # Check if Type field exists and is not NA
+  if ("Type" %in% names(FieldSite_locations_aqu) && !is.na(FieldSite_locations_aqu$Type[i])) {
+    FieldSite_locations_aqu$`General Type`[i] <- if (FieldSite_locations_aqu$Type[i] == "STREAM") {
+      "Stream Site"
+    } else if (FieldSite_locations_aqu$Type[i] == "LAKE") {
+      "Lake Site"
+    } else {
+      "Aquatic Site"
+    }
+  } else {
+    FieldSite_locations_aqu$`General Type`[i] <- "Aquatic Site"
   }
 }
 
@@ -148,15 +192,22 @@ FieldSite_table <- bind_rows(FieldSite_table, as.data.frame(cbind(Abb = FieldSit
 FieldSite_table <- FieldSite_table[c(-29, -31, -37, -44, -45, -47, -50, -53, -60, -67, -70, -71, -74, -75, -83, -84, -92, -100),]
 CR_table <- data.frame("Abb" = c("C", "R", "A"),"Actual" = c("Core", "Relocatable", "Aquatic"),
                        stringsAsFactors = FALSE)
-# Load modern spatial data with automatic caching and updates
-source('Functions/load_spatial_data.R')
-
-# Initialize flight_data as NULL to avoid function/variable conflicts
-flight_data <- NULL
-
-# Initialize spatial data - will check for updates and cache locally
-# Set check_updates = FALSE if you want to skip update checking on every app start
-load_neon_spatial_data(force_update = FALSE, check_updates = TRUE)
+# Load modern spatial data with automatic caching and updates (if sf is available)
+if (sf_available) {
+  tryCatch({
+    source('Functions/load_spatial_data.R')
+    # Initialize flight_data as NULL to avoid function/variable conflicts
+    flight_data <- NULL
+    # Initialize spatial data - will check for updates and cache locally
+    load_neon_spatial_data(force_update = FALSE, check_updates = TRUE)
+  }, error = function(e) {
+    message("Modern spatial data loading failed, using legacy methods...")
+    flight_data <<- NULL
+  })
+} else {
+  message("sf package not available, skipping modern spatial data loading...")
+  flight_data <- NULL
+}
 
 # Debug: Check what flight_data contains after spatial data loading
 if (exists("flight_data")) {
