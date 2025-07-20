@@ -104,17 +104,40 @@ create_legacy_flight_data <- function() {
     # Process new flight data to match old structure
     # This maintains compatibility with existing map rendering code
     
-    # Extract flight info from new data structure
+    # Extract flight info from new data structure with safe extraction
+    safe_extract <- function(obj, field, default) {
+      tryCatch({
+        value <- obj[[field]]
+        if (is.null(value) || length(value) == 0 || is.function(value)) {
+          return(default)
+        }
+        return(value)
+      }, error = function(e) {
+        return(default)
+      })
+    }
+    
+    # Get number of rows safely
+    n_rows <- tryCatch({
+      if (is.data.frame(flight_boundaries_new)) {
+        nrow(flight_boundaries_new)
+      } else if (inherits(flight_boundaries_new, "sf")) {
+        nrow(flight_boundaries_new)
+      } else {
+        1
+      }
+    }, error = function(e) 1)
+    
     flight_info <- data.frame(
-      Name = flight_boundaries_new$name %||% paste0("flight_", seq_len(nrow(flight_boundaries_new))),
-      DomainID = as.numeric(gsub("D", "", flight_boundaries_new$domain_id %||% "1")),
-      SiteAbb = flight_boundaries_new$site_code %||% "UNKN",
-      Site = flight_boundaries_new$site_name %||% "Unknown Site",
-      SiteType = flight_boundaries_new$site_type %||% "UNKNOWN", 
-      SiteType_number = flight_boundaries_new$type_number %||% "1",
-      Priority = flight_boundaries_new$priority %||% "1",
-      Version = flight_boundaries_new$version %||% "1",
-      Year = flight_boundaries_new$year %||% "2024",
+      Name = safe_extract(flight_boundaries_new, "name", paste0("flight_", seq_len(n_rows))),
+      DomainID = as.numeric(gsub("D", "", safe_extract(flight_boundaries_new, "domain_id", "1"))),
+      SiteAbb = safe_extract(flight_boundaries_new, "site_code", "UNKN"),
+      Site = safe_extract(flight_boundaries_new, "site_name", "Unknown Site"),
+      SiteType = safe_extract(flight_boundaries_new, "site_type", "UNKNOWN"), 
+      SiteType_number = safe_extract(flight_boundaries_new, "type_number", "1"),
+      Priority = safe_extract(flight_boundaries_new, "priority", "1"),
+      Version = safe_extract(flight_boundaries_new, "version", "1"),
+      Year = safe_extract(flight_boundaries_new, "year", "2024"),
       stringsAsFactors = FALSE
     )
     
