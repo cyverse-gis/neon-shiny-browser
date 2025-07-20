@@ -72,7 +72,15 @@ FieldSite_point$`Habitat Specific` <- FieldSite_extra$Site.Subtype
 FieldSite_point$Host <- FieldSite_extra$Site.Host
 
 # List of field site abbreviations
-FieldSite_abbs <- FieldSite_point$siteCode
+message("DEBUG: Creating FieldSite_abbs...")
+message(sprintf("  - FieldSite_point$siteCode class: %s", class(FieldSite_point$siteCode)[1]))
+if (is.function(FieldSite_point$siteCode)) {
+  message("  ERROR: FieldSite_point$siteCode is a function!")
+  FieldSite_abbs <- character(0)  # Create empty character vector as fallback
+} else {
+  FieldSite_abbs <- FieldSite_point$siteCode
+  message(sprintf("  - FieldSite_abbs created with %d elements", length(FieldSite_abbs)))
+}
 FieldSite_Tes <- FieldSite_point$siteCode[FieldSite_point$Habitat %in% "Terrestrial"]
 FieldSite_Aqu <- FieldSite_point$siteCode[FieldSite_point$Habitat %in% "Aquatic"]
 
@@ -172,6 +180,21 @@ message(sprintf("  - flight_data: %s with %d rows", class(flight_data)[1], if(ex
 #### Miscellaneous Variables ####
 
 NEON_datatypes <- c("Airborne Observation Platform (AOP)", "Aquatic Instrument System (AIS)", "Aquatic Observation System (AOS)","Terrestrial Instrument System (TIS)", "Terrestrial Observation System (TOS)")
+
+# Debug: Check critical UI variables before they're used in Ui.R
+message("DEBUG: Checking UI variables that might cause coercion errors:")
+message(sprintf("  - FieldSite_abbs: %s with length %d", class(FieldSite_abbs)[1], if(exists("FieldSite_abbs")) length(FieldSite_abbs) else 0))
+if (exists("FieldSite_abbs") && is.function(FieldSite_abbs)) {
+  message("  ERROR: FieldSite_abbs is a function! This will cause UI coercion error!")
+}
+message(sprintf("  - NEON_datatypes: %s with length %d", class(NEON_datatypes)[1], length(NEON_datatypes)))
+if (is.function(NEON_datatypes)) {
+  message("  ERROR: NEON_datatypes is a function! This will cause UI coercion error!")
+}
+message(sprintf("  - domains$Domain: %s with length %d", class(domains$Domain)[1], if(exists("domains") && "Domain" %in% names(domains)) length(domains$Domain) else 0))
+if (exists("domains") && "Domain" %in% names(domains) && is.function(domains$Domain)) {
+  message("  ERROR: domains$Domain is a function! This will cause UI coercion error!")
+}
 baseplot_text <- "30/site: Distributed Base Plots support a variety of plant productivity, plant diversity, soil, biogeochemistry, microbe and beetle sampling. Distributed Base Plots are 40m x 40m."
 birdgrid_text <- "5-15/site: Bird Grids consist of 9 sampling points within a 500m x 500m square. Each point is 250m apart. Where possible, Bird Grids are colocated with Distributed Base Plots by placing the Bird Grid center in close proximity to the center of the Base Plot. At smaller sites, a single point count is done at the south-west corner of the Distributed Base Plot."
 mammalgrid_text <- "6-8/site: Mammal Grids are 90m x 90m and include 10m spacing. Where possible, these grids are colocated with Distributed Base Plots by placing them a specified distance (150m +/- 50m) and random direction from the center of the Base Plot."
