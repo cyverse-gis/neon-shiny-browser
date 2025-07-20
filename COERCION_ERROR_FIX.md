@@ -45,6 +45,13 @@ Fixed by adding the null-coalescing operator definition directly to `load_spatia
 - Added comprehensive error handling with `tryCatch()`
 - Prevents reactive context access during app initialization
 
+### 5. Fixed Unsafe List Column Access
+**File**: `Server.R`
+- Added `safe_siteCodes_access()` helper function for safe nested list access
+- Fixed all instances of `$siteCodes[[1]]$...` patterns with proper validation
+- Added error handling for malformed data structures during reactive evaluation
+- Prevents coercion errors when accessing nested product data structures
+
 ## Testing
 The fix addresses the coercion error that was occurring during spatial data initialization. The spatial data system should now:
 

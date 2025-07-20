@@ -1,5 +1,35 @@
 # Shiny server
 function(input, output, session) {
+  
+  # Helper function to safely access siteCodes data
+  safe_siteCodes_access <- function(product_info, column_name = "siteCode", filter_input = NULL) {
+    tryCatch({
+      if (length(product_info$siteCodes) == 0 || !is.list(product_info$siteCodes)) {
+        return(NA)
+      }
+      
+      site_codes <- product_info$siteCodes[[1]]
+      if (is.null(site_codes) || !is.data.frame(site_codes) || !column_name %in% names(site_codes)) {
+        return(NA)
+      }
+      
+      if (!is.null(filter_input) && "siteCode" %in% names(site_codes)) {
+        matching_sites <- site_codes$siteCode %in% filter_input
+        if (any(matching_sites)) {
+          result <- site_codes[[column_name]][matching_sites]
+          return(if(length(result) > 0) result else NA)
+        } else {
+          return(NA)
+        }
+      } else {
+        return(site_codes[[column_name]])
+      }
+    }, error = function(e) {
+      message(sprintf("Error in safe_siteCodes_access: %s", e$message))
+      return(NA)
+    })
+  }
+  
   # Initialization
   if (dir_created == TRUE) {
     delay(ms = 5000, showNotification(ui = "'~/NEON_Downloads' folder created outside the directory containing this app. All downloads will go to the 'NEON_Downloads' folder.", duration = NULL, type = "message"))
@@ -865,17 +895,52 @@ function(input, output, session) {
     },
     content = function(file) {
       table <- NEONproductinfo_site()
+      
+      # Handle list columns properly before CSV export
       for (i in 1:ncol(table)) {
-        table[i] <- as.character(table[i])
+        if (is.list(table[[i]]) && !is.data.frame(table[[i]])) {
+          # Convert list columns to comma-separated strings
+          table[[i]] <- sapply(table[[i]], function(x) {
+            if (is.null(x) || length(x) == 0) {
+              ""
+            } else if (is.character(x) || is.numeric(x)) {
+              paste(x, collapse = ", ")
+            } else {
+              as.character(x)
+            }
+          })
+        } else if (!is.character(table[[i]])) {
+          # Convert non-list, non-character columns to character
+          table[[i]] <- as.character(table[[i]])
+        }
       }
-      write.csv(x = table, file = file)
+      write.csv(x = table, file = file, row.names = FALSE)
     })
   output$NEONproductURL_site <- renderPrint({
-    Urls <- if (length(NEONproductinfo_site()$siteCodes) == 0) {
-      NA
-    } else {
-      NEONproductinfo_site()$siteCodes[[1]]$availableDataUrls[NEONproductinfo_site()$siteCodes[[1]]$siteCode %in% input$NEONsite_site][[1]]}
-    req(Urls)
+    tryCatch({
+      product_info <- NEONproductinfo_site()
+      if (length(product_info$siteCodes) == 0 || !is.list(product_info$siteCodes)) {
+        Urls <- NA
+      } else {
+        site_codes <- product_info$siteCodes[[1]]
+        if (is.null(site_codes) || !is.data.frame(site_codes) || 
+            !"siteCode" %in% names(site_codes) || !"availableDataUrls" %in% names(site_codes)) {
+          Urls <- NA
+        } else {
+          matching_sites <- site_codes$siteCode %in% input$NEONsite_site
+          if (any(matching_sites)) {
+            available_urls <- site_codes$availableDataUrls[matching_sites]
+            Urls <- if(length(available_urls) > 0) available_urls[[1]] else NA
+          } else {
+            Urls <- NA
+          }
+        }
+      }
+      req(Urls)
+    }, error = function(e) {
+      message(sprintf("Error in NEONproductURL_site: %s", e$message))
+      return(NA)
+    })
   })
   
   ####—— 1b: By Product####
@@ -1133,17 +1198,45 @@ function(input, output, session) {
     },
     content = function(file) {
       table <- NEONproductinfo_product()
+      
+      # Handle list columns properly before CSV export
       for (i in 1:ncol(table)) {
-        table[i] <- as.character(table[i])
+        if (is.list(table[[i]]) && !is.data.frame(table[[i]])) {
+          # Convert list columns to comma-separated strings
+          table[[i]] <- sapply(table[[i]], function(x) {
+            if (is.null(x) || length(x) == 0) {
+              ""
+            } else if (is.character(x) || is.numeric(x)) {
+              paste(x, collapse = ", ")
+            } else {
+              as.character(x)
+            }
+          })
+        } else if (!is.character(table[[i]])) {
+          # Convert non-list, non-character columns to character
+          table[[i]] <- as.character(table[[i]])
+        }
       }
-      write.csv(x = table, file = file)
+      write.csv(x = table, file = file, row.names = FALSE)
     })
   output$ui_selectsite<- renderUI({
-    sites <- if (length(NEONproductinfo_product()$siteCodes) == 0) {
-      NA
-    } else {
-      sort(NEONproductinfo_product()$siteCodes[[1]]$siteCode)}
-    selectInput(inputId = "NEONsite_product", label = "Available sites:", choices = req(sites))
+    tryCatch({
+      product_info <- NEONproductinfo_product()
+      if (length(product_info$siteCodes) == 0 || !is.list(product_info$siteCodes)) {
+        sites <- NA
+      } else {
+        site_codes <- product_info$siteCodes[[1]]
+        if (is.null(site_codes) || !is.data.frame(site_codes) || !"siteCode" %in% names(site_codes)) {
+          sites <- NA
+        } else {
+          sites <- sort(site_codes$siteCode)
+        }
+      }
+      selectInput(inputId = "NEONsite_product", label = "Available sites:", choices = req(sites))
+    }, error = function(e) {
+      message(sprintf("Error in ui_selectsite: %s", e$message))
+      selectInput(inputId = "NEONsite_product", label = "Available sites:", choices = c("Loading..."))
+    })
   })
   output$nodates_message <- renderUI({
     if (nrow(NEONproductinfo_product()) > 0) {
@@ -1162,19 +1255,57 @@ function(input, output, session) {
     } else {}
   })
   observeEvent(input$eddy_covariance, updateTextInput(session, inputId = "NEONproductID_product", value = "DP4.00200.001"))
-  output$NEONproductURL_site <- renderPrint({
-    Urls <- if (length(NEONproductinfo_site()$siteCodes) == 0) {
-      NA
-    } else {
-      NEONproductinfo_site()$siteCodes[[1]]$availableDataUrls[NEONproductinfo_site()$siteCodes[[1]]$siteCode %in% input$NEONsite_site][[1]]}
-    req(Urls)
+  output$NEONproductURL_site_2 <- renderPrint({
+    tryCatch({
+      product_info <- NEONproductinfo_site()
+      if (length(product_info$siteCodes) == 0 || !is.list(product_info$siteCodes)) {
+        Urls <- NA
+      } else {
+        site_codes <- product_info$siteCodes[[1]]
+        if (is.null(site_codes) || !is.data.frame(site_codes) || 
+            !"siteCode" %in% names(site_codes) || !"availableDataUrls" %in% names(site_codes)) {
+          Urls <- NA
+        } else {
+          matching_sites <- site_codes$siteCode %in% input$NEONsite_site
+          if (any(matching_sites)) {
+            available_urls <- site_codes$availableDataUrls[matching_sites]
+            Urls <- if(length(available_urls) > 0) available_urls[[1]] else NA
+          } else {
+            Urls <- NA
+          }
+        }
+      }
+      req(Urls)
+    }, error = function(e) {
+      message(sprintf("Error in NEONproductURL_site_2: %s", e$message))
+      return(NA)
+    })
   })
   output$NEONproductURL_product <- renderPrint({
-    Urls <- if (length(NEONproductinfo_product()$siteCodes) == 0) {
-      NA
-    } else {
-      NEONproductinfo_product()$siteCodes[[1]]$availableDataUrls[NEONproductinfo_product()$siteCodes[[1]]$siteCode %in% input$NEONsite_product][[1]]}
-    req(Urls)
+    tryCatch({
+      product_info <- NEONproductinfo_product()
+      if (length(product_info$siteCodes) == 0 || !is.list(product_info$siteCodes)) {
+        Urls <- NA
+      } else {
+        site_codes <- product_info$siteCodes[[1]]
+        if (is.null(site_codes) || !is.data.frame(site_codes) || 
+            !"siteCode" %in% names(site_codes) || !"availableDataUrls" %in% names(site_codes)) {
+          Urls <- NA
+        } else {
+          matching_sites <- site_codes$siteCode %in% input$NEONsite_product
+          if (any(matching_sites)) {
+            available_urls <- site_codes$availableDataUrls[matching_sites]
+            Urls <- if(length(available_urls) > 0) available_urls[[1]] else NA
+          } else {
+            Urls <- NA
+          }
+        }
+      }
+      req(Urls)
+    }, error = function(e) {
+      message(sprintf("Error in NEONproductURL_product: %s", e$message))
+      return(NA)
+    })
   })
   
   ####— NEON: Step 2- Download Data####
