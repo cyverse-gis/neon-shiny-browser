@@ -603,22 +603,42 @@ function(input, output, session) {
   ## for dropdown
   output$dropdown_site <- renderPrint(paste0(FieldSite_point$siteName[FieldSite_point$siteCode %in% input$NEONsite_dropdown], " ", FieldSite_point$`Habitat Specific`[FieldSite_point$siteCode %in% input$NEONsite_dropdown]))
   output$dropdown_state <- renderPrint(FieldSite_point$stateName[FieldSite_point$siteCode %in% input$NEONsite_dropdown])
-  output$dataproduct_number <- renderPrint(nrow(NEONproducts_product[filter_site(site = input$NEONsite_dropdown),]))
+  output$dataproduct_number <- renderPrint({
+    if (!is.null(NEONproducts_product) && nrow(NEONproducts_product) > 0) {
+      nrow(NEONproducts_product[filter_site(site = input$NEONsite_dropdown),])
+    } else {
+      0
+    }
+  })
   ####—— 1a: By Site####
   # Variables
   # Load products initially without token, update reactively when token changes
-  NEONproducts_product <<- nneo_products() # Initial load without token
+  NEONproducts_product <<- NULL  # Initialize as NULL
   
-  # Reactive expression to reload products when API token changes
+  # Load products initially and generate keyword lists
   observe({
+    # Load products with or without token
     if (!is.null(input$neon_api_token) && nchar(input$neon_api_token) > 0) {
       NEONproducts_product <<- nneo_products(token = input$neon_api_token)
+    } else {
+      NEONproducts_product <<- nneo_products()
+    }
+    
+    # Generate keyword lists after products are loaded
+    if (!is.null(NEONproducts_product) && nrow(NEONproducts_product) > 0) {
+      keyword_lists(list = FieldSite_abbs)
+    }
+  }, priority = 100)  # High priority to ensure this runs first
+  
+  NEONproducts_site <- reactive({
+    if (!is.null(NEONproducts_product) && nrow(NEONproducts_product) > 0) {
+      NEONproducts_product[filter_site(site = input$NEONsite_site),]
+    } else {
+      data.frame()  # Return empty data frame if products not loaded
     }
   })
-  NEONproducts_site <- reactive(NEONproducts_product[filter_site(site = input$NEONsite_site),])
   # list: getting data frame of availability based on site code
   # Filter by keywords, type, theme
-  keyword_lists(list = FieldSite_abbs)
   output$ui_selectkeywords_site <- renderUI({
     selectInput(inputId = "NEONproductkeywords_site", label = "Keywords", choices = get(x = input$NEONsite_site, envir = .NEON_keywords), multiple = TRUE)
   })
