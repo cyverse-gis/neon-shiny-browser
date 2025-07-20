@@ -6,7 +6,7 @@ if (getRversion() < "4.0.0") {
 # Required packages with minimum versions where applicable
 packages <- c('shiny','leaflet','leaflet.extras','neonUtilities','shinythemes',
               'shinyWidgets','shinyBS','shinyjs','sf','geosphere','jsonlite', 
-              'dplyr', 'DT', 'crul', 'httr', 'testthat')
+              'dplyr', 'DT', 'crul', 'httr', 'testthat', 'markdown')
 
 # Install missing packages
 packages_needed <- packages[!(packages %in% installed.packages()[,"Package"])]

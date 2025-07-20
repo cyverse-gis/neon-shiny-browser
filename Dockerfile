@@ -14,18 +14,12 @@ RUN cd /srv/shiny-server && \
     git clone -b v1.1 https://github.com/cyverse-gis/NEON-Shiny-Browser && \
     chmod -R 755 /srv/shiny-server/NEON-Shiny-Browser
 
-# Install R packages using the app's Install.R script
+# Set working directory and install packages
 WORKDIR /srv/shiny-server/NEON-Shiny-Browser/
 RUN R -e "source('Install.R')" && \
     rm -rf /tmp/downloaded_packages
 
-# Create environment variable to skip Install.R at runtime
-ENV DOCKER_ENV=true
-
-# Set up the app directory and permissions
-WORKDIR /srv/shiny-server/NEON-Shiny-Browser/
-
-# Create NEON_Downloads directory
+# Create NEON_Downloads directory with proper permissions
 RUN mkdir -p /srv/shiny-server/NEON_Downloads && \
     chown -R shiny:shiny /srv/shiny-server/NEON_Downloads
 

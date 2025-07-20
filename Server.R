@@ -606,7 +606,15 @@ function(input, output, session) {
   output$dataproduct_number <- renderPrint(nrow(NEONproducts_product[filter_site(site = input$NEONsite_dropdown),]))
   ####—— 1a: By Site####
   # Variables
-  NEONproducts_product <<- nneo_products(token = input$neon_api_token) # Added this variable up here because one item in finding by "site" needed it
+  # Load products initially without token, update reactively when token changes
+  NEONproducts_product <<- nneo_products() # Initial load without token
+  
+  # Reactive expression to reload products when API token changes
+  observe({
+    if (!is.null(input$neon_api_token) && nchar(input$neon_api_token) > 0) {
+      NEONproducts_product <<- nneo_products(token = input$neon_api_token)
+    }
+  })
   NEONproducts_site <- reactive(NEONproducts_product[filter_site(site = input$NEONsite_site),])
   # list: getting data frame of availability based on site code
   # Filter by keywords, type, theme
