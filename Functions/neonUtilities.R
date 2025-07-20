@@ -231,7 +231,7 @@ stackDataFiles <- function (folder) {
 }
 
 byFileAOP <- function (dpID, site = "SJER", year = "2017", check.size = TRUE, 
-                       savepath = NA) 
+                       savepath = NA, token = NULL) 
 {
   if (regexpr("DP[1-4]{1}.[0-9]{5}.001", dpID) != 1) {
     stop(paste(dpID, "is not a properly formatted data product ID. The correct format is DP#.#####.001", 
@@ -239,7 +239,15 @@ byFileAOP <- function (dpID, site = "SJER", year = "2017", check.size = TRUE,
   }
   productUrl <- paste0("https://data.neonscience.org/api/v0/products/", 
                        dpID)
-  req <- httr::GET(productUrl)
+  headers <- list()
+  if (!is.null(token) && nchar(token) > 0) {
+    headers[["X-API-Token"]] <- token
+  }
+  if (length(headers) > 0) {
+    req <- httr::GET(productUrl, httr::add_headers(.headers = headers))
+  } else {
+    req <- httr::GET(productUrl)
+  }
   avail <- jsonlite::fromJSON(httr::content(req, as = "text"), 
                               simplifyDataFrame = TRUE, flatten = TRUE)
   if (!is.null(avail$error$status)) {
@@ -255,11 +263,15 @@ byFileAOP <- function (dpID, site = "SJER", year = "2017", check.size = TRUE,
     stop("There are no data at the selected site and year.")
   }
   incProgress(amount = 0, detail = "Querying NEON API")
-  getFileUrls <- function(m.urls) {
+  getFileUrls <- function(m.urls, headers = list()) {
     url.messages <- character()
     file.urls <- c(NA, NA, NA)
     for (i in 1:length(m.urls)) {
-      tmp <- httr::GET(m.urls[i])
+      if (length(headers) > 0) {
+        tmp <- httr::GET(m.urls[i], httr::add_headers(.headers = headers))
+      } else {
+        tmp <- httr::GET(m.urls[i])
+      }
       tmp.files <- jsonlite::fromJSON(httr::content(tmp, 
                                                     as = "text"), simplifyDataFrame = T, flatten = T)
       if (length(tmp.files$data$files) == 0) {
@@ -270,10 +282,11 @@ byFileAOP <- function (dpID, site = "SJER", year = "2017", check.size = TRUE,
       }
       file.urls <- rbind(file.urls, cbind(tmp.files$data$files$name, 
                                           tmp.files$data$files$url, tmp.files$data$files$size))
-      file.urls <- data.frame(file.urls, row.names = NULL)
+      file.urls <- data.frame(file.urls, row.names = NULL, stringsAsFactors = FALSE)
       colnames(file.urls) <- c("name", "URL", "size")
       file.urls$URL <- as.character(file.urls$URL)
       file.urls$name <- as.character(file.urls$name)
+      file.urls$size <- as.numeric(file.urls$size)
       if (length(url.messages) > 0) {
         writeLines(url.messages)
       }
@@ -281,7 +294,7 @@ byFileAOP <- function (dpID, site = "SJER", year = "2017", check.size = TRUE,
       return(file.urls)
     }
   }
-  file.urls.current <- getFileUrls(month.urls)
+  file.urls.current <- getFileUrls(month.urls, headers)
   downld.size <- sum(as.numeric(as.character(file.urls.current$size)), 
                      na.rm = T)
   downld.size.read <- gdata::humanReadable(downld.size, units = "auto", 
@@ -319,7 +332,7 @@ byFileAOP <- function (dpID, site = "SJER", year = "2017", check.size = TRUE,
                                   mode = "wb"), silent = T)
     if (class(t) == "try-error") {
       writeLines("File could not be downloaded. URLs may have expired. Getting new URLs.")
-      file.urls.new <- getFileUrls(month.urls)
+      file.urls.new <- getFileUrls(month.urls, headers)
       file.urls.current <- file.urls.new
       writeLines("Continuing downloads.")
     }
