@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D20_PUUM_C1_P1_v3",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D20", "domainName": "Pacific Tropical", "siteName": "Pu'u Maka'ala Natural Area Reserve NEON", "siteID": "PUUM", "siteType": "Core", "sampleType": "Terrestrial", "priority": 1, "version": 3, "flightbxID": "D20_PUUM_C1_P1_v3" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -155.354256945849045, 19.505903996497523 ], [ -155.354236138976461, 19.603125895583958 ], [ -155.216435632148404, 19.603050916737971 ], [ -155.216539106229419, 19.505820733034057 ], [ -155.354256945849045, 19.505903996497523 ] ] ] } }
+]
+}

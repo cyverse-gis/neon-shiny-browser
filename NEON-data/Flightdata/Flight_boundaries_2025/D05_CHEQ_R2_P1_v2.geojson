@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D05_CHEQ_R2_P1_v2",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D05", "domainName": "Great Lakes", "siteName": "Steigerwaldt-Chequamegon NEON", "siteID": "STEI", "siteType": "Gradient", "sampleType": "Terrestrial", "priority": 1, "version": 2, "flightbxID": "D05_CHEQ_R2_P1_v2" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -90.124234636884353, 45.779866740798184 ], [ -90.124234636884353, 45.837402107918876 ], [ -90.043142605656499, 45.837402107918876 ], [ -90.043142605656499, 45.779866740798184 ], [ -90.124234636884353, 45.779866740798184 ] ] ] } }
+]
+}

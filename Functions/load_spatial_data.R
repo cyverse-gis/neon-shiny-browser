@@ -174,9 +174,32 @@ load_legacy_flight_data <- function() {
   message("Using legacy flight data loading...")
   
   tryCatch({
-    # Load old flight data structure if it exists
+    # First try to load new 2025 flight boundaries
+    if (file.exists('NEON-data/Flightdata/Flight_boundaries_2025')) {
+      message("Loading 2025 flight boundaries...")
+      
+      flight_filenames_all_2025 <- Sys.glob('NEON-data/Flightdata/Flight_boundaries_2025/D*')
+      flight_filenames_2025 <- Sys.glob('NEON-data/Flightdata/Flight_boundaries_2025/D*.geojson')
+      
+      if (length(flight_filenames_2025) > 0 && file.exists("Functions/flight_function.R")) {
+        source("Functions/flight_function.R")
+        
+        process_flight_data(flightlist_info = flight_filenames_all_2025, 
+                   flightlist_geo = flight_filenames_2025, 
+                   year = "2025", name = "flight_data")
+        
+        if (exists("flight_data")) {
+          message("✓ 2025 flight data loaded successfully")
+          return()
+        }
+      }
+    }
+    
+    # Fallback to older flight data if 2025 not available
     if (file.exists('NEON-data/Flightdata/Flight_boundaries_2016') && 
         file.exists('NEON-data/Flightdata/Flight_boundaries_2017')) {
+      
+      message("Falling back to legacy 2016/2017 flight boundaries...")
       
       # Use original loading code
       flight_filenames_all_2016 <- Sys.glob('NEON-data/Flightdata/Flight_boundaries_2016/D*')
@@ -202,7 +225,7 @@ load_legacy_flight_data <- function() {
         }
       }
     } else {
-      message("No legacy flight data found")
+      message("No flight data found")
     }
   }, error = function(e) {
     warning(sprintf("Legacy flight data loading failed: %s", e$message))

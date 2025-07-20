@@ -246,6 +246,26 @@ load_field_boundaries <- function() {
 #' Load TOS plots as sf object
 #' @return sf object with TOS plot locations
 load_tos_plots <- function() {
+  # First try to use local TOS plot files
+  local_files <- c(
+    "NEON-data/All_NEON_TOS_Plot_Centroids_V11.shp",
+    "NEON-data/All_NEON_TOS_Plot_Points_V11.shp",
+    "NEON-data/All_NEON_TOS_Plot_Polygons_V11.shp"
+  )
+  
+  for (file in local_files) {
+    if (file.exists(file)) {
+      tryCatch({
+        plots <- st_read(file, quiet = TRUE)
+        message(sprintf("Loaded local TOS plots (%s) with %d features", basename(file), nrow(plots)))
+        return(plots)
+      }, error = function(e) {
+        warning(sprintf("Error loading local TOS plots %s: %s", file, e$message))
+      })
+    }
+  }
+  
+  # Fallback to downloaded cache
   data_dir <- load_spatial_dataset("tos_plots") 
   if (is.null(data_dir)) return(NULL)
   
@@ -273,6 +293,19 @@ load_tos_plots <- function() {
 #' Load domain polygons as sf object
 #' @return sf object with NEON domain polygons
 load_domain_polygons <- function() {
+  # First try to use local domain files
+  local_file <- "NEON-data/NEON_Domains.shp"
+  if (file.exists(local_file)) {
+    tryCatch({
+      domains <- st_read(local_file, quiet = TRUE)
+      message(sprintf("Loaded local domain polygons with %d features", nrow(domains)))
+      return(domains)
+    }, error = function(e) {
+      warning(sprintf("Error loading local domain polygons: %s", e$message))
+    })
+  }
+  
+  # Fallback to downloaded cache
   data_dir <- load_spatial_dataset("domain_polygons")
   if (is.null(data_dir)) return(NULL)
   
@@ -300,6 +333,32 @@ load_domain_polygons <- function() {
 #' Load flight boundaries as sf object  
 #' @return sf object with flight boundaries
 load_flight_boundaries <- function() {
+  # First try to use local 2025 flight boundaries
+  flight_2025_dir <- "NEON-data/Flightdata/Flight_boundaries_2025"
+  if (dir.exists(flight_2025_dir)) {
+    flight_files <- list.files(flight_2025_dir, pattern = "\\.geojson$", full.names = TRUE)
+    
+    if (length(flight_files) > 0) {
+      tryCatch({
+        all_flights <- NULL
+        for (file in flight_files) {
+          flight_data <- st_read(file, quiet = TRUE)
+          if (is.null(all_flights)) {
+            all_flights <- flight_data
+          } else {
+            all_flights <- rbind(all_flights, flight_data)
+          }
+        }
+        message(sprintf("Loaded 2025 flight boundaries with %d features from %d files", 
+                        nrow(all_flights), length(flight_files)))
+        return(all_flights)
+      }, error = function(e) {
+        warning(sprintf("Error loading 2025 flight boundaries: %s", e$message))
+      })
+    }
+  }
+  
+  # Fallback to downloaded cache
   data_dir <- load_spatial_dataset("flight_boundaries")
   if (is.null(data_dir)) return(NULL)
   
@@ -337,6 +396,26 @@ load_flight_boundaries <- function() {
 #' Load aquatic watersheds as sf object
 #' @return sf object with aquatic site watersheds  
 load_aquatic_watersheds <- function() {
+  # First try to use local aquatic files
+  local_files <- c(
+    "NEON-data/NEON_Aquatic_Watershed.shp",
+    "NEON-data/NEON_Aquatic_DrainageLine.shp",
+    "NEON-data/NEON_Aquatic_PourPoint.shp"
+  )
+  
+  for (file in local_files) {
+    if (file.exists(file)) {
+      tryCatch({
+        watersheds <- st_read(file, quiet = TRUE)
+        message(sprintf("Loaded local aquatic watersheds (%s) with %d features", basename(file), nrow(watersheds)))
+        return(watersheds)
+      }, error = function(e) {
+        warning(sprintf("Error loading local aquatic watersheds %s: %s", file, e$message))
+      })
+    }
+  }
+  
+  # Fallback to downloaded cache
   data_dir <- load_spatial_dataset("aquatic_watersheds")
   if (is.null(data_dir)) return(NULL)
   

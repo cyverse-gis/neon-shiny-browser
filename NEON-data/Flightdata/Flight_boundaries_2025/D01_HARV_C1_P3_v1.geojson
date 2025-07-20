@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D01_HARV_C1_P3_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D01", "domainName": "Northeast", "siteName": "Harvard Forest & Quabbin Watershed NEON", "siteID": "HARV", "siteType": "Core", "sampleType": "Terrestrial", "priority": 3, "version": 1, "flightbxID": "D01_HARV_C1_P3_v1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -72.108117452355543, 42.436530272196535 ], [ -72.147880515408872, 42.436534974787151 ], [ -72.148147178108104, 42.556698834112183 ], [ -72.108381513296365, 42.55671503372298 ], [ -72.108117452355543, 42.436530272196535 ] ] ] } }
+]
+}

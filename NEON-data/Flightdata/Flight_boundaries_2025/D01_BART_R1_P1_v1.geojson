@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D01_BART_R1_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D01", "domainName": "Northeast", "siteName": "Bartlett Experimental Forest NEON", "siteID": "BART", "siteType": "Gradient", "sampleType": "Terrestrial", "priority": 1, "version": 1, "flightbxID": "D01_BART_R1_P1_v1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -71.334256012070909, 43.991965619029088 ], [ -71.334230862339211, 44.081964596122987 ], [ -71.209496997745077, 44.081946507921543 ], [ -71.20952197030897, 43.991947556008881 ], [ -71.334256012070909, 43.991965619029088 ] ] ] } }
+]
+}

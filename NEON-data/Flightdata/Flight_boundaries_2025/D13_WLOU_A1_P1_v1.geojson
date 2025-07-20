@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D13_WLOU_A1_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D13", "domainName": "Southern Rockies & Colorado Plateau", "siteName": "West St Louis Creek NEON", "siteID": "WLOU", "siteType": "Gradient", "sampleType": "Aquatic", "priority": 1, "version": 1, "flightbxID": "D13_WLOU_A1_P1_v1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -105.943017833795409, 39.871968413257605 ], [ -105.943017833795409, 39.908582666954317 ], [ -105.891586082165531, 39.908582666954317 ], [ -105.891586082165531, 39.871968413257605 ], [ -105.943017833795409, 39.871968413257605 ] ] ] } }
+]
+}

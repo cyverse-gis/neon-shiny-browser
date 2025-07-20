@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D16_MCRA_A2_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D16", "domainName": "Pacific Northwest", "siteName": "McRae Creek NEON", "siteID": "MCRA", "siteType": "Gradient", "sampleType": "Aquatic", "priority": 1, "version": 1, "flightbxID": "D16_MCRA_A2_P1_v1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -122.16894299297428, 44.255683894845959 ], [ -122.16894299297428, 44.281565648722051 ], [ -122.132629511721859, 44.281565648722051 ], [ -122.132629511721859, 44.255683894845959 ], [ -122.16894299297428, 44.255683894845959 ] ] ] } }
+]
+}

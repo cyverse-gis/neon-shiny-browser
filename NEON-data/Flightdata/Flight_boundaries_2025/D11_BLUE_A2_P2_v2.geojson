@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D11_BLUE_A2_P2_v2",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D11", "domainName": "Southern Plains", "siteName": "Blue River NEON", "siteID": "BLUE", "siteType": "Gradient", "sampleType": "Aquatic", "priority": 2, "version": 2, "flightbxID": "D11_BLUE_A2_P2_v2" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -96.632922638056641, 34.487865448139587 ], [ -96.632964540486398, 34.465884836281191 ], [ -96.617971383840995, 34.46586439543546 ], [ -96.618018471800951, 34.443096445439323 ], [ -96.634474136828828, 34.443118597707837 ], [ -96.634474109848952, 34.4431328439764 ], [ -96.678872039567636, 34.443181548929601 ], [ -96.678811648735177, 34.487917065119689 ], [ -96.632922638056641, 34.487865448139587 ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D11_PRIN_C1_P2_v2",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D11", "domainName": "Southern Plains", "siteName": "Pringle Creek NEON", "siteID": "PRIN", "siteType": "Core", "sampleType": "Aquatic", "priority": 2, "version": 2, "flightbxID": "D11_PRIN_C1_P2_v2" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -97.775901506154298, 33.360437625454892 ], [ -97.793743128691858, 33.321971061870556 ], [ -97.801005672416125, 33.322331913080291 ], [ -97.886052523004253, 33.3835557399359 ], [ -97.885998486829521, 33.414933199863867 ], [ -97.855515157643936, 33.414655700251842 ], [ -97.77542111885009, 33.394715776201394 ], [ -97.775901506154298, 33.360437625454892 ] ] ] } }
+]
+}

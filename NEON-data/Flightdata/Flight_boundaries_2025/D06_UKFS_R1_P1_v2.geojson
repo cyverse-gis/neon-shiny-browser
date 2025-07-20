@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D06_UKFS_R1_P1_v2",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D06", "domainName": "Prairie Peninsula", "siteName": "KU Field Station NEON", "siteID": "UKFS", "siteType": "Gradient", "sampleType": "Terrestrial", "priority": 1, "version": 2, "flightbxID": "D06_UKFS_R1_P1_v2" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -95.134408692825218, 39.085468275479229 ], [ -95.134408692825218, 38.995391375136649 ], [ -95.216260754969312, 38.995403182425321 ], [ -95.216260766660582, 38.959949824693581 ], [ -95.249892371900785, 38.959949824693581 ], [ -95.249892371900785, 38.996424837101074 ], [ -95.249891276518269, 38.996424837101074 ], [ -95.249891307994744, 39.085468275479229 ], [ -95.134408692825218, 39.085468275479229 ] ] ] } }
+]
+}

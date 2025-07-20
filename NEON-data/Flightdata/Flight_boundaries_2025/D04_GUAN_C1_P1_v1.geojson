@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D04_GUAN_C1_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D04", "domainName": "Atlantic Neotropical", "siteName": "Guanica Forest NEON", "siteID": "GUAN", "siteType": "Core", "sampleType": "Terrestrial", "priority": 1, "version": 1, "flightbxID": "D04_GUAN_C1_P1_v1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -66.908113828007686, 17.937198532477055 ], [ -66.908184449605301, 18.035807577985906 ], [ -66.798388934756986, 18.035722947542581 ], [ -66.798323478004988, 17.937114761792088 ], [ -66.908113828007686, 17.937198532477055 ] ] ] } }
+]
+}

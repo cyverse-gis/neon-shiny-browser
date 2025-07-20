@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D14_JORN_R1_P2_v2",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D14", "domainName": "Desert Southwest", "siteName": "Jornada Experimental Range NEON", "siteID": "JORN", "siteType": "Gradient", "sampleType": "Terrestrial", "priority": 2, "version": 2, "flightbxID": "D14_JORN_R1_P2_v2" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -106.882679908418027, 32.717890427364807 ], [ -106.88268334025696, 32.623021035886325 ], [ -106.969368741053927, 32.622971588986786 ], [ -106.969492871819568, 32.717837481176616 ], [ -106.882679908418027, 32.717890427364807 ] ] ], [ [ [ -106.881577513795548, 32.717832141861152 ], [ -106.881577503902975, 32.717803343552305 ], [ -106.881765195635353, 32.717890665686923 ], [ -106.881703234574672, 32.717890680975529 ], [ -106.881577513795548, 32.717832141861152 ] ] ] ] } }
+]
+}

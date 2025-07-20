@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D05_STEI_TREE_R1_P2_v2",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D05", "domainName": "Great Lakes", "siteName": "Treehaven NEON", "siteID": "TREE", "siteType": "Gradient", "sampleType": "Terrestrial", "priority": 2, "version": 2, "flightbxID": "D05_STEI_TREE_R1_P2_v2" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -89.391822601096919, 45.550252886975329 ], [ -89.39191932481549, 45.447514313984584 ], [ -89.485540975737933, 45.447798534281162 ], [ -89.485485106730948, 45.550253003888088 ], [ -89.391822601096919, 45.550252886975329 ] ] ] } }
+]
+}

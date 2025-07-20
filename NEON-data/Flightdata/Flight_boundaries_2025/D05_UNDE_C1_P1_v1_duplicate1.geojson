@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D05_UNDE_C1_P1_v1_duplicate1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D05", "domainName": "Great Lakes", "siteName": "Crampton Lake NEON", "siteID": "CRAM", "siteType": "Core", "sampleType": "Aquatic", "priority": 1, "version": 1, "flightbxID": "D05_UNDE_C1_P1_v1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -89.43576308898804, 46.266543633602168 ], [ -89.435038738045137, 46.148528787146006 ], [ -89.580078728006811, 46.149146816732696 ], [ -89.581071853273102, 46.266250068379406 ], [ -89.43576308898804, 46.266543633602168 ] ] ] } }
+]
+}

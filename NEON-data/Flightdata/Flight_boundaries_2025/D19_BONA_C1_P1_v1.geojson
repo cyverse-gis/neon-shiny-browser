@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D19_BONA_C1_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D19", "domainName": "Taiga", "siteName": "Caribou-Poker Creeks Research Watershed NEON", "siteID": "BONA", "siteType": "Core", "sampleType": "Terrestrial", "priority": 1, "version": 1, "flightbxID": "D19_BONA_C1_P1_v1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -147.670071651612403, 65.127081926468122 ], [ -147.669841142832837, 65.241103303107479 ], [ -147.347355124372854, 65.241287047685489 ], [ -147.347882819972568, 65.127266762831368 ], [ -147.670071651612403, 65.127081926468122 ] ] ] } }
+]
+}

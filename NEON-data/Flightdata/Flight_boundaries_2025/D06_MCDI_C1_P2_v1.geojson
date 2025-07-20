@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D06_MCDI_C1_P2_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D06", "domainName": "Prairie Peninsula", "siteName": "McDiffett Creek NEON", "siteID": "MCDI", "siteType": "Gradient", "sampleType": "Aquatic", "priority": 2, "version": 1, "flightbxID": "D06_MCDI_C1_P2_v1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -96.520786949895637, 38.934067490750351 ], [ -96.520786949895637, 38.983738738680984 ], [ -96.433639191539555, 38.983738738680984 ], [ -96.433639191539555, 38.934067490750351 ], [ -96.520786949895637, 38.934067490750351 ] ] ] } }
+]
+}

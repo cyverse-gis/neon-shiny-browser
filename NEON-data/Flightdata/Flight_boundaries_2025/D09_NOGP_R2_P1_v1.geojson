@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D09_NOGP_R2_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D09", "domainName": "Northern Plains", "siteName": "Northern Great Plains Research Laboratory NEON", "siteID": "NOGP", "siteType": "Gradient", "sampleType": "Terrestrial", "priority": 1, "version": 1, "flightbxID": "D09_NOGP_R2_P1_v1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -100.979084208480913, 46.740962134404185 ], [ -100.979082226360106, 46.830917217054889 ], [ -100.848145883952554, 46.830915812303203 ], [ -100.848147989281415, 46.740960733249779 ], [ -100.979084208480913, 46.740962134404185 ] ] ] } }
+]
+}

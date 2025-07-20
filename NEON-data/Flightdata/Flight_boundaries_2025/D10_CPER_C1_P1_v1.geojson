@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D10_CPER_C1_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D10", "domainName": "Central Plains", "siteName": "Central Plains Experimental Range NEON", "siteID": "CPER", "siteType": "Core", "sampleType": "Terrestrial", "priority": 1, "version": 1, "flightbxID": "D10_CPER_C1_P1_v1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -104.793110129639388, 40.781745272643661 ], [ -104.793094404874239, 40.871794308180711 ], [ -104.674569798133803, 40.871782330918904 ], [ -104.674585585852014, 40.781733317865076 ], [ -104.793110129639388, 40.781745272643661 ] ] ] } }
+]
+}

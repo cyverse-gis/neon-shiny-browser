@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D04_CUPE_A1_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D04", "domainName": "Atlantic Neotropical", "siteName": "Rio Cupeyes NEON", "siteID": "CUPE", "siteType": "Core", "sampleType": "Aquatic", "priority": 1, "version": 1, "flightbxID": "D04_CUPE_A1_P1_v1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -66.99719116478866, 18.096263892408558 ], [ -66.99719116568798, 18.145292916108019 ], [ -66.970057765470642, 18.145292917007339 ], [ -66.970057765470642, 18.096263893307878 ], [ -66.99719116478866, 18.096263892408558 ] ] ] } }
+]
+}

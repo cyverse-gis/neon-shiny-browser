@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D15_ONAQ_C1_P1_v2",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D15", "domainName": "Great Basin", "siteName": "Onaqui NEON", "siteID": "ONAQ", "siteType": "Core", "sampleType": "Terrestrial", "priority": 1, "version": 2, "flightbxID": "D15_ONAQ_C1_P1_v2" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -112.568835345218531, 40.140942417313113 ], [ -112.568835345218531, 40.240522860302917 ], [ -112.411077079749361, 40.240522860302917 ], [ -112.411077079749361, 40.140942417313113 ], [ -112.568835345218531, 40.140942417313113 ] ] ] } }
+]
+}

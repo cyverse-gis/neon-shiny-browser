@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D07_GRSM_R1_P2_all_v1_duplicate1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D07", "domainName": "Appalachians & Cumberland Plateau", "siteName": "Great Smoky Mountains National Park NEON", "siteID": "GRSM", "siteType": "Gradient", "sampleType": "Terrestrial", "priority": 2, "version": 1, "flightbxID": "D07_GRSM_R1_P2_all_v1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -83.50875896761562, 35.562169040730225 ], [ -83.585433778756283, 35.562143663468362 ], [ -83.609045963830113, 35.580084798543282 ], [ -83.613653469314158, 35.6280570595668 ], [ -83.533952682750339, 35.6280570595668 ], [ -83.533952232186607, 35.628064129190989 ], [ -83.50875896761562, 35.628060173942686 ], [ -83.50875896761562, 35.562169040730225 ] ] ] } }
+]
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D07_MLBS_R1_P1_v5",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D07", "domainName": "Appalachians & Cumberland Plateau", "siteName": "Mountain Lake Biological Station NEON", "siteID": "MLBS", "siteType": "Gradient", "sampleType": "Terrestrial", "priority": 1, "version": 5, "flightbxID": "D07_MLBS_R1_P1_v5" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -80.595807076152596, 37.328881625543886 ], [ -80.595804320608977, 37.434787158146321 ], [ -80.468312529156663, 37.434815760401477 ], [ -80.468342055022561, 37.328910402268832 ], [ -80.595807076152596, 37.328881625543886 ] ] ] } }
+]
+}

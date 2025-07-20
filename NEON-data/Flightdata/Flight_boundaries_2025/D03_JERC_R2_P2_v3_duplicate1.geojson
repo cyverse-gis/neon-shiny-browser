@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D03_JERC_R2_P2_v3_duplicate1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D03", "domainName": "Southeast", "siteName": "The Jones Center At Ichauway NEON", "siteID": "JERC", "siteType": "Gradient", "sampleType": "Terrestrial", "priority": 2, "version": 3, "flightbxID": "D03_JERC_R2_P2_v3" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -84.410356899541625, 31.326502669305171 ], [ -84.410310810736064, 31.2614256967139 ], [ -84.359555043243461, 31.261533927345226 ], [ -84.359468502625646, 31.228677277383724 ], [ -84.392740520213181, 31.164465794608475 ], [ -84.418437163430724, 31.164405353413542 ], [ -84.419157234467605, 31.261404778324504 ], [ -84.419637150523442, 31.326497660942721 ], [ -84.410356899541625, 31.326502669305171 ] ] ] } }
+]
+}

@@ -244,7 +244,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                          pickerInput(inputId = "fieldsite_domain", label = "Domains:", choices = domains$Domain, selected = domains$Domain, multiple = TRUE,
                                                                                      options = list(`actions-box` = TRUE, `live-search` = TRUE, title = "Select Domains to include:", `selected-text-format`= "static"))),
                                                         conditionalPanel("input.map_features == 'flightpath'",
-                                                                         selectInput(inputId = "flightpath_year", label = "Year", choices = c(2016, 2017), selected = c(2016, 2017), multiple = TRUE))
+                                                                         selectInput(inputId = "flightpath_year", label = "Year", choices = c(2016, 2017, 2025), selected = c(2025), multiple = TRUE))
                                                ),
                                                #### — SPATIAL DATA MANAGEMENT ####
                                                tabPanel(title = tags$h5("Spatial Data"), value = "spatial_data",

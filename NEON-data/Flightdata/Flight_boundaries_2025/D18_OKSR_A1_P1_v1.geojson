@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D18_OKSR_A1_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D18", "domainName": "Tundra", "siteName": "Oksrukuyik Creek NEON", "siteID": "OKSR", "siteType": "Core", "sampleType": "Aquatic", "priority": 1, "version": 1, "flightbxID": "D18_OKSR_A1_P1_v1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -149.106416513299337, 68.681996033172936 ], [ -149.108491329738285, 68.553458077635355 ], [ -149.267513449038717, 68.553725578509045 ], [ -149.267513176542082, 68.682264633026534 ], [ -149.106416513299337, 68.681996033172936 ] ] ] } }
+]
+}

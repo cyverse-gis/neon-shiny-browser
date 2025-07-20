@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D17_SJER_C1_P1_v2",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D17", "domainName": "Pacific Southwest", "siteName": "San Joaquin Experimental Range NEON", "siteID": "SJER", "siteType": "Core", "sampleType": "Terrestrial", "priority": 1, "version": 2, "flightbxID": "D17_SJER_C1_P1_v2" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -119.788522180282257, 37.045309507636716 ], [ -119.788522180282257, 37.135416092127059 ], [ -119.676037818723671, 37.135416092127059 ], [ -119.676037818723671, 37.045309507636716 ], [ -119.788522180282257, 37.045309507636716 ] ] ] } }
+]
+}

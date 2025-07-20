@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D19_HEAL_R3_P1_v1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D19", "domainName": "Taiga", "siteName": "Healy NEON", "siteID": "HEAL", "siteType": "Gradient", "sampleType": "Terrestrial", "priority": 1, "version": 1, "flightbxID": "D19_HEAL_R3_P1_v1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -149.315054476476405, 63.829805891507647 ], [ -149.315054476476405, 63.930147007534458 ], [ -149.111625523202207, 63.930147007534458 ], [ -149.111625523202207, 63.829805891507647 ], [ -149.315054476476405, 63.829805891507647 ] ] ] } }
+]
+}

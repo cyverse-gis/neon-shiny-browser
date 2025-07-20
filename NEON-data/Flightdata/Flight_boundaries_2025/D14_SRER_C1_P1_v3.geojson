@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D14_SRER_C1_P1_v3",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D14", "domainName": "Desert Southwest", "siteName": "Santa Rita Experimental Range NEON", "siteID": "SRER", "siteType": "Core", "sampleType": "Terrestrial", "priority": 1, "version": 3, "flightbxID": "D14_SRER_C1_P1_v3" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -110.821529682815367, 31.921748534482163 ], [ -110.821784127232604, 31.789557655290366 ], [ -110.952483827437788, 31.789717800579638 ], [ -110.977386047604739, 31.811804444210338 ], [ -110.977434062772716, 31.811817436814408 ], [ -110.978219284789702, 31.811817436814408 ], [ -110.978219284789702, 31.854742912472716 ], [ -110.930058993886121, 31.854742912472716 ], [ -110.930058993886121, 31.921748534482163 ], [ -110.821529682815367, 31.921748534482163 ] ] ] } }
+]
+}

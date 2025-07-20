@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D16_WREF_C1_P2_v2_duplicate1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D16", "domainName": "Pacific Northwest", "siteName": "Wind River Experimental Forest NEON", "siteID": "WREF", "siteType": "Core", "sampleType": "Terrestrial", "priority": 2, "version": 2, "flightbxID": "D16_WREF_C1_P2_v2" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -122.049914798943007, 45.786391990438574 ], [ -122.092722363594078, 45.786318199606001 ], [ -122.092802885003834, 45.89152501753415 ], [ -122.049914792647712, 45.891544570742326 ], [ -122.049914798943007, 45.786391990438574 ] ] ] } }
+]
+}

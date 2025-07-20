@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D10_STER_R1_P1",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D10", "domainName": "Central Plains", "siteName": "North Sterling NEON", "siteID": "STER", "siteType": "Gradient", "sampleType": "Terrestrial", "priority": 1, "version": 0, "flightbxID": "D10_STER_R1_P1" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -103.101547537583656, 40.434968683764453 ], [ -103.101547537583656, 40.524999221006169 ], [ -102.983666592201928, 40.524999221006169 ], [ -102.983666592201928, 40.434968683764453 ], [ -103.101547537583656, 40.434968683764453 ] ] ] } }
+]
+}

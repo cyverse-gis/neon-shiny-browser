@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "D16_WREF_C1_P1_v2",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "domain": "D16", "domainName": "Pacific Northwest", "siteName": "Martha Creek NEON", "siteID": "MART", "siteType": "Core", "sampleType": "Aquatic", "priority": 1, "version": 2, "flightbxID": "D16_WREF_C1_P1_v2" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ -121.921366535297977, 45.786517168023011 ], [ -122.049914798943007, 45.786391990438574 ], [ -122.049914792647712, 45.891544570742326 ], [ -121.925995499667977, 45.89151061118514 ], [ -121.925995499667977, 45.89152501753415 ], [ -121.921260305673286, 45.891528247923475 ], [ -121.921260715767289, 45.82228593297765 ], [ -121.921287856613048, 45.822285914991085 ], [ -121.921366535297977, 45.786517168023011 ] ] ] } }
+]
+}
