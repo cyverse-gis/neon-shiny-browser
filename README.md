@@ -8,9 +8,9 @@ A multifunctional R Shiny map and data API download tool. Designed to make NEON 
 
 The app can be run in RStudio or RStudio-Server (online).
 
-## Version 1.2 - Major Update 🎉
+## Version 1.1 - Major Update 🎉
 
-**Version 1.2** includes significant modernization updates:
+**Version 1.1** includes significant modernization updates:
 
 - ✅ **R 4.4+ Support**: Updated from R 3.6.3 to modern R versions
 - 🔐 **HTTPS Security**: All API calls now use secure HTTPS endpoints  
@@ -62,7 +62,7 @@ To install and run the tool:
 
 ```bash
 $ cd
-$ git clone -b v1.2 https://github.com/cyverse-gis/neon-shiny-browser
+$ git clone -b v1.1 https://github.com/cyverse-gis/neon-shiny-browser
 $ cd ~/neon-shiny-browser
 $ R
 ```
@@ -142,14 +142,14 @@ To build the Docker container locally:
 
 ```bash
 cd
-git clone -b v1.2 https://github.com/cyverse-gis/neon-shiny-browser
+git clone -b v1.1 https://github.com/cyverse-gis/neon-shiny-browser
 cd neon-shiny-browser
 sudo docker build -t shiny-neon-browser:latest .
 ```
 
 ## Testing
 
-### Run Test Suite (New in v1.2!)
+### Run Test Suite (New in v1.1!)
 
 To run the comprehensive test suite:
 
@@ -220,7 +220,7 @@ source("Install.R")
 
 **Note: [Mac OS X](https://cran.r-project.org/bin/macosx/tools/) currently requires that `gfortran` and `clang` be installed in addition to the latest version of R (> v4.0)** 
 
-## What's New in v1.2
+## What's New in v1.1
 
 ### Major Technical Updates
 
@@ -263,7 +263,7 @@ All existing functionality is preserved:
 ## Documentation
 
 - **`TESTING.md`**: Comprehensive testing guide
-- **`UPDATES_SUMMARY.md`**: Detailed changelog for v1.2
+- **`UPDATES_SUMMARY.md`**: Detailed changelog for v1.1
 - **`CLAUDE.md`**: Development and deployment instructions
 
 ## Contributing

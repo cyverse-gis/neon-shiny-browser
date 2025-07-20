@@ -1,5 +1,8 @@
 # Download all packages if they haven't been already
-source("Install.R")
+# Skip installation in Docker environment where packages are pre-installed
+if (Sys.getenv("DOCKER_ENV") != "true") {
+  source("Install.R")
+}
 library(shiny)
 library(DT)
 library(shinythemes)
