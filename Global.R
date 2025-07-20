@@ -109,6 +109,18 @@ FieldSite_point$Habitat <- FieldSite_extra$Site.Type
 FieldSite_point$`Habitat Specific` <- FieldSite_extra$Site.Subtype
 FieldSite_point$Host <- FieldSite_extra$Site.Host
 
+# Check if stateCode exists, if not create it from stateName or set a default
+if (!"stateCode" %in% names(FieldSite_point)) {
+  message("WARNING: stateCode not found in FieldSite_point, creating from available data...")
+  if ("stateName" %in% names(FieldSite_point)) {
+    # Create state codes from state names if available
+    FieldSite_point$stateCode <- substr(FieldSite_point$stateName, 1, 2)
+  } else {
+    # Default to empty if no state information available
+    FieldSite_point$stateCode <- rep("", nrow(FieldSite_point))
+  }
+}
+
 # List of field site abbreviations
 message("DEBUG: Creating FieldSite_abbs...")
 message(sprintf("  - FieldSite_point$siteCode class: %s", class(FieldSite_point$siteCode)[1]))
@@ -257,6 +269,18 @@ if (exists("domains") && "Domain" %in% names(domains) && is.function(domains$Dom
   # Fix the domains$Domain if it's a function
   domains$Domain <<- as.character(domains$Domain)
   message("  Fixed: converted domains$Domain to character")
+}
+
+# Check the unique() calls on stateCode
+message("  - Checking FieldSite_point$stateCode for UI usage:")
+if ("stateCode" %in% names(FieldSite_point)) {
+  message(sprintf("    - FieldSite_point$stateCode class: %s, length: %d", 
+                  class(FieldSite_point$stateCode)[1], 
+                  length(FieldSite_point$stateCode)))
+  message(sprintf("    - unique(FieldSite_point$stateCode) length: %d", 
+                  length(unique(FieldSite_point$stateCode))))
+} else {
+  message("    - ERROR: stateCode column not found in FieldSite_point!")
 }
 baseplot_text <- "30/site: Distributed Base Plots support a variety of plant productivity, plant diversity, soil, biogeochemistry, microbe and beetle sampling. Distributed Base Plots are 40m x 40m."
 birdgrid_text <- "5-15/site: Bird Grids consist of 9 sampling points within a 500m x 500m square. Each point is 250m apart. Where possible, Bird Grids are colocated with Distributed Base Plots by placing the Bird Grid center in close proximity to the center of the Base Plot. At smaller sites, a single point count is done at the south-west corner of the Distributed Base Plot."
