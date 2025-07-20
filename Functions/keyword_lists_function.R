@@ -1,11 +1,14 @@
 keyword_lists <- function(list) {
+  message("DEBUG: keyword_lists function called...")
   .NEON_keywords <<- new.env()
   
   # Check if NEONproducts_product exists and has data
   if (!exists("NEONproducts_product") || is.null(NEONproducts_product) || nrow(NEONproducts_product) == 0) {
-    warning("NEONproducts_product not loaded yet, skipping keyword list generation")
+    message("DEBUG: NEONproducts_product not loaded yet, skipping keyword list generation")
     return(NULL)
   }
+  
+  message(sprintf("DEBUG: Processing keywords for %d sites", length(list)))
   
   for (site in list) {
     # Safe filtering with validation

@@ -1,6 +1,13 @@
 # Shiny server
 function(input, output, session) {
   
+  message("DEBUG: Server.R starting...")
+  message("DEBUG: Checking reactive dependencies are available:")
+  message(sprintf("  - FieldSite_point exists: %s", exists("FieldSite_point")))
+  message(sprintf("  - FieldSite_poly exists: %s", exists("FieldSite_poly")))
+  message(sprintf("  - flight_data exists: %s", exists("flight_data")))
+  message(sprintf("  - domains exists: %s", exists("domains")))
+  
   # Helper function to safely get product name by code
   safe_product_name <- function(product_code) {
     tryCatch({
@@ -52,6 +59,7 @@ function(input, output, session) {
   }
   
   # Initialization
+  message("DEBUG: Server.R initialization section starting...")
   if (dir_created == TRUE) {
     delay(ms = 5000, showNotification(ui = "'~/NEON_Downloads' folder created outside the directory containing this app. All downloads will go to the 'NEON_Downloads' folder.", duration = NULL, type = "message"))
   } else {
@@ -104,11 +112,34 @@ function(input, output, session) {
   })
   #### — Filter Map Features ####
   #### —— Filtered Features ####
-  Domain_IDs <- reactive(domains$DomainID[domains$Domain %in% input$fieldsite_domain])
-  Field_sites_point_filtered <- reactive(FieldSite_point %>% filter(siteType %in% input$fieldsite_type) %>%
-                                           filter(domainCode %in% Domain_IDs()) %>%
-                                           filter(Habitat %in% input$fieldsite_habitat) %>%
-                                           filter(stateCode %in% input$fieldsite_state))
+  message("DEBUG: Setting up reactive expressions...")
+  
+  Domain_IDs <- reactive({
+    message("DEBUG: Domain_IDs reactive evaluating...")
+    tryCatch({
+      result <- domains$DomainID[domains$Domain %in% input$fieldsite_domain]
+      message(sprintf("DEBUG: Domain_IDs result length: %d", length(result)))
+      return(result)
+    }, error = function(e) {
+      message(sprintf("ERROR in Domain_IDs: %s", e$message))
+      return(numeric(0))
+    })
+  })
+  
+  Field_sites_point_filtered <- reactive({
+    message("DEBUG: Field_sites_point_filtered reactive evaluating...")
+    tryCatch({
+      result <- FieldSite_point %>% filter(siteType %in% input$fieldsite_type) %>%
+                                    filter(domainCode %in% Domain_IDs()) %>%
+                                    filter(Habitat %in% input$fieldsite_habitat) %>%
+                                    filter(stateCode %in% input$fieldsite_state)
+      message(sprintf("DEBUG: Field_sites_point_filtered result: %d rows", nrow(result)))
+      return(result)
+    }, error = function(e) {
+      message(sprintf("ERROR in Field_sites_point_filtered: %s", e$message))
+      return(data.frame())
+    })
+  })
   Field_sites_poly_filtered <- reactive(FieldSite_poly %>% filter(code %in% Field_sites_point_filtered()$siteCode))
   Domain_included <- reactive(domain_data %>% filter(DomainName %in% input$fieldsite_domain))
   Domain_unincluded <- reactive(domain_data %>% filter(!(DomainName %in% input$fieldsite_domain)))
@@ -684,19 +715,24 @@ function(input, output, session) {
   NEONproducts_product <<- NULL  # Initialize as NULL
   
   # Load products initially without token
+  message("DEBUG: About to load NEON products...")
   isolate({
     tryCatch({
-      message("Loading NEON products...")
+      message("DEBUG: Loading NEON products...")
       NEONproducts_product <<- nneo_products()
+      message(sprintf("DEBUG: NEONproducts_product loaded with %d rows", if(is.data.frame(NEONproducts_product)) nrow(NEONproducts_product) else 0))
       
       # Generate keyword lists after products are loaded
       if (!is.null(NEONproducts_product) && nrow(NEONproducts_product) > 0) {
+        message("DEBUG: Generating keyword lists...")
         keyword_lists(list = FieldSite_abbs)
         message("✓ NEON products loaded successfully")
+      } else {
+        message("DEBUG: NEONproducts_product is empty or null")
       }
     }, error = function(e) {
       # Log error but don't stop the app
-      message(sprintf("Error loading NEON products: %s", e$message))
+      message(sprintf("ERROR loading NEON products: %s", e$message))
       NEONproducts_product <<- data.frame()  # Set to empty data frame
     })
   })

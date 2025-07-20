@@ -161,6 +161,14 @@ if (exists("flight_data")) {
   }
 }
 
+message("DEBUG: Global.R initialization complete - about to start Shiny server")
+message("DEBUG: Checking key variables before server start:")
+message(sprintf("  - FieldSite_point: %s with %d rows", class(FieldSite_point)[1], if(exists("FieldSite_point") && is.data.frame(FieldSite_point)) nrow(FieldSite_point) else 0))
+message(sprintf("  - FieldSite_poly: %s with %d rows", class(FieldSite_poly)[1], if(exists("FieldSite_poly") && is.data.frame(FieldSite_poly)) nrow(FieldSite_poly) else 0))
+message(sprintf("  - FieldSite_plots_tes: %s with %d rows", class(FieldSite_plots_tes)[1], if(exists("FieldSite_plots_tes") && is.data.frame(FieldSite_plots_tes)) nrow(FieldSite_plots_tes) else 0))
+message(sprintf("  - domains: %s with %d rows", class(domains)[1], if(exists("domains") && is.data.frame(domains)) nrow(domains) else 0))
+message(sprintf("  - flight_data: %s with %d rows", class(flight_data)[1], if(exists("flight_data") && is.data.frame(flight_data)) nrow(flight_data) else 0))
+
 #### Miscellaneous Variables ####
 
 NEON_datatypes <- c("Airborne Observation Platform (AOP)", "Aquatic Instrument System (AIS)", "Aquatic Observation System (AOS)","Terrestrial Instrument System (TIS)", "Terrestrial Observation System (TOS)")
