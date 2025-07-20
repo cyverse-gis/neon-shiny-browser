@@ -1,6 +1,13 @@
 # Modern Spatial Data Loading for NEON Shiny Browser
 # This replaces the old manual file loading with automated cache management
 
+# Load required libraries
+suppressMessages(library(sf))
+suppressMessages(library(jsonlite))
+
+# Define null-coalescing operator
+`%||%` <- function(x, y) if (is.null(x)) y else x
+
 source('Functions/spatial_data_updater.R')
 
 #' Initialize all spatial data for the NEON Shiny Browser
@@ -111,8 +118,16 @@ create_legacy_flight_data <- function() {
       stringsAsFactors = FALSE
     )
     
-    # Combine with geometry
-    flight_data <<- data.frame(flight_info, geometry = flight_boundaries_new$geometry)
+    # Combine with geometry - create sf object properly
+    if (inherits(flight_boundaries_new, "sf")) {
+      # If flight_boundaries_new is an sf object, use st_geometry
+      flight_data <<- flight_info
+      flight_data$geometry <<- st_geometry(flight_boundaries_new)
+      flight_data <<- st_sf(flight_data)
+    } else {
+      # Fallback to simple data.frame if no geometry
+      flight_data <<- flight_info
+    }
     
     message("✓ Legacy flight_data structure created for backward compatibility")
     
@@ -135,7 +150,10 @@ load_legacy_flight_data <- function() {
       flight_filenames_all_2016 <- Sys.glob('NEON-data/Flightdata/Flight_boundaries_2016/D*')
       flight_filenames_2016 <- Sys.glob('NEON-data/Flightdata/Flight_boundaries_2016/D*.geojson')
       
-      if (exists("flight_data")) {
+      # Source the flight function if it exists
+      if (file.exists("Functions/flight_function.R")) {
+        source("Functions/flight_function.R")
+        
         flight_data(flightlist_info = flight_filenames_all_2016, 
                    flightlist_geo = flight_filenames_2016, 
                    year = "2016", name = "flight_data_2016")
