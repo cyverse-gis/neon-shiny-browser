@@ -6,8 +6,12 @@ After successful spatial data loading, the app was encountering the error:
 Error in as.character: cannot coerce type 'closure' to vector of type 'character'
 ```
 
-## Root Cause
-The error was caused by the missing definition of the null-coalescing operator (`%||%`) in the scope where it was being used. The `create_legacy_flight_data()` function in `load_spatial_data.R` was using the `%||%` operator, but the operator was only defined in `spatial_data_updater.R` and wasn't available in all execution contexts.
+## Root Causes
+The error had multiple contributing factors:
+
+1. **Missing null-coalescing operator**: The `%||%` operator was not available in all execution contexts where it was being used
+2. **Reactive context issue**: The Server.R was trying to access reactive inputs during app initialization in an `observe()` block, causing timing issues
+3. **Geometry handling**: Improper handling of sf geometry objects in the flight data conversion
 
 ## Solution
 Fixed by adding the null-coalescing operator definition directly to `load_spatial_data.R`:
@@ -34,6 +38,13 @@ Fixed by adding the null-coalescing operator definition directly to `load_spatia
 - Fixed the `load_legacy_flight_data()` function to properly source the flight function
 - Changed from checking for variable existence to checking for file existence
 
+### 4. Fixed Reactive Context Issues
+**File**: `Server.R`
+- Replaced problematic `observe()` block with `isolate()` for initial product loading
+- Added `observeEvent()` for handling API token updates
+- Added comprehensive error handling with `tryCatch()`
+- Prevents reactive context access during app initialization
+
 ## Testing
 The fix addresses the coercion error that was occurring during spatial data initialization. The spatial data system should now:
 
@@ -43,7 +54,8 @@ The fix addresses the coercion error that was occurring during spatial data init
 4. ✅ Complete initialization without runtime errors
 
 ## Files Modified
-- `Functions/load_spatial_data.R` - Primary fixes
+- `Functions/load_spatial_data.R` - Spatial data handling fixes
+- `Server.R` - Reactive context and initialization fixes
 - `test_null_coalescing_fix.R` - Test script created for validation
 
 ## Next Steps

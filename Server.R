@@ -615,20 +615,41 @@ function(input, output, session) {
   # Load products initially without token, update reactively when token changes
   NEONproducts_product <<- NULL  # Initialize as NULL
   
-  # Load products initially and generate keyword lists
-  observe({
-    # Load products with or without token
-    if (!is.null(input$neon_api_token) && nchar(input$neon_api_token) > 0) {
-      NEONproducts_product <<- nneo_products(token = input$neon_api_token)
-    } else {
+  # Load products initially without token
+  isolate({
+    tryCatch({
+      message("Loading NEON products...")
       NEONproducts_product <<- nneo_products()
+      
+      # Generate keyword lists after products are loaded
+      if (!is.null(NEONproducts_product) && nrow(NEONproducts_product) > 0) {
+        keyword_lists(list = FieldSite_abbs)
+        message("✓ NEON products loaded successfully")
+      }
+    }, error = function(e) {
+      # Log error but don't stop the app
+      message(sprintf("Error loading NEON products: %s", e$message))
+      NEONproducts_product <<- data.frame()  # Set to empty data frame
+    })
+  })
+  
+  # Update products when API token changes
+  observeEvent(input$neon_api_token, {
+    if (!is.null(input$neon_api_token) && nchar(input$neon_api_token) > 0) {
+      tryCatch({
+        message("Updating NEON products with API token...")
+        NEONproducts_product <<- nneo_products(token = input$neon_api_token)
+        
+        # Regenerate keyword lists
+        if (!is.null(NEONproducts_product) && nrow(NEONproducts_product) > 0) {
+          keyword_lists(list = FieldSite_abbs)
+          message("✓ NEON products updated with token")
+        }
+      }, error = function(e) {
+        message(sprintf("Error updating NEON products with token: %s", e$message))
+      })
     }
-    
-    # Generate keyword lists after products are loaded
-    if (!is.null(NEONproducts_product) && nrow(NEONproducts_product) > 0) {
-      keyword_lists(list = FieldSite_abbs)
-    }
-  }, priority = 100)  # High priority to ensure this runs first
+  }, ignoreInit = TRUE)
   
   NEONproducts_site <- reactive({
     if (!is.null(NEONproducts_product) && nrow(NEONproducts_product) > 0) {
