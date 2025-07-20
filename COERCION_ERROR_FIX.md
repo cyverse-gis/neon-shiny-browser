@@ -54,7 +54,15 @@ Fixed by adding the null-coalescing operator definition directly to `load_spatia
 - Added explicit variable initialization in Global.R to prevent function conflicts
 - Added debugging to verify proper data structure after spatial loading
 
-### 6. Fixed Unsafe List Column Access
+### 6. Fixed Unsafe Reactive Indexing (CRITICAL FIX)
+**File**: `Server.R`
+- Added `safe_product_name()` helper function for safe product name lookup
+- Fixed unsafe indexing: `NEONproducts_product$productName[NEONproducts_product$productCode == Product_ID_regular()]`
+- Fixed unsafe domain lookup: `domains[Flight_data_filtered()$DomainID,2]`
+- Replaced direct reactive indexing with defensive programming patterns
+- Prevents coercion errors when reactive expressions evaluate during app startup
+
+### 7. Fixed Unsafe List Column Access
 **File**: `Server.R`
 - Added `safe_siteCodes_access()` helper function for safe nested list access
 - Fixed all instances of `$siteCodes[[1]]$...` patterns with proper validation

@@ -1,6 +1,27 @@
 # Shiny server
 function(input, output, session) {
   
+  # Helper function to safely get product name by code
+  safe_product_name <- function(product_code) {
+    tryCatch({
+      if (is.null(NEONproducts_product) || !is.data.frame(NEONproducts_product) || 
+          is.null(product_code) || is.na(product_code) || product_code == "") {
+        return("Unknown Product")
+      }
+      
+      matches <- NEONproducts_product$productCode == product_code
+      if (any(matches, na.rm = TRUE)) {
+        product_name <- NEONproducts_product$productName[matches]
+        return(if(length(product_name) > 0 && !is.na(product_name[1])) product_name[1] else "Unknown Product")
+      } else {
+        return("Unknown Product")
+      }
+    }, error = function(e) {
+      message(sprintf("Error in safe_product_name: %s", e$message))
+      return("Unknown Product")
+    })
+  }
+  
   # Helper function to safely access siteCodes data
   safe_siteCodes_access <- function(product_info, column_name = "siteCode", filter_input = NULL) {
     tryCatch({
@@ -163,7 +184,16 @@ function(input, output, session) {
                                    "<br><b>Site: </b><br>",
                                    Flight_data_filtered()$Site,
                                    "<br><b>Domain: </b>",
-                                   domains[Flight_data_filtered()$DomainID,2],
+                                   {
+                                     # Safe domain name lookup
+                                     domain_ids <- Flight_data_filtered()$DomainID
+                                     if (length(domain_ids) > 0 && !is.null(domain_ids) && all(!is.na(domain_ids))) {
+                                       domain_match <- match(domain_ids, domains$DomainID)
+                                       ifelse(!is.na(domain_match), domains$Domain[domain_match], "Unknown")
+                                     } else {
+                                       "Unknown"
+                                     }
+                                   },
                                    "<br><b>Core/Relocatable: </b>",
                                    Flight_data_filtered()$SiteType,
                                    "<br><b>Flight Priority: </b>",
@@ -1496,7 +1526,7 @@ function(input, output, session) {
                          unzipEddy(site = Field_Site_regular(), path = folder)
                        })
                        size <- sum(file.info(list.files(paste0("../NEON_Downloads/", folder), all.files = TRUE, recursive = TRUE, full.names = T))$size)
-                       write_downloadSummary(method = "Regular", dpID = Product_ID_regular(), dpName = NEONproducts_product$productName[NEONproducts_product$productCode == Product_ID_regular()], site = Field_Site_regular(), dates = download_dates(), package = Package_type_regular(), size = utils:::format.object_size(x = size, units = "auto"), path = paste0("NEON_Downloads/", folder))
+                       write_downloadSummary(method = "Regular", dpID = Product_ID_regular(), dpName = safe_product_name(Product_ID_regular()), site = Field_Site_regular(), dates = download_dates(), package = Package_type_regular(), size = utils:::format.object_size(x = size, units = "auto"), path = paste0("NEON_Downloads/", folder))
                        sendSweetAlert(session, title = "Download Complete", text = paste0("Check the '~/NEON_Downloads' directory for a folder titled ", folder, "."), type = 'success')
                        enable(id = "download_NEON_regular")
                      } else {
@@ -1513,7 +1543,7 @@ function(input, output, session) {
                          }
                          unlink(x = paste0("../NEON_Downloads/", folder, "/stackedFiles/"), recursive = T)
                          size <- sum(file.info(list.files(paste0("../NEON_Downloads/", folder), all.files = TRUE, recursive = TRUE, full.names = T))$size)
-                         write_downloadSummary(method = "Regular", dpID = Product_ID_regular(), dpName = NEONproducts_product$productName[NEONproducts_product$productCode == Product_ID_regular()], site = Field_Site_regular(), dates = download_dates(), package = Package_type_regular(), size = utils:::format.object_size(x = size, units = "auto"), path = paste0("NEON_Downloads/", folder))
+                         write_downloadSummary(method = "Regular", dpID = Product_ID_regular(), dpName = safe_product_name(Product_ID_regular()), site = Field_Site_regular(), dates = download_dates(), package = Package_type_regular(), size = utils:::format.object_size(x = size, units = "auto"), path = paste0("NEON_Downloads/", folder))
                          sendSweetAlert(session, title = "Download Complete", text = paste0("Check the 'NEON_Downloads' directory for a folder titled ", folder, "."), type = 'success')
                          enable(id = "download_NEON_regular")
                        }
@@ -1641,7 +1671,7 @@ function(input, output, session) {
                    } else {
                      file.rename(from = paste0("../NEON_Downloads/", Product_ID_AOP()), to = paste0("../NEON_Downloads/", folder))
                      size <- sum(file.info(list.files(paste0("../NEON_Downloads/", folder), all.files = TRUE, recursive = TRUE, full.names = T))$size) 
-                     write_downloadSummary(method = "AOP", dpID = Product_ID_AOP(), dpName = NEONproducts_product$productName[NEONproducts_product$productCode == Product_ID_AOP()], site = Field_Site_AOP(), dates = Year_AOP(), package = "NA", size = utils:::format.object_size(size, units = "auto"), path = paste0("NEON_Downloads/", folder))
+                     write_downloadSummary(method = "AOP", dpID = Product_ID_AOP(), dpName = safe_product_name(Product_ID_AOP()), site = Field_Site_AOP(), dates = Year_AOP(), package = "NA", size = utils:::format.object_size(size, units = "auto"), path = paste0("NEON_Downloads/", folder))
                      enable(id = "download_NEON_AOP")
                      sendSweetAlert(session, title = "Download Complete", text = paste0("Check the 'NEON Download' directory for a folder titled ", folder, "."), type = 'success')
                    }
