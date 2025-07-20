@@ -859,21 +859,51 @@ function(input, output, session) {
   
   ####—— 1b: By Product####
   # Variables
-  # list: getting data table with products and IDs
-  # Filter by keywords, type, theme
-  keywords <- NULL
-  for (i in 1:length(NEONproducts_product$keywords)) {
-    keywords <- c(keywords, NEONproducts_product$keywords[[i]])
-  }
-  keywords <- unique(keywords)
-  keywords <- sort(keywords)
-  output$ui_selectkeywords_product <- renderUI({
-    selectInput(inputId = "NEONproductkeywords_product", label = "Keywords", choices = keywords, multiple = TRUE)
+  # Reactive expression for keywords from all products
+  all_keywords <- reactive({
+    if (!is.null(NEONproducts_product) && nrow(NEONproducts_product) > 0) {
+      keywords <- NULL
+      for (i in seq_len(nrow(NEONproducts_product))) {
+        if (i <= length(NEONproducts_product$keywords) && !is.null(NEONproducts_product$keywords[[i]])) {
+          keywords <- c(keywords, NEONproducts_product$keywords[[i]])
+        }
+      }
+      keywords <- unique(keywords)
+      keywords <- sort(keywords)
+      return(keywords)
+    } else {
+      return(character(0))
+    }
   })
-  NEONproduct_products_filter <- NEONproducts_product[c("productName", "productCode", "keywords", "productScienceTeam", "themes")]
-  names(NEONproduct_products_filter) <- c('Product Name', 'Product ID', 'keywords', "producttype", "themes")
-  NEONproduct_products_filter <- NEONproduct_products_filter[order(NEONproduct_products_filter$`Product Name`),]
-  keyword_filters_product <- reactive(filter_keyword(column = NEONproduct_products_filter$keywords, keywords = input$NEONproductkeywords_product) & filter_keyword(column = NEONproduct_products_filter$themes, keywords = input$selectproducttheme_product))
+  
+  output$ui_selectkeywords_product <- renderUI({
+    selectInput(inputId = "NEONproductkeywords_product", label = "Keywords", choices = all_keywords(), multiple = TRUE)
+  })
+  
+  # Reactive expression for filtered products data
+  NEONproduct_products_filter <- reactive({
+    if (!is.null(NEONproducts_product) && nrow(NEONproducts_product) > 0) {
+      df <- NEONproducts_product[c("productName", "productCode", "keywords", "productScienceTeam", "themes")]
+      names(df) <- c('Product Name', 'Product ID', 'keywords', "producttype", "themes")
+      df <- df[order(df$`Product Name`),]
+      return(df)
+    } else {
+      # Return empty data frame with correct column names
+      df <- data.frame(matrix(ncol = 5, nrow = 0))
+      names(df) <- c('Product Name', 'Product ID', 'keywords', "producttype", "themes")
+      return(df)
+    }
+  })
+  
+  keyword_filters_product <- reactive({
+    if (nrow(NEONproduct_products_filter()) > 0) {
+      filter_keyword(column = NEONproduct_products_filter()$keywords, keywords = input$NEONproductkeywords_product) & 
+      filter_keyword(column = NEONproduct_products_filter()$themes, keywords = input$selectproducttheme_product)
+    } else {
+      logical(0)
+    }
+  })
+  
   datatype_filters_product <- reactive({
     if (is.null(input$selectproducttype_product)) {
       NEON_datatypes
@@ -881,7 +911,14 @@ function(input, output, session) {
       input$selectproducttype_product
     }
   })
-  NEONproductlist_product <- reactive(NEONproduct_products_filter[keyword_filters_product(),] %>% filter(`producttype` %in% datatype_filters_product()))
+  
+  NEONproductlist_product <- reactive({
+    if (nrow(NEONproduct_products_filter()) > 0 && length(keyword_filters_product()) > 0) {
+      NEONproduct_products_filter()[keyword_filters_product(),] %>% filter(`producttype` %in% datatype_filters_product())
+    } else {
+      NEONproduct_products_filter()  # Return empty data frame
+    }
+  })
   # Filters
   observe({
     if (input$showfilterinfo_product == TRUE) {
@@ -1325,7 +1362,13 @@ function(input, output, session) {
                  }
                })
   ####—— Download NEON data: AOP####
-  product_table <- reactive(NEONproducts_product[NEONproducts_product$productCode == Product_ID_AOP(),])
+  product_table <- reactive({
+    if (!is.null(NEONproducts_product) && nrow(NEONproducts_product) > 0) {
+      NEONproducts_product[NEONproducts_product$productCode == Product_ID_AOP(),]
+    } else {
+      data.frame()
+    }
+  })
   # Checking is data product is AOP
   is_AOP <- reactive(if (nrow(product_table()) != 0) {
     if (product_table()$productScienceTeamAbbr == "AOP") {
