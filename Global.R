@@ -123,19 +123,12 @@ FieldSite_Tes <- FieldSite_point$siteCode[FieldSite_point$Habitat %in% "Terrestr
 FieldSite_Aqu <- FieldSite_point$siteCode[FieldSite_point$Habitat %in% "Aquatic"]
 
 ## Retrieve polygon data for NEON Field Sites
-tryCatch({
-  # Try to get updated data from API first
-  message("Attempting to fetch field site polygons from NEON API...")
-  Fieldsite_poly_JSON <- fromJSON('http://guest:guest@128.196.38.73:9200/sites/_search?size=500', timeout = 10)
-  message("✓ Successfully fetched from API")
-}, error = function(e) {
-  # Fallback to local JSON file
-  message("API unavailable, using local Fieldsites.json...")
-  Fieldsite_poly_JSON <<- fromJSON('NEON-data/Fieldsites.json')
-  message(sprintf("Loaded %d of %d total field site records from local file", 
-                  length(Fieldsite_poly_JSON$hits$hits), 
-                  Fieldsite_poly_JSON$hits$total))
-})
+# Use local JSON file directly (API is unreliable)
+message("Loading field site polygons from local file...")
+Fieldsite_poly_JSON <- fromJSON('NEON-data/Fieldsites.json')
+message(sprintf("Loaded %d of %d total field site records from local file", 
+                length(Fieldsite_poly_JSON$hits$hits), 
+                Fieldsite_poly_JSON$hits$total))
 
 # Check if we have valid data
 if (length(Fieldsite_poly_JSON$hits$hits) == 0) {
