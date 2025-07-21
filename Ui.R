@@ -248,7 +248,6 @@ fluidPage(theme = shinytheme('cerulean'),
                                                ),
                                                #### — SPATIAL DATA MANAGEMENT ####
                                                tabPanel(title = tags$h5("Spatial Data"), value = "spatial_data",
-                                                        source('Functions/spatial_data_ui.R', local = TRUE),
                                                         spatial_data_management_UI()
                                                )
                                              )

@@ -58,6 +58,12 @@ function(input, output, session) {
     })
   }
   
+  # Initialize .NEON_keywords environment if it doesn't exist
+  if (!exists(".NEON_keywords")) {
+    .NEON_keywords <<- new.env()
+    message("DEBUG: Initialized .NEON_keywords environment")
+  }
+  
   # Initialization
   message("DEBUG: Server.R initialization section starting...")
   if (dir_created == TRUE) {
@@ -765,7 +771,13 @@ function(input, output, session) {
   # list: getting data frame of availability based on site code
   # Filter by keywords, type, theme
   output$ui_selectkeywords_site <- renderUI({
-    selectInput(inputId = "NEONproductkeywords_site", label = "Keywords", choices = get(x = input$NEONsite_site, envir = .NEON_keywords), multiple = TRUE)
+    req(input$NEONsite_site)  # Ensure input$NEONsite_site is not NULL
+    choices <- tryCatch({
+      get(x = input$NEONsite_site, envir = .NEON_keywords)
+    }, error = function(e) {
+      character(0)  # Return empty character vector on error
+    })
+    selectInput(inputId = "NEONproductkeywords_site", label = "Keywords", choices = choices, multiple = TRUE)
   })
   NEONproducts_site_filter <- reactive(as.data.frame(cbind("Product Name" = NEONproducts_site()$productName, "Product ID" = NEONproducts_site()$productCode, "keywords" = NEONproducts_site()$keywords, "producttype" = NEONproducts_site()$productScienceTeam, "themes" = NEONproducts_site()$themes))[order(NEONproducts_site()$productName),])
   keyword_filters_site <- reactive(filter_keyword(column = NEONproducts_site_filter()$keywords, keywords = input$NEONproductkeywords_site) & filter_keyword(column = NEONproducts_site_filter()$themes, keywords = input$selectproducttheme_site))
@@ -818,7 +830,13 @@ function(input, output, session) {
                                                         ), caption = HTML("<center>Click on a product to view it</center>"),
                                                         selection = list(mode = 'single', target = 'cell')))
   output$ui_selectkeywords_site2 <- renderUI({
-    selectInput(inputId = "NEONproductkeywords_site2", label = "Keywords", choices = get(x = input$NEONsite_site, envir = .NEON_keywords), multiple = TRUE)
+    req(input$NEONsite_site)  # Ensure input$NEONsite_site is not NULL
+    choices <- tryCatch({
+      get(x = input$NEONsite_site, envir = .NEON_keywords)
+    }, error = function(e) {
+      character(0)  # Return empty character vector on error
+    })
+    selectInput(inputId = "NEONproductkeywords_site2", label = "Keywords", choices = choices, multiple = TRUE)
   })
   observeEvent(input$NEONproductkeywords_site2, updateSelectInput(session, inputId = "NEONproductkeywords_site", selected = input$NEONproductkeywords_site2))
   observe({
@@ -1117,7 +1135,13 @@ function(input, output, session) {
                                                            ), caption = HTML("<center>Click on a product to view it</center>"),
                                                            selection = list(mode = 'single', target = 'cell')))
   output$ui_selectkeywords_product2 <- renderUI({
-    selectInput(inputId = "NEONproductkeywords_product2", label = "Keywords", choices = get(x = input$NEONsite_site, envir = .NEON_keywords), multiple = TRUE)
+    req(input$NEONsite_site)  # Ensure input$NEONsite_site is not NULL
+    choices <- tryCatch({
+      get(x = input$NEONsite_site, envir = .NEON_keywords)
+    }, error = function(e) {
+      character(0)  # Return empty character vector on error
+    })
+    selectInput(inputId = "NEONproductkeywords_product2", label = "Keywords", choices = choices, multiple = TRUE)
   })
   observeEvent(input$NEONproductkeywords_product2, updateSelectInput(session, inputId = "NEONproductkeywords_product", selected = input$NEONproductkeywords_product2))
   observe({

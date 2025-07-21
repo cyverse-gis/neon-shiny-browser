@@ -23,6 +23,7 @@ source('Functions/flight_function.R')
 source('Functions/filter_keyword_function.R')
 source('Functions/filter_site_function.R')
 source('Functions/keyword_lists_function.R')
+source('Functions/spatial_data_ui.R')
 
 # Source functions that require additional packages only if available
 tryCatch(source('Functions/getProductSize_function.R'), error = function(e) {
@@ -199,9 +200,14 @@ domains <- cbind("DomainID" = domains$features$properties$DomainID,"Domain"=doma
 # Remove Duplicates, make data frame
 domains <- as.data.frame(unique(domains))
 domains$Domain <- as.character(domains$Domain)
-# Retrieve geometry data using st_read()
-domain_data <- st_read('NEON-data/NEON_Domains.json')
-domain_data <- as.data.frame(domain_data)
+# Retrieve geometry data using st_read() if sf is available
+if (sf_available) {
+  domain_data <- st_read('NEON-data/NEON_Domains.json')
+  domain_data <- as.data.frame(domain_data)
+} else {
+  # Create a placeholder when sf is not available
+  domain_data <- data.frame(DomainID = character(), DomainName = character())
+}
 
 ####NEON Flight Boxes####
 ## Retrieve info for NEON flight boxes
@@ -297,35 +303,42 @@ reach_text <- "These icons mark the top and bottom of the observational sampling
 riparian_text <- "Number of locations for assessment of riparian vegetation composition and physical structure vary by site type. Lakes and non-wadeable rivers have ten locations. Wadeable streams have 20 locations and also include assessment of riparian vegetation percent cover in wadeable streams."
 
 ####———MAP ICONS———####
-NEON_icon <- makeIcon(iconUrl = "Img/NEON.png",
-                      iconWidth = 30, iconHeight = 30,
-                      iconAnchorX = 15, iconAnchorY = 15,
-                      popupAnchorX = -1, popupAnchorY = -15)
-NEON_locations_tes <- iconList(
-  `Distributed Base Plot` = makeIcon(iconUrl = "Img/distributedBaseplot.png", iconWidth = 15, iconHeight = 15,
-                                     iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
-  `Distributed Bird Grid` = makeIcon(iconUrl = "Img/birdGrid.png", iconWidth = 15, iconHeight = 15,
-                                     iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
-  `Distributed Mosquito Plot` = makeIcon(iconUrl = "Img/mosquito.png", iconWidth = 15, iconHeight = 15,
+if (leaflet_available) {
+  NEON_icon <- makeIcon(iconUrl = "Img/NEON.png",
+                        iconWidth = 30, iconHeight = 30,
+                        iconAnchorX = 15, iconAnchorY = 15,
+                        popupAnchorX = -1, popupAnchorY = -15)
+  NEON_locations_tes <- iconList(
+    `Distributed Base Plot` = makeIcon(iconUrl = "Img/distributedBaseplot.png", iconWidth = 15, iconHeight = 15,
+                                       iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
+    `Distributed Bird Grid` = makeIcon(iconUrl = "Img/birdGrid.png", iconWidth = 15, iconHeight = 15,
+                                       iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
+    `Distributed Mosquito Plot` = makeIcon(iconUrl = "Img/mosquito.png", iconWidth = 15, iconHeight = 15,
+                                           iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
+    `Distributed Mammal Grid` = makeIcon(iconUrl = "Img/mammal.png", iconWidth = 15, iconHeight = 15,
                                          iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
-  `Distributed Mammal Grid` = makeIcon(iconUrl = "Img/mammal.png", iconWidth = 15, iconHeight = 15,
+    `Distributed Tick Plot` = makeIcon(iconUrl = "Img/tick.png", iconWidth = 15, iconHeight = 15,
                                        iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
-  `Distributed Tick Plot` = makeIcon(iconUrl = "Img/tick.png", iconWidth = 15, iconHeight = 15,
-                                     iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
-  `Tower Phenology Plot` = makeIcon(iconUrl = "Img/phenology.png", iconWidth = 15, iconHeight = 15,
-                                    iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5)
-)
-NEON_locations_aqu <- iconList(
-  `Groundwater Well` = makeIcon(iconUrl = "Img/groundwaterWell.png", iconWidth = 15, iconHeight = 15,
-                                iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
-  `Met. Station` = makeIcon(iconUrl = "Img/metStation.png", iconWidth = 15, iconHeight = 15,
-                            iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
-  `Sensor Station` = makeIcon(iconUrl = "Img/sensorStation.png", iconWidth = 15, iconHeight = 15,
-                              iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
-  `Staff gauge/camera` = makeIcon(iconUrl = "Img/staffGaugeCamera.png", iconWidth = 15, iconHeight = 15,
+    `Tower Phenology Plot` = makeIcon(iconUrl = "Img/phenology.png", iconWidth = 15, iconHeight = 15,
+                                      iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5)
+  )
+  NEON_locations_aqu <- iconList(
+    `Groundwater Well` = makeIcon(iconUrl = "Img/groundwaterWell.png", iconWidth = 15, iconHeight = 15,
                                   iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
-  `Sampling Reach Boundary` = makeIcon(iconUrl = "Img/reach-icon.png", iconWidth = 15, iconHeight = 15,
-                                       iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
-  `Riparian Assessment` = makeIcon(iconUrl = "Img/riparianAssessment.png", iconWidth = 15, iconHeight = 15,
-                                   iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5) 
-)
+    `Met. Station` = makeIcon(iconUrl = "Img/metStation.png", iconWidth = 15, iconHeight = 15,
+                              iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
+    `Sensor Station` = makeIcon(iconUrl = "Img/sensorStation.png", iconWidth = 15, iconHeight = 15,
+                                iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
+    `Staff gauge/camera` = makeIcon(iconUrl = "Img/staffGaugeCamera.png", iconWidth = 15, iconHeight = 15,
+                                    iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
+    `Sampling Reach Boundary` = makeIcon(iconUrl = "Img/reach-icon.png", iconWidth = 15, iconHeight = 15,
+                                         iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5),
+    `Riparian Assessment` = makeIcon(iconUrl = "Img/riparianAssessment.png", iconWidth = 15, iconHeight = 15,
+                                     iconAnchorX = 7.5, iconAnchorY = 7.5, popupAnchorX = -1, popupAnchorY = -7.5) 
+  )
+} else {
+  # Create placeholder icons when leaflet is not available
+  NEON_icon <- NULL
+  NEON_locations_tes <- NULL
+  NEON_locations_aqu <- NULL
+}
