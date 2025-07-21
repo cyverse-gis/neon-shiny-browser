@@ -44,11 +44,11 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                       ),
                                                                                       column(4,
                                                                                              tags$b("Data Collection Method"),
-                                                                                             selectInput(inputId = "selectproducttype_product", label = NULL, choices = NEON_datatypes, multiple = TRUE)
+                                                                                             selectInput(inputId = "selectproducttype_product", label = NULL, choices = NEON_datatypes, multiple = TRUE, )
                                                                                       ),
                                                                                       column(4,
                                                                                              tags$b("Theme"),
-                                                                                             selectInput(inputId = "selectproducttheme_product", label = NULL, choices = c("Atmosphere", "Biogeochemistry", "Ecohydrology", "Land Use, Land Cover, and Land Processes", "Organisms, Populations, and Communities"), multiple = TRUE)
+                                                                                             selectInput(inputId = "selectproducttheme_product", label = NULL, choices = c("Atmosphere", "Biogeochemistry", "Ecohydrology", "Land Use, Land Cover, and Land Processes", "Organisms, Populations, and Communities"), multiple = TRUE, )
                                                                                       )
                                                                                     ),
                                                                                     checkboxInput(inputId = "showfilterinfo_product", label = "Show filter help", value = FALSE),
@@ -62,11 +62,11 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                               ),
                                                                                               column(4,
                                                                                                      tags$b("Data Collection Method"),
-                                                                                                     selectInput(inputId = "selectproducttype_product2", label = NULL, choices = NEON_datatypes, multiple = TRUE)
+                                                                                                     selectInput(inputId = "selectproducttype_product2", label = NULL, choices = NEON_datatypes, multiple = TRUE, )
                                                                                               ),
                                                                                               column(4,
                                                                                                      tags$b("Theme"),
-                                                                                                     selectInput(inputId = "selectproducttheme_product2", label = NULL, choices = c("Atmosphere", "Biogeochemistry", "Ecohydrology", "Land Use, Land Cover, and Land Processes", "Organisms, Populations, and Communities"), multiple = TRUE)
+                                                                                                     selectInput(inputId = "selectproducttheme_product2", label = NULL, choices = c("Atmosphere", "Biogeochemistry", "Ecohydrology", "Land Use, Land Cover, and Land Processes", "Organisms, Populations, and Communities"), multiple = TRUE, )
                                                                                               )
                                                                                             ),
                                                                                             checkboxInput(inputId = "showfilterinfo_product2", label = "Show filter help", value = FALSE),
