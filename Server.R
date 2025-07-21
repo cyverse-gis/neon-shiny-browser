@@ -706,14 +706,60 @@ function(input, output, session) {
                })
   ####— NEON: Step 1- Find data ####
   ## for dropdown
-  output$dropdown_site <- renderPrint(paste0(FieldSite_point$siteName[FieldSite_point$siteCode %in% input$NEONsite_dropdown], " ", FieldSite_point$`Habitat Specific`[FieldSite_point$siteCode %in% input$NEONsite_dropdown]))
-  output$dropdown_state <- renderPrint(FieldSite_point$stateName[FieldSite_point$siteCode %in% input$NEONsite_dropdown])
+  output$dropdown_site <- renderPrint({
+    req(input$NEONsite_dropdown)
+    tryCatch({
+      if (exists("FieldSite_point") && is.data.frame(FieldSite_point) && nrow(FieldSite_point) > 0) {
+        site_match <- FieldSite_point$siteCode %in% input$NEONsite_dropdown
+        if (any(site_match)) {
+          paste0(FieldSite_point$siteName[site_match], " ", FieldSite_point$`Habitat Specific`[site_match])
+        } else {
+          "Site not found"
+        }
+      } else {
+        "Loading site data..."
+      }
+    }, error = function(e) {
+      message(sprintf("Error in dropdown_site: %s", e$message))
+      "Error loading site"
+    })
+  })
+  
+  output$dropdown_state <- renderPrint({
+    req(input$NEONsite_dropdown)
+    tryCatch({
+      if (exists("FieldSite_point") && is.data.frame(FieldSite_point) && nrow(FieldSite_point) > 0) {
+        site_match <- FieldSite_point$siteCode %in% input$NEONsite_dropdown
+        if (any(site_match)) {
+          FieldSite_point$stateName[site_match]
+        } else {
+          "Site not found"
+        }
+      } else {
+        "Loading..."
+      }
+    }, error = function(e) {
+      message(sprintf("Error in dropdown_state: %s", e$message))
+      "Error loading state"
+    })
+  })
   output$dataproduct_number <- renderPrint({
-    if (!is.null(NEONproducts_product) && nrow(NEONproducts_product) > 0) {
-      nrow(NEONproducts_product[filter_site(site = input$NEONsite_dropdown),])
-    } else {
-      0
-    }
+    req(input$NEONsite_dropdown)
+    tryCatch({
+      if (!is.null(NEONproducts_product) && nrow(NEONproducts_product) > 0) {
+        filtered_products <- filter_site(site = input$NEONsite_dropdown)
+        if (is.data.frame(filtered_products)) {
+          nrow(filtered_products)
+        } else {
+          "Loading..."
+        }
+      } else {
+        "Loading..."
+      }
+    }, error = function(e) {
+      message(sprintf("Error in dataproduct_number: %s", e$message))
+      "Error loading"
+    })
   })
   ####—— 1a: By Site####
   # Variables
@@ -1044,29 +1090,45 @@ function(input, output, session) {
       write.csv(x = table, file = file, row.names = FALSE)
     })
   output$NEONproductURL_site <- renderPrint({
+    # Check if we have required inputs
+    if (is.null(input$NEONproductID_site) || input$NEONproductID_site == "" || 
+        is.null(input$NEONsite_site) || input$NEONsite_site == "") {
+      return("Select a product and site first")
+    }
+    
     tryCatch({
       product_info <- NEONproductinfo_site()
+      req(product_info, nrow(product_info) > 0)
+      
       if (length(product_info$siteCodes) == 0 || !is.list(product_info$siteCodes)) {
-        Urls <- NA
-      } else {
-        site_codes <- product_info$siteCodes[[1]]
-        if (is.null(site_codes) || !is.data.frame(site_codes) || 
-            !"siteCode" %in% names(site_codes) || !"availableDataUrls" %in% names(site_codes)) {
-          Urls <- NA
-        } else {
-          matching_sites <- site_codes$siteCode %in% input$NEONsite_site
-          if (any(matching_sites)) {
-            available_urls <- site_codes$availableDataUrls[matching_sites]
-            Urls <- if(length(available_urls) > 0) available_urls[[1]] else NA
-          } else {
-            Urls <- NA
-          }
-        }
+        return("No site data available for this product")
       }
-      req(Urls)
+      
+      site_codes <- product_info$siteCodes[[1]]
+      if (is.null(site_codes) || !is.data.frame(site_codes) || !"siteCode" %in% names(site_codes)) {
+        return("Invalid site data structure")
+      }
+      
+      # Check if availableDataUrls column exists
+      if (!"availableDataUrls" %in% names(site_codes)) {
+        return("No URL data available")
+      }
+      
+      matching_sites <- site_codes$siteCode %in% input$NEONsite_site
+      if (!any(matching_sites)) {
+        return("No data available for selected site")
+      }
+      
+      available_urls <- site_codes$availableDataUrls[matching_sites]
+      if (length(available_urls) == 0 || is.na(available_urls[[1]])) {
+        return("No URLs available for this site")
+      }
+      
+      return(available_urls[[1]])
+      
     }, error = function(e) {
       message(sprintf("Error in NEONproductURL_site: %s", e$message))
-      return(NA)
+      return("Error loading URLs")
     })
   })
   
@@ -1388,22 +1450,34 @@ function(input, output, session) {
       write.csv(x = table, file = file, row.names = FALSE)
     })
   output$ui_selectsite<- renderUI({
+    # Only render if we have a valid product ID
+    if (is.null(input$NEONproductID_product) || input$NEONproductID_product == "" || is.na(input$NEONproductID_product)) {
+      return(selectInput(inputId = "NEONsite_product", label = "Available sites:", choices = c("Select a product first")))
+    }
+    
     tryCatch({
       product_info <- NEONproductinfo_product()
+      req(product_info, nrow(product_info) > 0)
+      
       if (length(product_info$siteCodes) == 0 || !is.list(product_info$siteCodes)) {
-        sites <- NA
+        sites <- character(0)
       } else {
         site_codes <- product_info$siteCodes[[1]]
         if (is.null(site_codes) || !is.data.frame(site_codes) || !"siteCode" %in% names(site_codes)) {
-          sites <- NA
+          sites <- character(0)
         } else {
           sites <- sort(site_codes$siteCode)
         }
       }
-      selectInput(inputId = "NEONsite_product", label = "Available sites:", choices = req(sites))
+      
+      if (length(sites) == 0) {
+        sites <- c("No sites available")
+      }
+      
+      selectInput(inputId = "NEONsite_product", label = "Available sites:", choices = sites)
     }, error = function(e) {
       message(sprintf("Error in ui_selectsite: %s", e$message))
-      selectInput(inputId = "NEONsite_product", label = "Available sites:", choices = c("Loading..."))
+      selectInput(inputId = "NEONsite_product", label = "Available sites:", choices = c("Error loading sites"))
     })
   })
   output$nodates_message <- renderUI({
@@ -1450,29 +1524,45 @@ function(input, output, session) {
     })
   })
   output$NEONproductURL_product <- renderPrint({
+    # Check if we have required inputs
+    if (is.null(input$NEONproductID_product) || input$NEONproductID_product == "" || 
+        is.null(input$NEONsite_product) || input$NEONsite_product == "") {
+      return("Select a product and site first")
+    }
+    
     tryCatch({
       product_info <- NEONproductinfo_product()
+      req(product_info, nrow(product_info) > 0)
+      
       if (length(product_info$siteCodes) == 0 || !is.list(product_info$siteCodes)) {
-        Urls <- NA
-      } else {
-        site_codes <- product_info$siteCodes[[1]]
-        if (is.null(site_codes) || !is.data.frame(site_codes) || 
-            !"siteCode" %in% names(site_codes) || !"availableDataUrls" %in% names(site_codes)) {
-          Urls <- NA
-        } else {
-          matching_sites <- site_codes$siteCode %in% input$NEONsite_product
-          if (any(matching_sites)) {
-            available_urls <- site_codes$availableDataUrls[matching_sites]
-            Urls <- if(length(available_urls) > 0) available_urls[[1]] else NA
-          } else {
-            Urls <- NA
-          }
-        }
+        return("No site data available for this product")
       }
-      req(Urls)
+      
+      site_codes <- product_info$siteCodes[[1]]
+      if (is.null(site_codes) || !is.data.frame(site_codes) || !"siteCode" %in% names(site_codes)) {
+        return("Invalid site data structure")
+      }
+      
+      # Check if availableDataUrls column exists
+      if (!"availableDataUrls" %in% names(site_codes)) {
+        return("No URL data available")
+      }
+      
+      matching_sites <- site_codes$siteCode %in% input$NEONsite_product
+      if (!any(matching_sites)) {
+        return("No data available for selected site")
+      }
+      
+      available_urls <- site_codes$availableDataUrls[matching_sites]
+      if (length(available_urls) == 0 || is.na(available_urls[[1]])) {
+        return("No URLs available for this site")
+      }
+      
+      return(available_urls[[1]])
+      
     }, error = function(e) {
       message(sprintf("Error in NEONproductURL_product: %s", e$message))
-      return(NA)
+      return("Error loading URLs")
     })
   })
   
