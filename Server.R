@@ -814,10 +814,19 @@ function(input, output, session) {
                                                        selection = list(mode = 'single', target = 'cell')))
   observeEvent(eventExpr = input$NEONproductoptions_site_cells_selected,
                handlerExpr = {
-                 if (length(input$NEONproductoptions_site_cells_selected) > 0) {
-                   updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "single")
-                 }
-                 updateTextInput(session = session, inputId = "NEONproductID_site", value = ifelse(length(input$NEONproductoptions_site_cells_selected)==0,NA,NEONproductlist_site()[[2]][[input$NEONproductoptions_site_cells_selected[1]]]))
+                 req(NEONproductlist_site(), nrow(NEONproductlist_site()) > 0)
+                 tryCatch({
+                   if (length(input$NEONproductoptions_site_cells_selected) > 0) {
+                     updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "single")
+                     row_index <- input$NEONproductoptions_site_cells_selected[1]
+                     if (row_index <= nrow(NEONproductlist_site())) {
+                       product_id <- NEONproductlist_site()[[2]][[row_index]]
+                       updateTextInput(session = session, inputId = "NEONproductID_site", value = product_id)
+                     }
+                   }
+                 }, error = function(e) {
+                   message(sprintf("Error in site product selection: %s", e$message))
+                 })
                })
   # Modal
   output$NEONproductoptions_site2 <- renderDT(datatable(data.frame(unlist(NEONproductlist_site()[1]), unlist(NEONproductlist_site()[2])),
@@ -887,11 +896,20 @@ function(input, output, session) {
   })
   observeEvent(eventExpr = input$NEONproductoptions_site2_cells_selected,
                handlerExpr = {
-                 if (length(input$NEONproductoptions_site2_cells_selected) > 0) {
-                   updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "single")
-                   toggleModal(session, modalId = "tableexpand_site", toggle = "close")
-                 }
-                 updateTextInput(session = session, inputId = "NEONproductID_site", value = ifelse(length(input$NEONproductoptions_site2_cells_selected)==0, NA, NEONproductlist_site()[[2]][[input$NEONproductoptions_site2_cells_selected[1]]]))
+                 req(NEONproductlist_site(), nrow(NEONproductlist_site()) > 0)
+                 tryCatch({
+                   if (length(input$NEONproductoptions_site2_cells_selected) > 0) {
+                     updateRadioButtons(session, inputId = "NEONbrowsingstep_site", selected = "single")
+                     toggleModal(session, modalId = "tableexpand_site", toggle = "close")
+                     row_index <- input$NEONproductoptions_site2_cells_selected[1]
+                     if (row_index <= nrow(NEONproductlist_site())) {
+                       product_id <- NEONproductlist_site()[[2]][[row_index]]
+                       updateTextInput(session = session, inputId = "NEONproductID_site", value = product_id)
+                     }
+                   }
+                 }, error = function(e) {
+                   message(sprintf("Error in expanded site product selection: %s", e$message))
+                 })
                })
   modal_clicked_site <- 0
   observeEvent(input$expandtable_site, handlerExpr = {
@@ -936,6 +954,9 @@ function(input, output, session) {
     }
   })
   observeEvent(input$toggledownload_site, handlerExpr = {
+    req(input$NEONproductID_site, input$NEONsite_site)
+    req(NEONproductinfo_site(), nrow(NEONproductinfo_site()) > 0)
+    
     is_AOP <- if (NEONproductinfo_site()$productScienceTeamAbbr == "AOP") {
       TRUE
     } else {
@@ -943,16 +964,30 @@ function(input, output, session) {
     }
     if (!is_AOP) {
       updateTextInput(session, inputId = "dpID_regular", value = input$NEONproductID_site)
-      delay(ms = 1000, updateSelectInput(session, inputId = "fieldsite_NEON_regular", selected = input$NEONsite_site))
       updateTabsetPanel(session, inputId = "data", selected = "download")
       updateRadioButtons(session, inputId = "NEON_download_type", selected = "regular")
-      updateCheckboxInput(session, inputId = "toggledownload_site", value = FALSE)
+      
+      # Use observe to wait for UI to render before updating field site
+      observe({
+        if (!is.null(input$fieldsite_regular)) {
+          updateSelectInput(session, inputId = "fieldsite_regular", selected = input$NEONsite_site)
+        }
+      })
+      
+      updateCheckboxInput(session, inputId = "toggledownload_site_bool", value = FALSE)
     } else if (is_AOP) {
       updateTextInput(session, inputId = "dpID_AOP", value = input$NEONproductID_site)
-      delay(ms = 1000, updateSelectInput(session, inputId = "fieldsite_NEON_AOP", selected = input$NEONsite_site))
       updateTabsetPanel(session, inputId = "data", selected = "download")
       updateRadioButtons(session, inputId = "NEON_download_type", selected = "AOP")
-      updateCheckboxInput(session, inputId = "toggledownload_site", value = FALSE)
+      
+      # Use observe to wait for UI to render before updating field site
+      observe({
+        if (!is.null(input$fieldsite_AOP)) {
+          updateSelectInput(session, inputId = "fieldsite_AOP", selected = input$NEONsite_site)
+        }
+      })
+      
+      updateCheckboxInput(session, inputId = "toggledownload_site_bool", value = FALSE)
     }
   })
   
@@ -1120,10 +1155,19 @@ function(input, output, session) {
                                                           selection = list(mode = 'single', target = 'cell')))
   observeEvent(eventExpr = input$NEONproductoptions_product_cells_selected,
                handlerExpr = {
-                 if (length(input$NEONproductoptions_product_cells_selected) > 0) {
-                   updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "single")
-                 }
-                 updateTextInput(session = session, inputId = "NEONproductID_product", value = ifelse(length(input$NEONproductoptions_product_cells_selected)==0,NA,NEONproductlist_product()[[2]][[input$NEONproductoptions_product_cells_selected[1]]]))
+                 req(NEONproductlist_product(), nrow(NEONproductlist_product()) > 0)
+                 tryCatch({
+                   if (length(input$NEONproductoptions_product_cells_selected) > 0) {
+                     updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "single")
+                     row_index <- input$NEONproductoptions_product_cells_selected[1]
+                     if (row_index <= nrow(NEONproductlist_product())) {
+                       product_id <- NEONproductlist_product()[[2]][[row_index]]
+                       updateTextInput(session = session, inputId = "NEONproductID_product", value = product_id)
+                     }
+                   }
+                 }, error = function(e) {
+                   message(sprintf("Error in product selection: %s", e$message))
+                 })
                })
   # Modal
   output$NEONproductoptions_product2 <- renderDT(datatable(NEONproductlist_product()[1:2], class = 'cell-border stripe hover order-column', rownames = FALSE,
@@ -1192,11 +1236,20 @@ function(input, output, session) {
   })
   observeEvent(eventExpr = input$NEONproductoptions_product2_cells_selected,
                handlerExpr = {
-                 if (length(input$NEONproductoptions_product2_cells_selected) > 0) {
-                   updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "single")
-                   toggleModal(session, modalId = "tableexpand_product", toggle = "close")
-                 }
-                 updateTextInput(session = session, inputId = "NEONproductID_product", value = ifelse(length(input$NEONproductoptions_product2_cells_selected)==0, NA, NEONproductlist_product()[[2]][[input$NEONproductoptions_product2_cells_selected[1]]]))
+                 req(NEONproductlist_product(), nrow(NEONproductlist_product()) > 0)
+                 tryCatch({
+                   if (length(input$NEONproductoptions_product2_cells_selected) > 0) {
+                     updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "single")
+                     toggleModal(session, modalId = "tableexpand_product", toggle = "close")
+                     row_index <- input$NEONproductoptions_product2_cells_selected[1]
+                     if (row_index <= nrow(NEONproductlist_product())) {
+                       product_id <- NEONproductlist_product()[[2]][[row_index]]
+                       updateTextInput(session = session, inputId = "NEONproductID_product", value = product_id)
+                     }
+                   }
+                 }, error = function(e) {
+                   message(sprintf("Error in expanded product selection: %s", e$message))
+                 })
                })
   modal_clicked_product <- 0
   observeEvent(input$expandtable_product, handlerExpr = {
@@ -1234,6 +1287,9 @@ function(input, output, session) {
     }
   })
   observeEvent(input$toggledownload_product, handlerExpr = {
+    req(input$NEONproductID_product)
+    req(NEONproductinfo_product(), nrow(NEONproductinfo_product()) > 0)
+    
     is_AOP <- if (NEONproductinfo_product()$productScienceTeamAbbr == "AOP") {
       TRUE
     } else {
@@ -1241,16 +1297,30 @@ function(input, output, session) {
     }
     if (!is_AOP) {
       updateTextInput(session, inputId = "dpID_regular", value = input$NEONproductID_product)
-      delay(ms = 1000, updateSelectInput(session, inputId = "fieldsite_NEON_regular", selected = input$NEONsite_product))
       updateTabsetPanel(session, inputId = "data", selected = "download")
       updateRadioButtons(session, inputId = "NEON_download_type", selected = "regular")
-      updateCheckboxInput(session, inputId = "toggledownload_product", value = FALSE)
+      
+      # Use observe to wait for UI to render before updating field site
+      observe({
+        if (!is.null(input$fieldsite_regular) && !is.null(input$NEONsite_product)) {
+          updateSelectInput(session, inputId = "fieldsite_regular", selected = input$NEONsite_product)
+        }
+      })
+      
+      updateCheckboxInput(session, inputId = "toggledownload_product_bool", value = FALSE)
     } else if (is_AOP) {
       updateTextInput(session, inputId = "dpID_AOP", value = input$NEONproductID_product)
-      delay(ms = 1000, updateSelectInput(session, inputId = "fieldsite_NEON_AOP", selected = input$NEONsite_product))
       updateTabsetPanel(session, inputId = "data", selected = "download")
       updateRadioButtons(session, inputId = "NEON_download_type", selected = "AOP")
-      updateCheckboxInput(session, inputId = "toggledownload_product", value = FALSE)
+      
+      # Use observe to wait for UI to render before updating field site
+      observe({
+        if (!is.null(input$fieldsite_AOP) && !is.null(input$NEONsite_product)) {
+          updateSelectInput(session, inputId = "fieldsite_AOP", selected = input$NEONsite_product)
+        }
+      })
+      
+      updateCheckboxInput(session, inputId = "toggledownload_product_bool", value = FALSE)
     }
   })
   observe({
@@ -1421,8 +1491,8 @@ function(input, output, session) {
            no = gsub(pattern = " ", replacement = "", x = input$dpID_AOP))
   ))
   AOP_ID_middle <- reactive(req(strsplit(Product_ID_AOP(), "[.]")[[1]][2]))
-  Field_Site_regular <- reactive(req(input$fieldsite_NEON_regular))
-  Field_Site_AOP <- reactive(req(input$fieldsite_NEON_AOP))
+  Field_Site_regular <- reactive(req(input$fieldsite_regular))
+  Field_Site_AOP <- reactive(req(input$fieldsite_AOP))
   Package_type_regular <- reactive(req(input$package_type_regular))
   Folder_path_regular <- reactive(req(paste0("NEON_", Field_Site_regular(), "_", Product_ID_regular())))
   Folder_path_AOP <- reactive(req(paste0("NEON_", Field_Site_AOP(), "_", Product_ID_AOP(), "_", Year_AOP())))
@@ -1430,17 +1500,23 @@ function(input, output, session) {
   ####—— Download NEON data: Regular ####
   NEONproductinfo_regular <- reactive(req(filter(.data = NEONproducts_product, productCode == Product_ID_regular())))
   output$ui_fieldsite_regular <- renderUI({
-    sites <- if (length(NEONproductinfo_regular()$siteCodes) == 0) {
-      NA
-    } else {
-      sort(NEONproductinfo_regular()$siteCodes[[1]]$siteCode)}
-    selectInput(inputId = "fieldsite_NEON_regular", label = "Field Site", choices = sites)}
-  )
+    req(NEONproductinfo_regular())
+    tryCatch({
+      sites <- if (length(NEONproductinfo_regular()$siteCodes) == 0) {
+        character(0)
+      } else {
+        sort(NEONproductinfo_regular()$siteCodes[[1]]$siteCode)
+      }
+      selectInput(inputId = "fieldsite_regular", label = "Field Site", choices = sites)
+    }, error = function(e) {
+      selectInput(inputId = "fieldsite_regular", label = "Field Site", choices = character(0))
+    })
+  })
   output$download_dates_regular <- renderDT({
     dates <- if (length(NEONproductinfo_regular()$siteCodes) == 0) {
       NA
     } else { 
-      NEONproductinfo_regular()$siteCodes[[1]]$availableMonths[NEONproductinfo_regular()$siteCodes[[1]]$siteCode %in% input$fieldsite_NEON_regular][[1]]}
+      NEONproductinfo_regular()$siteCodes[[1]]$availableMonths[NEONproductinfo_regular()$siteCodes[[1]]$siteCode %in% input$fieldsite_regular][[1]]}
     if (sum(is.na(dates)) | length(dates) == 0) {
       datatable(data = data.frame())
     } else {
@@ -1459,7 +1535,7 @@ function(input, output, session) {
                 selection = list(mode = 'multiple', target = input$target_download_regular))
     }
   })
-  product_dates <- reactive(NEONproductinfo_regular()$siteCodes[[1]]$availableMonths[NEONproductinfo_regular()$siteCodes[[1]]$siteCode %in% input$fieldsite_NEON_regular][[1]])
+  product_dates <- reactive(NEONproductinfo_regular()$siteCodes[[1]]$availableMonths[NEONproductinfo_regular()$siteCodes[[1]]$siteCode %in% input$fieldsite_regular][[1]])
   download_dates <- reactive({
     if (nrow(NEONproductinfo_regular()) == 0) {
       NULL
@@ -1637,17 +1713,23 @@ function(input, output, session) {
   # Display dates
   NEONproductinfo_AOP <- reactive(req(filter(.data = NEONproducts_product, productCode == Product_ID_AOP())))
   output$ui_fieldsite_AOP <- renderUI({
-    sites <- if (length(NEONproductinfo_AOP()$siteCodes) == 0) {
-      NA
-    } else {
-      sort(NEONproductinfo_AOP()$siteCodes[[1]]$siteCode)}
-    selectInput(inputId = "fieldsite_NEON_AOP", label = "Field Site", choices = sites)
+    req(NEONproductinfo_AOP())
+    tryCatch({
+      sites <- if (length(NEONproductinfo_AOP()$siteCodes) == 0) {
+        character(0)
+      } else {
+        sort(NEONproductinfo_AOP()$siteCodes[[1]]$siteCode)
+      }
+      selectInput(inputId = "fieldsite_AOP", label = "Field Site", choices = sites)
+    }, error = function(e) {
+      selectInput(inputId = "fieldsite_AOP", label = "Field Site", choices = character(0))
+    })
   })
   output$download_dates_AOP <- renderDT({
     dates <- if (length(NEONproductinfo_AOP()$siteCodes) == 0) {
       NA
     } else { 
-      NEONproductinfo_AOP()$siteCodes[[1]]$availableMonths[NEONproductinfo_AOP()$siteCodes[[1]]$siteCode %in% input$fieldsite_NEON_AOP][[1]]}
+      NEONproductinfo_AOP()$siteCodes[[1]]$availableMonths[NEONproductinfo_AOP()$siteCodes[[1]]$siteCode %in% input$fieldsite_AOP][[1]]}
     if (sum(is.na(dates)) | length(dates) == 0) {
       datatable(data = data.frame())
     } else {
@@ -1670,7 +1752,7 @@ function(input, output, session) {
     dates <- if (length(NEONproductinfo_AOP()$siteCodes) == 0) {
       NA
     } else { 
-      NEONproductinfo_AOP()$siteCodes[[1]]$availableMonths[NEONproductinfo_AOP()$siteCodes[[1]]$siteCode %in% input$fieldsite_NEON_AOP][[1]]}
+      NEONproductinfo_AOP()$siteCodes[[1]]$availableMonths[NEONproductinfo_AOP()$siteCodes[[1]]$siteCode %in% input$fieldsite_AOP][[1]]}
     selected <- input$download_dates_AOP_columns_selected
     year <- datesTable(dates = dates, process = "AOP", selected = selected)
     year

@@ -4,7 +4,7 @@ fluidPage(theme = shinytheme('cerulean'),
           navbarPage(tags$b("NEON Data Browser"), id ="main",
                      ####Tab 1: Includes the map, and key with features like filtering data####
                      tabPanel("Map Browser",
-                              dropdownButton(tooltip = "Find an individual NEON Site and Zoom to its location", label = "Quick Finder", circle = FALSE, right = FALSE, status = "primary", size = "xs", icon = icon("info-circle"), width = "38vw", inputId = "map_dropdown",
+                              dropdownButton(tooltip = "Find an individual NEON Site and Zoom to its location", label = "Select a Site", circle = FALSE, right = FALSE, status = "primary", size = "xs", icon = icon("info-circle"), width = "38vw", inputId = "map_dropdown",
                                              selectInput(inputId = "NEONsite_dropdown", label = "Site info:", choices = FieldSite_abbs),
                                              tags$b("Name and type:"),
                                              verbatimTextOutput(outputId = "dropdown_site", placeholder = TRUE),
