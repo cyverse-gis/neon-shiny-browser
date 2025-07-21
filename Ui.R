@@ -44,11 +44,11 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                       ),
                                                                                       column(4,
                                                                                              tags$b("Data Collection Method"),
-                                                                                             selectInput(inputId = "selectproducttype_product", label = NULL, choices = NEON_datatypes, multiple = TRUE, placeholder = "All methods")
+                                                                                             selectInput(inputId = "selectproducttype_product", label = NULL, choices = NEON_datatypes, multiple = TRUE)
                                                                                       ),
                                                                                       column(4,
                                                                                              tags$b("Theme"),
-                                                                                             selectInput(inputId = "selectproducttheme_product", label = NULL, choices = c("Atmosphere", "Biogeochemistry", "Ecohydrology", "Land Use, Land Cover, and Land Processes", "Organisms, Populations, and Communities"), multiple = TRUE, placeholder = "All themes")
+                                                                                             selectInput(inputId = "selectproducttheme_product", label = NULL, choices = c("Atmosphere", "Biogeochemistry", "Ecohydrology", "Land Use, Land Cover, and Land Processes", "Organisms, Populations, and Communities"), multiple = TRUE)
                                                                                       )
                                                                                     ),
                                                                                     checkboxInput(inputId = "showfilterinfo_product", label = "Show filter help", value = FALSE),
@@ -62,11 +62,11 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                               ),
                                                                                               column(4,
                                                                                                      tags$b("Data Collection Method"),
-                                                                                                     selectInput(inputId = "selectproducttype_product2", label = NULL, choices = NEON_datatypes, multiple = TRUE, placeholder = "All methods")
+                                                                                                     selectInput(inputId = "selectproducttype_product2", label = NULL, choices = NEON_datatypes, multiple = TRUE)
                                                                                               ),
                                                                                               column(4,
                                                                                                      tags$b("Theme"),
-                                                                                                     selectInput(inputId = "selectproducttheme_product2", label = NULL, choices = c("Atmosphere", "Biogeochemistry", "Ecohydrology", "Land Use, Land Cover, and Land Processes", "Organisms, Populations, and Communities"), multiple = TRUE, placeholder = "All themes")
+                                                                                                     selectInput(inputId = "selectproducttheme_product2", label = NULL, choices = c("Atmosphere", "Biogeochemistry", "Ecohydrology", "Land Use, Land Cover, and Land Processes", "Organisms, Populations, and Communities"), multiple = TRUE)
                                                                                               )
                                                                                             ),
                                                                                             checkboxInput(inputId = "showfilterinfo_product2", label = "Show filter help", value = FALSE),
@@ -216,7 +216,7 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                                           )
                                                                          ),
                                                         conditionalPanel("input.map_features == 'domains'",
-                                                                         pickerInput(inputId = "fieldsite_domain", label = "Domains:", choices = domains$Domain, selected = domains$Domain, multiple = TRUE,
+                                                                         pickerInput(inputId = "domains_display", label = "Domains:", choices = domains$Domain, selected = domains$Domain, multiple = TRUE,
                                                                                      options = list(`actions-box` = TRUE, `live-search` = TRUE, title = "Select Domains to include:", `selected-text-format`= "static"))),
                                                         conditionalPanel("input.map_features == 'flightpath'",
                                                                          selectInput(inputId = "flightpath_year", label = "Year", choices = c(2016, 2017, 2025), selected = c(2025), multiple = TRUE))
@@ -284,11 +284,6 @@ fluidPage(theme = shinytheme('cerulean'),
                                                                          includeMarkdown("Rmd/Help_download_chars.Rmd")),
                                                                 tabPanel(icon("forward"))
                                                     )
-                                           )))#,
-                     ###Tab 4: Includes outputs to help with testing or troubleshooting####
-                     # tabPanel("For me (troubleshooting)",
-                     #          textOutput("text_me"),
-                     #          textOutput("text_me_two"),
-                     #          shiny::dataTableOutput("table_me"))
+                                           ))
           )
 )
