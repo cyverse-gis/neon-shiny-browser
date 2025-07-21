@@ -1207,6 +1207,73 @@ function(input, output, session) {
     }
   })
   # Display products: list
+  # Enhanced product table with additional columns
+  output$NEONproductoptions_enhanced <- renderDT({
+    req(NEONproductlist_product(), nrow(NEONproductlist_product()) > 0)
+    
+    tryCatch({
+      # Create enhanced data frame with better formatting
+      enhanced_data <- NEONproductlist_product()
+      
+      # Format themes and keywords for display
+      enhanced_data$themes_display <- sapply(enhanced_data$themes, function(x) {
+        if (is.list(x) && length(x) > 0) {
+          paste(x, collapse = ", ")
+        } else {
+          "Not specified"
+        }
+      })
+      
+      enhanced_data$keywords_display <- sapply(enhanced_data$keywords, function(x) {
+        if (is.list(x) && length(x) > 0) {
+          # Limit to first 3 keywords for table display
+          keywords <- x[1:min(3, length(x))]
+          result <- paste(keywords, collapse = ", ")
+          if (length(x) > 3) result <- paste0(result, "...")
+          return(result)
+        } else {
+          "No keywords"
+        }
+      })
+      
+      # Select and rename columns for display
+      display_data <- data.frame(
+        "Product Name" = enhanced_data$`Product Name`,
+        "Product ID" = enhanced_data$`Product ID`,
+        "Data Team" = enhanced_data$producttype,
+        "Themes" = enhanced_data$themes_display,
+        "Keywords" = enhanced_data$keywords_display,
+        stringsAsFactors = FALSE
+      )
+      
+      datatable(display_data,
+                class = 'cell-border stripe hover order-column compact',
+                rownames = FALSE,
+                options = list(
+                  dom = 'ltfripr',
+                  lengthMenu = c(10, 25, 50, 100),
+                  pageLength = 15,
+                  deferRender = TRUE,
+                  scrollY = '45vh',
+                  scrollX = TRUE,
+                  columnDefs = list(
+                    list(width = '200px', targets = 0),  # Product Name
+                    list(width = '120px', targets = 1),  # Product ID
+                    list(width = '100px', targets = 2),  # Data Team
+                    list(width = '150px', targets = 3),  # Themes
+                    list(width = '200px', targets = 4)   # Keywords
+                  )
+                ),
+                selection = list(mode = 'single', target = 'cell')) %>%
+        formatStyle(columns = 1:5, fontSize = '12px')
+      
+    }, error = function(e) {
+      message(sprintf("Error in enhanced product table: %s", e$message))
+      datatable(data.frame("Message" = "Error loading product data"))
+    })
+  })
+  
+  # Keep original for backward compatibility
   output$NEONproductoptions_product <- renderDT(datatable(NEONproductlist_product()[1:2], class = 'cell-border stripe hover order-column', rownames = FALSE,
                                                           options = list(dom = 'tlfipr',
                                                                          lengthMenu = c(10,25,50),
@@ -1231,7 +1298,69 @@ function(input, output, session) {
                    message(sprintf("Error in product selection: %s", e$message))
                  })
                })
-  # Modal
+  # Enhanced modal version  
+  output$NEONproductoptions_enhanced2 <- renderDT({
+    req(NEONproductlist_product(), nrow(NEONproductlist_product()) > 0)
+    
+    tryCatch({
+      # Create enhanced data frame with better formatting
+      enhanced_data <- NEONproductlist_product()
+      
+      # Format themes and keywords for display
+      enhanced_data$themes_display <- sapply(enhanced_data$themes, function(x) {
+        if (is.list(x) && length(x) > 0) {
+          paste(x, collapse = ", ")
+        } else {
+          "Not specified"
+        }
+      })
+      
+      enhanced_data$keywords_display <- sapply(enhanced_data$keywords, function(x) {
+        if (is.list(x) && length(x) > 0) {
+          paste(x, collapse = ", ")
+        } else {
+          "No keywords"
+        }
+      })
+      
+      # Select and rename columns for display (more detailed for modal)
+      display_data <- data.frame(
+        "Product Name" = enhanced_data$`Product Name`,
+        "Product ID" = enhanced_data$`Product ID`,
+        "Data Team" = enhanced_data$producttype,
+        "Themes" = enhanced_data$themes_display,
+        "Keywords" = enhanced_data$keywords_display,
+        stringsAsFactors = FALSE
+      )
+      
+      datatable(display_data,
+                class = 'cell-border stripe hover order-column compact',
+                rownames = FALSE,
+                options = list(
+                  dom = 'Bfrtilp',
+                  lengthMenu = c(25, 50, 100, -1),
+                  pageLength = 50,
+                  deferRender = TRUE,
+                  scrollY = '60vh',
+                  scrollX = TRUE,
+                  buttons = c('copy', 'csv', 'excel'),
+                  columnDefs = list(
+                    list(width = '250px', targets = 0),  # Product Name
+                    list(width = '120px', targets = 1),  # Product ID
+                    list(width = '120px', targets = 2),  # Data Team
+                    list(width = '200px', targets = 3),  # Themes
+                    list(width = '300px', targets = 4)   # Keywords
+                  )
+                ),
+                selection = list(mode = 'single', target = 'cell'))
+      
+    }, error = function(e) {
+      message(sprintf("Error in enhanced modal product table: %s", e$message))
+      datatable(data.frame("Message" = "Error loading product data"))
+    })
+  })
+  
+  # Original Modal for backward compatibility
   output$NEONproductoptions_product2 <- renderDT(datatable(NEONproductlist_product()[1:2], class = 'cell-border stripe hover order-column', rownames = FALSE,
                                                            options = list(dom = 'tlfipr',
                                                                           lengthMenu = c(10,25,50),
@@ -1313,6 +1442,42 @@ function(input, output, session) {
                    message(sprintf("Error in expanded product selection: %s", e$message))
                  })
                })
+  # Enhanced table selection handlers
+  observeEvent(eventExpr = input$NEONproductoptions_enhanced_cells_selected,
+               handlerExpr = {
+                 req(NEONproductlist_product(), nrow(NEONproductlist_product()) > 0)
+                 tryCatch({
+                   if (length(input$NEONproductoptions_enhanced_cells_selected) > 0) {
+                     updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "single")
+                     row_index <- input$NEONproductoptions_enhanced_cells_selected[1]
+                     if (row_index <= nrow(NEONproductlist_product())) {
+                       product_id <- NEONproductlist_product()[[2]][[row_index]]
+                       updateTextInput(session = session, inputId = "NEONproductID_product", value = product_id)
+                     }
+                   }
+                 }, error = function(e) {
+                   message(sprintf("Error in enhanced product selection: %s", e$message))
+                 })
+               })
+  
+  observeEvent(eventExpr = input$NEONproductoptions_enhanced2_cells_selected,
+               handlerExpr = {
+                 req(NEONproductlist_product(), nrow(NEONproductlist_product()) > 0)
+                 tryCatch({
+                   if (length(input$NEONproductoptions_enhanced2_cells_selected) > 0) {
+                     updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "single")
+                     toggleModal(session, modalId = "tableexpand_product", toggle = "close")
+                     row_index <- input$NEONproductoptions_enhanced2_cells_selected[1]
+                     if (row_index <= nrow(NEONproductlist_product())) {
+                       product_id <- NEONproductlist_product()[[2]][[row_index]]
+                       updateTextInput(session = session, inputId = "NEONproductID_product", value = product_id)
+                     }
+                   }
+                 }, error = function(e) {
+                   message(sprintf("Error in enhanced modal product selection: %s", e$message))
+                 })
+               })
+
   modal_clicked_product <- 0
   observeEvent(input$expandtable_product, handlerExpr = {
     modal_clicked_product <<- modal_clicked_product + 1
@@ -1369,7 +1534,6 @@ function(input, output, session) {
         }
       })
       
-      updateCheckboxInput(session, inputId = "toggledownload_product_bool", value = FALSE)
     } else if (is_AOP) {
       updateTextInput(session, inputId = "dpID_AOP", value = input$NEONproductID_product)
       updateTabsetPanel(session, inputId = "data", selected = "download")
@@ -1381,8 +1545,6 @@ function(input, output, session) {
           updateSelectInput(session, inputId = "fieldsite_AOP", selected = input$NEONsite_product)
         }
       })
-      
-      updateCheckboxInput(session, inputId = "toggledownload_product_bool", value = FALSE)
     }
   })
   observe({
@@ -2037,6 +2199,56 @@ function(input, output, session) {
   
   #Text for troublshooting
   #output$text_me <- renderText(as.character(input$map_marker_click))
+  # Dynamic UI outputs for field site filtering
+  output$fieldsite_state_ui <- renderUI({
+    if (exists("FieldSite_point") && is.data.frame(FieldSite_point) && nrow(FieldSite_point) > 0) {
+      state_choices <- unique(FieldSite_point$stateCode)
+      state_choices <- state_choices[!is.na(state_choices) & state_choices != ""]
+      state_choices <- sort(state_choices)
+      
+      pickerInput(inputId = "fieldsite_state", 
+                  label = "State:", 
+                  choices = state_choices, 
+                  selected = state_choices, 
+                  multiple = TRUE,
+                  options = list(`actions-box` = TRUE, 
+                                `live-search` = TRUE, 
+                                title = "Select states to include:", 
+                                `selected-text-format` = "static"))
+    } else {
+      pickerInput(inputId = "fieldsite_state", 
+                  label = "State:", 
+                  choices = character(0), 
+                  multiple = TRUE,
+                  options = list(title = "Loading states..."))
+    }
+  })
+  
+  output$fieldsite_sublocs_ui <- renderUI({
+    if (exists("FieldSite_abbs") && length(FieldSite_abbs) > 0) {
+      pickerInput(inputId = "fieldsite_sublocs", 
+                  label = "Add sublocations to sites", 
+                  choices = FieldSite_abbs, 
+                  multiple = TRUE,
+                  options = list(`actions-box` = TRUE, 
+                                `live-search` = TRUE, 
+                                title = "Select sub-locations to include:", 
+                                `multiple-separator` = ", "))
+    } else {
+      pickerInput(inputId = "fieldsite_sublocs", 
+                  label = "Add sublocations to sites", 
+                  choices = character(0), 
+                  multiple = TRUE,
+                  options = list(title = "Loading sites..."))
+    }
+  })
+
+  # Set default state for product browsing (no site-based browsing)
+  observe({
+    # Automatically set to product browse mode since site mode is removed
+    updateRadioButtons(session, inputId = "NEONbrowsingstep_product", selected = "list")
+  })
+  
   #Text for troublshooting 2
   #output$text_me_two <- renderText("Sub Locations" %in% as.character(input$map_marker_click))
   #Table for troubleshooting
